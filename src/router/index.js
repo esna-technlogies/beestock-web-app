@@ -6,6 +6,7 @@ import menuModule from 'vuex-store/modules/menu'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     ...generateRoutesFromMenu(menuModule.state.items),
     {path: '*', redirect: { name: getDefaultRoute(menuModule.state.items).name }}
