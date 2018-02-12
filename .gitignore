@@ -1,0 +1,33 @@
+### Project ###
+node_modules/
+dist/
+npm-debug.log
+package-lock.json
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### VCode ###
+.vscode/
+
+### Misc ###
+.DS_Store
