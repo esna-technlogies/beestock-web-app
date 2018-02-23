@@ -1,13 +1,13 @@
 <template>
   <div id="app" class="app">
     <auth-layout v-if="isAuth"></auth-layout>
-    <layout v-else></layout>
+    <basic-layout v-else></basic-layout>
   </div>
 </template>
 
 <script>
-  import Layout from 'components/layout/Layout'
-  import AuthLayout from './components/layout/AuthLayout'
+  import BasicLayout from 'components/basic-layout/BasicLayout'
+  import AuthLayout from './components/basic-layout/AuthLayout'
   import VuesticPreLoader from './components/vuestic-components/vuestic-preloader/VuesticPreLoader.vue'
 
   export default {
@@ -15,7 +15,7 @@
     components: {
       VuesticPreLoader,
       AuthLayout,
-      Layout
+      BasicLayout
     },
     computed: {
       isAuth () {
@@ -27,8 +27,22 @@
 
 <style lang="scss">
   @import "sass/main";
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 100%;
+  }
+
   body {
     height: 100%;
+    background: url("../src/assets/images/bg.png") 0 0px no-repeat;
+    background-size: 100%;
+
     .app {
       height: 100%;
     }

@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <h2>{{'auth.welcome' | translate}}</h2>
-    <form method="post" action="/auth/login" name="login">
+    <form method="post" @submit.prevent="doLogin">
       <div class="form-group">
         <div class="input-group">
           <input type="text" id="email" required="required"/>
@@ -26,7 +26,13 @@
 
 <script>
   export default {
-    name: 'login'
+    name: 'login',
+    methods: {
+      doLogin () {
+        this.$store.dispatch('authenticate', true);
+        this.$router.push({ name: 'Home' });
+      }
+    }
   }
 </script>
 

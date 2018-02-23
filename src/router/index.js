@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import routes from './routes'
+
 import menuModule from 'vuex-store/modules/menu'
 
 Vue.use(Router)
@@ -8,8 +10,9 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   routes: [
+    ...routes,
     ...generateRoutesFromMenu(menuModule.state.items),
-    {path: '*', redirect: { name: getDefaultRoute(menuModule.state.items).name }}
+    {path: '*', redirect: { name: 'Home' }}
   ]
 })
 

@@ -1,5 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+
 import Vue from 'vue'
 import VeeValidate from 'vee-validate'
 import App from './App'
@@ -10,8 +11,15 @@ import VuesticPlugin from 'vuestic-components/vuestic-components-plugin'
 import VuesticMixinsPlugin from 'vuestic-mixins/vuestic-mixins-plugin'
 import './i18n'
 
+// import KeenUI from 'keen-ui'
+import Buefy from 'buefy'
+import 'buefy/lib/buefy.css'
+
 Vue.use(VuesticPlugin)
 Vue.use(VuesticMixinsPlugin)
+// Vue.use(KeenUI);
+Vue.use(Buefy);
+
 
 // NOTE: workaround for VeeValidate + vuetable-2
 Vue.use(VeeValidate, {fieldsBagName: 'formFields'})

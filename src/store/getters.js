@@ -9,6 +9,7 @@ const isLoading = state => state.app.isLoading
 const breadcrumbs = state => {
   return (keyword) => utils.findInNestedByName(state.menu.items, keyword)
 }
+const isAuth = state => state.app.isAuth
 
 export {
   menuItems,
@@ -17,5 +18,6 @@ export {
   config,
   palette,
   isLoading,
-  breadcrumbs
+  breadcrumbs,
+  isAuth
 }

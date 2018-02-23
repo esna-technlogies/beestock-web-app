@@ -23,7 +23,8 @@ const state = {
       lighterGray: '#ddd'
     }
   },
-  isLoading: true
+  isLoading: true,
+  isAuth: false
 }
 
 const mutations = {
@@ -40,6 +41,9 @@ const mutations = {
   },
   setLoading (state, isLoading) {
     state.isLoading = isLoading
+  },
+  setAuth (state, isAuth) {
+    state.isAuth = isAuth
   }
 }
 
@@ -52,6 +56,11 @@ const actions = {
   },
   isToggleWithoutAnimation ({ commit }, value) {
     commit(types.TOGGLE_WITHOUT_ANIMATION, value)
+  },
+  authenticate ({ commit }, value) {
+    console.log('isAuth', state.isAuth)
+    commit('setAuth', value)
+    console.log('isAuth', state.isAuth)
   }
 }
 

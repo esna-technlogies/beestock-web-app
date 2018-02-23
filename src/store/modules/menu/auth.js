@@ -1,6 +1,7 @@
 /**
  * Created by yarik on 18.7.17.
  */
+/*
 import lazyLoading from './lazyLoading'
 
 export default {
@@ -12,7 +13,7 @@ export default {
   },
   children: [
     {
-      name: 'Login',
+      name: 'AuthLogin',
       path: '/auth/login',
       component: lazyLoading('auth/login/Login'),
       meta: {
@@ -22,7 +23,7 @@ export default {
       }
     },
     {
-      name: 'Signup',
+      name: 'AuthSignup',
       path: '/auth/signup',
       component: lazyLoading('auth/signup/Signup'),
       meta: {
@@ -33,3 +34,4 @@ export default {
     }
   ]
 }
+*/

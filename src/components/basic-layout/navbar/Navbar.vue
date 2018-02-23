@@ -1,46 +1,56 @@
 <template>
-  <nav class="navbar app-navbar navbar-toggleable-md -navbar">
+  <nav class="-site-color navbar app-navbar navbar-toggleable-md">
     <div class="-navbar-brand-container d-flex align-items-center justify-content-start">
-      <router-link class="" :to="{ path: '/' }">
+      <router-link :to="{ name: 'Home' }">
         <span aria-hidden="true" class="fa fa-home align-middle mb-4 mr-2" style="font-size: 25px;"></span>
 
         <svg class="-beestock-navbar-logo navbar-brand">
-          <text x="0" y="40" fill="#4ae387">BEESTOCK</text>
+          <text x="0" y="38" fill="#4ae387">BEESTOCK</text>
         </svg>
       </router-link>
     </div>
 
     <div class="row no-gutters navbar-container align-items-center justify-content-end">
-
-      <div class="col-7 pl-5 text-primary">
+      <div class="col-lg-6 col-md-6 col-sm-6 pl-5">
           <a class="-nav-link nav-link d-flex align-items-center justify-content ml-3" href="#" @click.prevent="closeMenu">
-            PHOTO
+            {{ 'navLinks.photos' | translate }}
           </a>
 
           <a class="-nav-link nav-link d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
-            ILLUSTRATION
+            {{ 'navLinks.illustrations' | translate }}
           </a>
 
           <a class="-nav-link nav-link d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
-            FOOTAGE
+            {{ 'navLinks.footage' | translate }}
           </a>
 
           <a class="-nav-link nav-link d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
-            AUDIO
+            {{ 'navLinks.audio' | translate }}
           </a>
       </div>
 
-      <div class="col-lg-3 col-md-3 col-sm-3">
-        <div class="row justify-content-end">
-          <div class="col-1 nav-item d-flex align-items-center justify-content-center">
-            <a class="nav-link d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
-              <span aria-hidden="true" class="ellipsis entypo entypo-upload text-white" style="font-size: 25px;"></span>
-            </a>
+      <div class="col-lg-4 col-md-4 col-sm-4">
+        <router-link v-if="!isAuth"
+          :to="{ name: 'Login' }"
+          class="nav-link d-flex align-items-center justify-content-end m-0 p-0" href="#" @click.prevent="closeMenu">
+          <span class="mr-2">{{ 'navLinks.login' | translate }}</span>
+          <span aria-hidden="true" class="vuestic-icon vuestic-icon-auth mt-1" style="font-size: 20px;"></span>
+        </router-link>
+
+        <div class="row no-gutters justify-content-end" v-else>
+          <div class="col-4 nav-item d-flex align-items-center justify-content-center">
+            <div class="nav-link d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
+              <div class="button btn-primary rounded-0 pl-3 pr-3">
+                <b-icon icon="ion ion-md-cloud-upload" style="font-size: 20px;"></b-icon>
+                <span style="font-weight: bold;">{{ 'navLinks.upload' | translate }}</span>
+              </div>
+              <!--<span aria-hidden="true" class="ellipsis entypo entypo-upload text-white" style="font-size: 25px;"></span>-->
+            </div>
           </div>
 
-          <div class="col-8 nav-item dropdown navbar-dropdown d-flex align-items-center justify-content-center" v-dropdown>
+          <div class="col-lg-6 col-md-10 nav-item dropdown vuestic-navbar-dropdown d-flex align-items-center justify-content-center" v-dropdown>
             <a class="nav-link dropdown-toggle d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
-              <span class="align-middle mr-2">Ahmed Shendy</span>
+              <span class="align-middle mr-2">Mohamed Al-Masry</span>
               <span class="avatar-container">
                 <img src="https://www.shareicon.net/download/2015/09/18/103157_man_512x512.png" />
               </span>
@@ -53,7 +63,7 @@
                 <div class="dropdown-item plain-link-item">
                   <a class="plain-link" href="#" @click.prevent="showLanguageModal">{{'user.language' | translate}}</a>
                 </div>
-                <div class="dropdown-item plain-link-item">
+                <div class="dropdown-item plain-link-item" @click.prevent="doLogout">
                   <a class="plain-link" href="#">{{'user.logout' | translate}}</a>
                 </div>
               </div>
@@ -62,59 +72,8 @@
         </div>
       </div>
 
-      <!--<div class="menu-icon-container d-flex align-items-center justify-content-center justify-content-lg-start col">-->
-        <!--<a class="menu-icon i-menu-expanded" href="#" @click.prevent="toggleSidebar(false)" v-if="sidebarOpened"></a>-->
-        <!--<a class="menu-icon i-menu-collapsed" href="#" @click.prevent="toggleSidebar(true)" v-else></a>-->
-      <!--</div>-->
-
-      <!--<div class="offset-lg-9"></div>-->
-      <!--<div class="col nav-item d-flex align-items-center justify-content-center">-->
-        <!--<a class="nav-link d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">-->
-          <!--<span aria-hidden="true" class="ellipsis entypo entypo-upload text-white" style="font-size: 30px;"></span>-->
-        <!--</a>-->
-      <!--</div>-->
-
-      <!--<div class="col nav-item dropdown navbar-dropdown d-flex align-items-center justify-content-center" v-dropdown>
-        <a class="nav-link dropdown-toggle d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
-          <span class="i-nav-messages notify"></span>
-        </a>
-        <div class="dropdown-menu">
-          <div class="dropdown-menu-content">
-            <a class="dropdown-item" href="#">
-              <span class="ellipsis">{{ $t('messages.new', {name: "Oleg M"})}}</span>
-            </a>
-            <a class="dropdown-item" href="#">
-              <span class="ellipsis">{{ $t('messages.new', {name: "Andrei H"})}}</span>
-            </a>
-            <div class="dropdown-item plain-link-item">
-              <a class="plain-link" href="#">{{'messages.all' | translate}}</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col nav-item dropdown navbar-dropdown d-flex align-items-center justify-content-center" v-dropdown>
-        <a class="nav-link dropdown-toggle d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
-          <span class="i-nav-notification notify"></span>
-        </a>
-        <div class="dropdown-menu">
-          <div class="dropdown-menu-content">
-            <a class="dropdown-item" href="#">
-              <span class="ellipsis">{{$t('notifications.sentMessage', {name: 'Vasily S'})}}</span>
-            </a>
-            <a class="dropdown-item" href="#">
-              <span class="ellipsis">{{$t('notifications.uploadedZip', { name: "Oleg M", type: "typography component"})}}</span>
-            </a>
-            <a class="dropdown-item" href="#">
-              <span class="ellipsis">{{$t('notifications.startedTopic',{name: "Andrei H"}) }}</span>
-            </a>
-            <div class="dropdown-item plain-link-item">
-              <a class="plain-link" href="#">{{'notifications.all' | translate}}</a>
-            </div>
-          </div>
-        </div>
-      </div>-->
-
     </div>
+
     <vuestic-modal ref="languageModal"
      v-bind:small="true" :okClass="'none'" :cancelClass="'none'">
       <div slot="title">{{'user.language' | translate}}</div>
@@ -145,6 +104,7 @@
 
     computed: {
       ...mapGetters([
+        'isAuth',
         'sidebarOpened',
         'toggleWithoutAnimation'
       ]),
@@ -155,6 +115,7 @@
     methods: {
       ...mapActions([
         'closeMenu',
+        'authenticate',
         'toggleSidebar',
         'isToggleWithoutAnimation'
       ]),
@@ -164,6 +125,9 @@
       setLanguage (locale) {
         Vue.i18n.set(locale)
         this.$refs.languageModal.cancel()
+      },
+      doLogout () {
+        this.$store.dispatch('authenticate', false);
       }
     }
   }
@@ -220,7 +184,7 @@
       height: 100%;
     }
 
-    .dropdown.navbar-dropdown {
+    .dropdown.vuestic-navbar-dropdown {
       .dropdown-toggle {
         padding: 0;
         &:after {
@@ -315,7 +279,7 @@
         }
       }
 
-      .dropdown.navbar-dropdown {
+      .dropdown.vuestic-navbar-dropdown {
         &.show {
           display: flex;
           &:after {
@@ -344,11 +308,11 @@
     letter-spacing: 0.15rem;
   }
 
-  .-nav-link-hover:hover {
+  .-nav-link:hover {
     color: #EBEBEB;
   }
 
-  .-navbar {
+   .-site-color {
     background-color: #254F99 !important;
   }
 

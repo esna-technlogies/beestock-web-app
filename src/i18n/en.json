@@ -227,5 +227,14 @@
     "language": "Change Language",
     "logout": "Logout",
     "profile": "My Profile"
+  },
+  "navLinks": {
+    "photos": "PHOTOS",
+    "illustrations": "ILLUSTRATIONS",
+    "footage": "FOOTAGE",
+    "audio": "AUDIO",
+    "login": "LOGIN",
+    "upload": "UPLOAD",
+    "priceAndPlans": "PRICE & PLANS"
   }
 }
