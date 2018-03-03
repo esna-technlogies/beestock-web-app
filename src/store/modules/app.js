@@ -1,5 +1,8 @@
 import * as types from '../mutation-types'
 
+import authService from '../../services/auth'
+import { jwtTokenHelper } from '../../helpers'
+
 const state = {
   sidebar: {
     opened: false,
@@ -24,7 +27,9 @@ const state = {
     }
   },
   isLoading: true,
-  isAuth: false
+  authInfo: null,
+  isAuth: false,
+  jwtToken: ''
 }
 
 const mutations = {
@@ -44,6 +49,9 @@ const mutations = {
   },
   setAuth (state, isAuth) {
     state.isAuth = isAuth
+  },
+  setAuthInfo (state, userDetails) {
+    state.authInfo = userDetails;
   }
 }
 
@@ -57,10 +65,59 @@ const actions = {
   isToggleWithoutAnimation ({ commit }, value) {
     commit(types.TOGGLE_WITHOUT_ANIMATION, value)
   },
-  authenticate ({ commit }, value) {
-    console.log('isAuth', state.isAuth)
-    commit('setAuth', value)
-    console.log('isAuth', state.isAuth)
+  setAuthInfo ({ commit }, value) {
+    commit('setAuthInfo', value);
+  },
+  clearAuthInfo ({ commit }) {
+    commit('setAuthInfo', null);
+  },
+  doSignup ({ commit }, userDetails) {
+    return authService.signUp(userDetails)
+      .then(response => {
+        return Promise.resolve(response);
+      })
+      .catch(error => {
+        return Promise.reject(error)
+      });
+  },
+  doLogin ({ commit }, credentials) {
+    return authService.login(credentials)
+      .then(response => {
+        const token = response.data.token;
+        jwtTokenHelper.setCookie(token);
+
+        commit('setAuthInfo', jwtTokenHelper.getPayload());
+
+        return Promise.resolve(response);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  },
+  doLogout ({ commit }) {
+    commit('setAuthInfo', null);
+    jwtTokenHelper.removeCookie();
+    return Promise.resolve();
+  },
+  verifyUser ({ commit }, verificationDetails) {
+    const queryParams = { code: verificationDetails.code };
+
+    return authService.verifyUser(verificationDetails.uuid, queryParams)
+      .then(response => {
+        return Promise.resolve(response);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  },
+  doResetPassword ({ commit }, emailOrMobileNumber) {
+    return authService.resetUserPassword(emailOrMobileNumber)
+      .then(response => {
+        return Promise.resolve(response);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      })
   }
 }
 

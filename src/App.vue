@@ -1,7 +1,6 @@
 <template>
   <div id="app" class="app">
-    <auth-layout v-if="isAuth"></auth-layout>
-    <basic-layout v-else></basic-layout>
+    <basic-layout></basic-layout>
   </div>
 </template>
 
@@ -10,22 +9,21 @@
   import AuthLayout from './components/basic-layout/AuthLayout'
   import VuesticPreLoader from './components/vuestic-components/vuestic-preloader/VuesticPreLoader.vue'
 
+  import { jwtTokenHelper } from './helpers'
+
   export default {
     name: 'app',
     components: {
       VuesticPreLoader,
       AuthLayout,
       BasicLayout
-    },
-    computed: {
-      isAuth () {
-        return this.$route.path.match('auth')
-      }
     }
   }
 </script>
 
 <style lang="scss">
+  /*@import "../node_modules/vue-multiselect/dist/vue-multiselect.min";*/
+  /*@import "../node_modules/buefy/lib/buefy.css";*/
   @import "sass/main";
 
   *,

@@ -109,11 +109,28 @@
       "title": "Inputs",
       "upload": "UPLOAD"
     },
+    "heads": {
+      "signin": "Sign In",
+      "signup": "Sign Up",
+      "logout": "Logout",
+      "resetPassword": "Reset Password",
+      "verifyUser": "Please Enter Your Verification Code"
+    },
+    "labels": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "password": "Password",
+      "passwordConfirmation": "Password Confirmation",
+      "mobileNumber": "Mobile Number",
+      "verificationCode": "Your Verification Code",
+      "emailOrMobileNumber": "Email Address or Mobile Number"
+    },
     "mediumEditor": {
       "title": "Medium Editor"
     },
     "selects": {
-      "country": "Country Select",
+      "country": "Country - [Mobile Code]",
       "countryMulti": "Country Multi Select",
       "multi": "Multi Select",
       "simple": "Simple Select",
@@ -130,6 +147,26 @@
       "stepThree": "Step 3. Confirm",
       "verticalRich": "Vertical Rich Wizard",
       "verticalSimple": "Vertical Simple Wizard"
+    },
+    "buttons": {
+      "signin": "Sign In",
+      "signup": "Sign Up",
+      "submit": "Submit",
+      "confirm": "Confirm"
+    },
+    "alerts": {
+      "signin": {
+        "badCredentials": ""
+      }
+    },
+    "misc": {
+      "alreadyHaveAccount": "You already have account?",
+      "signInHere": "Sign In Here",
+      "donotHaveAccount": "Don't have an account?",
+      "signUpHere": "Sign Up Here",
+      "rememberMe": "Remember Me",
+      "acceptTheLicenceAgreement": "Accept The Licence Agreement",
+      "forgetPassword": "Forget Password?"
     }
   },
   "grid": {
@@ -202,6 +239,78 @@
     "uploadedZip": "{name} uploaded a new Zip file with {type}",
     "startedTopic": "{name} started a new topic"
   },
+  "alerts": {
+    "types": {
+      "success": "SUCCESS",
+      "danger": "ERROR",
+      "warning": "WARNING"
+    },
+    "messages": {
+      "signUp": {
+        "200": "Signup has been done successfully!",
+        "201": "Signup has been done successfully!",
+        "400": "Bad request: The system is unable to process the request",
+        "500": "The system is unable to create the user due to a server side error"
+      },
+      "logout": {
+        "200": "Logout has been done successfully!",
+        "201": "Logout has been done successfully!"
+      },
+      "login": {
+        "200": "Login has been done successfully!",
+        "201": "Login has been done successfully!"
+      },
+      "verifyUser": {
+        "200": "Your account has been verified successfully!",
+        "201": "Your account has been verified successfully!"
+      },
+      "resetUserPassword": {
+        "200": "Password reset has been done successfully, please check you email!",
+        "201": "Password reset has been done successfully, please check you email!"
+      },
+      "findUser": {
+        "400": "Bad request: The system is unable to process the request",
+        "404": "No user with the provided UUID was found",
+        "500": "The system is unable to create the user due to a server side error"
+      },
+      "deleteUser": {
+        "200": "User has been deleted successfully!",
+        "204": "User has been deleted successfully!",
+        "400": "Bad request: The system is unable to process the request",
+        "404": "No user with the provided UUID was found",
+        "500": "The system is unable to create the user due to a server side error"
+      },
+      "findCategory": {
+        "400": "Bad request: The system is unable to process the request",
+        "404": "No category with the provided UUID was found",
+        "500": "The system is unable to create the user due to a server side error"
+      },
+      "addCategory": {
+        "200": "Category has been added successfully!",
+        "201": "Category has been added successfully!",
+        "400": "Bad request: The system is unable to process the request",
+        "500": "The system is unable to create the user due to a server side error"
+      },
+      "deleteCategory": {
+        "200": "Category has been deleted successfully!",
+        "204": "Category has been deleted successfully!",
+        "400": "Bad request: The system is unable to process the request",
+        "404": "No category with the provided UUID was found",
+        "500": "The system is unable to create the user due to a server side error"
+      },
+      "findPhotos": {
+        "200": "Category has been deleted successfully!",
+        "204": "Category has been deleted successfully!",
+        "400": "Bad request: The system is unable to process the request",
+        "404": "No photo with the provided UUID was found",
+        "500": "The system is unable to create the user due to a server side error"
+      },
+      "others": {
+        "400": "Bad request: The system is unable to process the request",
+        "500": "The system is unable to create the user due to a server side error"
+      }
+    }
+  },
   "progressBars": {
     "basic": "Basic",
     "basicVertical": "Basic Vertical",
@@ -226,7 +335,9 @@
   "user": {
     "language": "Change Language",
     "logout": "Logout",
-    "profile": "My Profile"
+    "profile": "My Profile",
+    "settings": "Settings",
+    "uploads": "Uploads"
   },
   "navLinks": {
     "photos": "PHOTOS",
@@ -234,6 +345,7 @@
     "footage": "FOOTAGE",
     "audio": "AUDIO",
     "login": "LOGIN",
+    "register": "REGISTER",
     "upload": "UPLOAD",
     "priceAndPlans": "PRICE & PLANS"
   }

@@ -16,12 +16,14 @@
 
   import Navbar from './navbar/Navbar'
   import Resize from 'directives/ResizeHandler'
+  import AppAlert from '../app-alert/AppAlert'
 
   export default {
     name: 'basic-layout',
 
     components: {
-      Navbar
+      Navbar,
+      AppAlert
     },
     directives: {
       resize: Resize

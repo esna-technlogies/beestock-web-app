@@ -1,36 +1,207 @@
 <template>
   <div class="login">
-    <h2>{{'auth.welcome' | translate}}</h2>
-    <form method="post" @submit.prevent="doLogin">
-      <div class="form-group">
-        <div class="input-group">
-          <input type="text" id="email" required="required"/>
-          <label class="control-label" for="email">{{'auth.email' | translate}}</label><i class="bar"></i>
-        </div>
+    <app-alert :alertType="alertType" :alertMessage="alertMessage"></app-alert>
+
+    <div class="row no-gutters justify-content-center">
+      <div class="col-7">
+        <vuestic-widget :class="'-login-widget'">
+
+          <vuestic-alert type="danger" :withCloseBtn="true" v-show="isErrorAlert">
+            <span class="badge badge-pill badge-danger">{{'notificationsPage.alerts.danger' | translate}}</span>
+            {{ errorAlertMessage }}
+            <i class="fa fa-close alert-close" @click="isErrorAlert=false"></i>
+          </vuestic-alert>
+
+          <hollow-dots-spinner
+            :animation-duration="1000"
+            :dot-size="15"
+            :dots-num="3"
+            color="#4ab2e3"
+            class="-spinner"
+            v-show="isLoading" />
+
+          <div class="col-12 text-center">
+            <h4><strong>{{ 'forms.heads.signin' | translate }}</strong></h4>
+          </div>
+
+          <div class="col-12">
+            <hr class="mt-4 mb-3">
+          </div>
+
+          <form name="login" @submit.prevent="doLogin">
+            <div class="row justify-content-center">
+              <div class="col-lg-10">
+                <fieldset>
+                  <div class="form-group mb-1">
+                    <div class="input-group">
+                      <input
+                        id="-email-or-mobile-number"
+                        type="text"
+                        name="emailOrMobileNumber"
+                        :placeholder="'forms.labels.email' | translate"
+                        v-model="userName"
+                        v-validate.initial="'required'"
+                        data-vv-as="Email or Mobile Number"
+                        required>
+                      <i class="bar"></i>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="col-lg-10">
+                <fieldset>
+                  <div class="form-group mb-1">
+                    <div class="input-group">
+                      <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        :placeholder="'forms.labels.password' | translate"
+                        v-model="password"
+                        v-validate.initial="'required'"
+                        data-vv-as="Password"
+                        required>
+                      <i class="bar"></i>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+
+              <!--<div class="col-lg-10">
+                <fieldset>
+                  <div class="form-check abc-checkbox abc-checkbox-primary">
+                    <input class="form-check-input" id="checkbox1" type="checkbox">
+                    <label class="form-check-label" for="checkbox1">
+                      <span class="abc-label-text">{{ 'forms.misc.rememberMe' | translate }}</span>
+                    </label>
+                  </div>
+                </fieldset>
+              </div>-->
+
+              <div class="col-lg-10 mt-3 mb-2">
+                <button class="btn btn-primary btn-micro btn-block rounded-0" :disabled="isLoading">
+                  {{ 'forms.buttons.signin' | translate }}
+                </button>
+              </div>
+
+              <div class="col-lg-10 text-right">
+                <router-link :to="{ name: 'ResetPassword' }">{{ 'forms.misc.forgetPassword' | translate }}</router-link>
+              </div>
+
+              <div class="col-lg-10 text-center mt-3">
+                <span>
+                  {{ 'forms.misc.donotHaveAccount' | translate }} <router-link :to="{ name: 'Register' }">{{ 'forms.misc.signUpHere' | translate }}</router-link>
+                </span>
+              </div>
+            </div>
+          </form>
+        </vuestic-widget>
       </div>
-      <div class="form-group">
-        <div class="input-group">
-          <input type="password" id="password" required="required"/>
-          <label class="control-label" for="password">{{'auth.password' | translate}}</label><i class="bar"></i>
-        </div>
-      </div>
-      <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between down-container">
-        <button class="btn btn-primary" type="submit">
-          {{'auth.login' | translate}}
-        </button>
-        <router-link class='link' :to="{name: 'Signup'}">{{'auth.createAccount' | translate}}</router-link>
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
+  import AppAlert from '../../app-alert/AppAlert'
+
+  import { HollowDotsSpinner } from 'epic-spinners';
+
   export default {
     name: 'login',
+    props: {
+      alertType: {
+        type: String,
+        default: ''
+      },
+      alertMessage: {
+        type: String,
+        default: ''
+      }
+    },
+    components: {
+      AppAlert,
+      HollowDotsSpinner
+    },
+    data () {
+      return {
+        isLoading: false,
+        userName: '',
+        password: '',
+        isErrorAlert: false,
+        errorAlertMessage: '',
+        showBadCredentialsAlert: false
+      }
+    },
     methods: {
       doLogin () {
-        this.$store.dispatch('authenticate', true);
-        this.$router.push({ name: 'Home' });
+        this.$validator.validateAll().then(result => {
+          if (result) {
+            this.clearErrorAlert();
+            this.startLoading();
+
+            const queryParams = {
+              userName: this.userName,
+              password: this.password
+            };
+
+            this.$store.dispatch('doLogin', queryParams)
+              .then((response) => {
+                this.handleSuccessLogin();
+              })
+              .catch((error) => {
+                this.handleFailedLogin(error);
+              })
+              .finally(() => {
+                this.stopLoading();
+              });
+          }
+        });
+      },
+      handleSuccessLogin () {
+        this.$router.push(this.sendTo);
+      },
+      handleFailedLogin (error) {
+        if (!error.response) {
+          this.setErrorAlert('Please check your internet connection');
+          return;
+        }
+
+        this.setErrorAlert(error.response.data.message);
+      },
+      startLoading () {
+        this.isLoading = true;
+      },
+      stopLoading () {
+        this.isLoading = false;
+      },
+      clearErrorAlert () {
+        this.isErrorAlert = false;
+        this.errorAlertMessage = '';
+      },
+      setErrorAlert (message = 'Default Error Alert Message') {
+        this.isErrorAlert = true;
+        this.errorAlertMessage = message;
+      }
+    },
+    computed: {
+      sendTo () {
+        const { prev, redirect } = this.$route.query;
+        if (redirect !== undefined) return { name: redirect };
+        if (prev !== undefined) return { path: prev };
+
+        return { name: 'Home' };
+      }
+    },
+    created () {
+      if (this.$store.getters.authInfo) {
+        return this.$router.replace({
+          name: this.sendTo.name,
+          params: {
+            alertType: this.alertType,
+            alertMessage: this.alertMessage
+          }
+        });
       }
     }
   }
@@ -56,10 +227,20 @@
     h2 {
       text-align: center;
     }
-    width: 21.375rem;
+    /*width: 21.375rem;*/
 
     .down-container {
       margin-top: 3.125rem;
     }
+  }
+
+  .-login-widget {
+    margin: 100px auto !important;
+  }
+
+  .-spinner {
+    position: absolute;
+    top: 120px;
+    right: 40px;
   }
 </style>

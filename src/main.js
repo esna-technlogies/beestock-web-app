@@ -7,22 +7,32 @@ import App from './App'
 import store from './store'
 import router from './router'
 import { sync } from 'vuex-router-sync'
-import VuesticPlugin from 'vuestic-components/vuestic-components-plugin'
-import VuesticMixinsPlugin from 'vuestic-mixins/vuestic-mixins-plugin'
+import VuesticPlugin from 'vuestic-components/vuestic-components-plugin';
+import VuesticMixinsPlugin from 'vuestic-mixins/vuestic-mixins-plugin';
 import './i18n'
 
-// import KeenUI from 'keen-ui'
-import Buefy from 'buefy'
-import 'buefy/lib/buefy.css'
+import Spinner from 'vue-simple-spinner';
+import vSelect from 'vue-select';
+
+import VueValidateCustomDictionary from 'src/vee-validate-messages'
+
+import { jwtTokenHelper } from "./helpers";
+
+import beforeEachRoute from './router/before-each-route'
+
 
 Vue.use(VuesticPlugin)
 Vue.use(VuesticMixinsPlugin)
-// Vue.use(KeenUI);
-Vue.use(Buefy);
+Vue.use(Spinner);
 
 
 // NOTE: workaround for VeeValidate + vuetable-2
-Vue.use(VeeValidate, {fieldsBagName: 'formFields'})
+Vue.use(VeeValidate, {
+  fieldsBagName: 'formFields',
+  dictionary: VueValidateCustomDictionary
+});
+
+Vue.component('v-select', vSelect)
 
 sync(store, router)
 
@@ -35,8 +45,15 @@ let mediaHandler = () => {
 }
 
 router.beforeEach((to, from, next) => {
-  store.commit('setLoading', true)
-  next()
+  store.commit('setLoading', true);
+
+  if (!store.getters.authInfo) {
+    const jwtToken = jwtTokenHelper.getCookie();
+    const userDetails = jwtTokenHelper.getPayload(jwtToken);
+    store.dispatch('setAuthInfo', userDetails);
+  }
+
+  return beforeEachRoute(to, from, next);
 })
 
 router.afterEach((to, from) => {

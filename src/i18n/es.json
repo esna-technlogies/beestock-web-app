@@ -102,11 +102,27 @@
       "title": "Inputs",
       "upload": "SUBIR"
     },
+    "heads": {
+      "signin": "",
+      "signup": "",
+      "resetPassword": "",
+      "verifyUser": ""
+    },
+    "labels": {
+      "firstName": "",
+      "lastName": "",
+      "email": "",
+      "password": "",
+      "passwordConfirmation": "",
+      "mobileNumber": "",
+      "verificationCode": "",
+      "emailOrMobileNumber": ""
+    },
     "mediumEditor": {
       "title": "Medium Editor"
     },
     "selects": {
-      "country": "País Select",
+      "country": "",
       "countryMulti": "País Multi Select",
       "multi": "Multi Select",
       "simple": "Select Simple",
@@ -123,6 +139,21 @@
       "stepThree": "Step 3. Confirmar",
       "verticalRich": "Asistente Rico Vertical",
       "verticalSimple": "Asistente Simple Vertical"
+    },
+    "buttons": {
+      "signin": "",
+      "signup": "",
+      "submit": "",
+      "confirm": ""
+    },
+    "misc": {
+      "alreadyHaveAccount": "",
+      "signInHere": "",
+      "donotHaveAccount": "",
+      "signUpHere": "",
+      "rememberMe": "",
+      "acceptTheLicenceAgreement": "",
+      "forgetPassword": ""
     }
   },
   "grid": {
@@ -190,6 +221,74 @@
     "uploadedZip": "{name} ha subido un archivo Zip con {type}",
     "startedTopic": "{name} ha creado una tema nueva"
   },
+  "alerts": {
+    "types": {
+      "success": "",
+      "danger": "",
+      "warning": ""
+    },
+    "messages": {
+      "signUp": {
+        "200": "",
+        "201": "",
+        "400": "",
+        "500": ""
+      },
+      "logout": {
+        "200": ""
+      },
+      "login": {
+        "200": ""
+      },
+      "verifyUser": {
+        "200": ""
+      },
+      "resetUserPassword": {
+        "200": ""
+      },
+      "findUser": {
+        "400": "",
+        "404": "",
+        "500": ""
+      },
+      "deleteUser": {
+        "200": "",
+        "204": "",
+        "400": "",
+        "404": "",
+        "500": ""
+      },
+      "findCategory": {
+        "400": "",
+        "404": "",
+        "500": ""
+      },
+      "addCategory": {
+        "200": "",
+        "201": "",
+        "400": "",
+        "500": ""
+      },
+      "deleteCategory": {
+        "200": "",
+        "204": "",
+        "400": "",
+        "404": "",
+        "500": ""
+      },
+      "findPhotos": {
+        "200": "",
+        "204": "",
+        "400": "",
+        "404": "",
+        "500": ""
+      },
+      "others": {
+        "400": "",
+        "500": ""
+      }
+    }
+  },
   "progressBars": {
     "basic": "Basico",
     "basicVertical": "Basico y Vertical",
@@ -214,6 +313,18 @@
   "user": {
     "language": "Cambiar Idioma",
     "profile": "Mi Perfil",
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "settings": "",
+    "uploads": ""
+  },
+  "navLinks": {
+    "photos": "",
+    "illustrations": "",
+    "footage": "",
+    "audio": "",
+    "login": "",
+    "register": "",
+    "upload": "",
+    "priceAndPlans": ""
   }
 }

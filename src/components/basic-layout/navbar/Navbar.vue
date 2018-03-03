@@ -1,92 +1,99 @@
 <template>
-  <nav class="-site-color navbar app-navbar navbar-toggleable-md">
-    <div class="-navbar-brand-container d-flex align-items-center justify-content-start">
+  <nav class="-site-color navbar app-navbar navbar-expand-lg navbar-toggleable-md">
+    <!--<div class="-navbar-brand-container d-flex align-items-center justify-content-start">-->
+      <div class="-navbar-brand-container navbar-brand">
       <router-link :to="{ name: 'Home' }">
-        <span aria-hidden="true" class="fa fa-home align-middle mb-4 mr-2" style="font-size: 25px;"></span>
+        <!--<span aria-hidden="true" class="fa fa-home align-middle mb-2 mr-1" style="font-size: 30px;"></span>-->
 
         <svg class="-beestock-navbar-logo navbar-brand">
-          <text x="0" y="38" fill="#4ae387">BEESTOCK</text>
+          <text x="0" y="34" fill="#4ae387">BEESTOCK</text>
         </svg>
       </router-link>
     </div>
 
     <div class="row no-gutters navbar-container align-items-center justify-content-end">
       <div class="col-lg-6 col-md-6 col-sm-6 pl-5">
-          <a class="-nav-link nav-link d-flex align-items-center justify-content ml-3" href="#" @click.prevent="closeMenu">
+          <router-link
+            :to="{ name: 'Photos' }"
+            :active-class="'-nav-link-active'"
+            class="-nav-link nav-link d-flex align-items-center justify-content ml-3" >
             {{ 'navLinks.photos' | translate }}
-          </a>
+          </router-link>
 
-          <a class="-nav-link nav-link d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
+          <router-link
+            :to="{ name: 'Illustrations' }"
+            :active-class="'-nav-link-active'"
+            class="-nav-link nav-link d-flex align-items-center justify-content">
             {{ 'navLinks.illustrations' | translate }}
-          </a>
+          </router-link>
 
-          <a class="-nav-link nav-link d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
+          <router-link
+            :to="{ name: 'Footage' }"
+            :active-class="'-nav-link-active'"
+            class="-nav-link nav-link d-flex align-items-center justify-content">
             {{ 'navLinks.footage' | translate }}
-          </a>
+          </router-link>
 
-          <a class="-nav-link nav-link d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
+          <router-link
+            :to="{ name: 'Audio' }"
+            :active-class="'-nav-link-active'"
+            class="-nav-link nav-link d-flex align-items-center justify-content">
             {{ 'navLinks.audio' | translate }}
-          </a>
+          </router-link>
       </div>
 
       <div class="col-lg-4 col-md-4 col-sm-4">
-        <router-link v-if="!isAuth"
-          :to="{ name: 'Login' }"
-          class="nav-link d-flex align-items-center justify-content-end m-0 p-0" href="#" @click.prevent="closeMenu">
-          <span class="mr-2">{{ 'navLinks.login' | translate }}</span>
-          <span aria-hidden="true" class="vuestic-icon vuestic-icon-auth mt-1" style="font-size: 20px;"></span>
-        </router-link>
+        <div class="row justify-content-end" v-show="!authInfo">
+          <div class="col-2 justify-content-center mr-2">
+            <router-link href="#" :to="{ name: 'Login' }" class="nav-link d-flex align-items-center justify-content-end m-0 p-0">
+              <span>{{ 'navLinks.login' | translate }}</span>
+            </router-link>
+          </div>
 
-        <div class="row no-gutters justify-content-end" v-else>
+          <div class="col-2 justify-content-center">
+            <router-link href="#" :to="{ name: 'Register' }" class="nav-link d-flex align-items-center justify-content-end m-0 p-0">
+              <span>{{ 'navLinks.register' | translate }}</span>
+            </router-link>
+          </div>
+        </div>
+
+        <div class="row no-gutters justify-content-end" v-if="authInfo">
           <div class="col-4 nav-item d-flex align-items-center justify-content-center">
-            <div class="nav-link d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
-              <div class="button btn-primary rounded-0 pl-3 pr-3">
-                <b-icon icon="ion ion-md-cloud-upload" style="font-size: 20px;"></b-icon>
+            <div class="nav-link d-flex align-items-center justify-content-center m-0 mb-2 mt-3 p-0" href="#" @click.prevent="closeMenu">
+              <router-link :to="{ name: 'NewUpload' }" class="button btn-block btn-primary rounded-0 pl-3 pr-3">
                 <span style="font-weight: bold;">{{ 'navLinks.upload' | translate }}</span>
-              </div>
-              <!--<span aria-hidden="true" class="ellipsis entypo entypo-upload text-white" style="font-size: 25px;"></span>-->
+                <span aria-hidden="true" class="fa fa-upload" style="font-size: 15px;"></span>
+              </router-link>
             </div>
           </div>
 
-          <div class="col-lg-6 col-md-10 nav-item dropdown vuestic-navbar-dropdown d-flex align-items-center justify-content-center" v-dropdown>
-            <a class="nav-link dropdown-toggle d-flex align-items-center justify-content" href="#" @click.prevent="closeMenu">
-              <span class="align-middle mr-2">Mohamed Al-Masry</span>
+          <div
+            class="col-lg-6 col-md-10 nav-item dropdown vuestic-navbar-dropdown d-flex align-items-center justify-content-center"
+            v-dropdown>
+            <a class="nav-link dropdown-toggle d-flex align-items-center justify-content" href="#">
+              <span class="align-middle mr-2">{{ authInfo.fullName }}</span>
               <span class="avatar-container">
                 <img src="https://www.shareicon.net/download/2015/09/18/103157_man_512x512.png" />
               </span>
             </a>
             <div class="dropdown-menu last">
               <div class="dropdown-menu-content">
-                <div class="dropdown-item plain-link-item">
-                  <a class="plain-link" href="#">{{'user.profile' | translate}}</a>
-                </div>
-                <div class="dropdown-item plain-link-item">
-                  <a class="plain-link" href="#" @click.prevent="showLanguageModal">{{'user.language' | translate}}</a>
-                </div>
-                <div class="dropdown-item plain-link-item" @click.prevent="doLogout">
-                  <a class="plain-link" href="#">{{'user.logout' | translate}}</a>
+                <router-link :to="{ name: 'UserUploads' }" class="dropdown-item plain-link-item"
+                             @click.prevent="closeMenu">
+                  {{'user.uploads' | translate}}
+                </router-link>
+                <router-link :to="{ name: 'UserSettings' }" class="dropdown-item plain-link-item">
+                  {{'user.settings' | translate}}
+                </router-link>
+                <div :to="{ name: 'Logout' }" class="dropdown-item plain-link-item" @click="doLogout">
+                  {{'user.logout' | translate}}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
-
-    <vuestic-modal ref="languageModal"
-     v-bind:small="true" :okClass="'none'" :cancelClass="'none'">
-      <div slot="title">{{'user.language' | translate}}</div>
-      <div class="text-center">
-              <button class="btn btn-info" @click="setLanguage('en')">
-                {{'language.english' | translate}}
-              </button>
-              <hr>
-              <button class="btn btn-info" @click="setLanguage('es')">
-                {{'language.spanish' | translate}}
-              </button>
-      </div>
-    </vuestic-modal>
   </nav>
 </template>
 
@@ -94,6 +101,8 @@
   import Vue from 'vue'
   import { mapGetters, mapActions } from 'vuex'
   import Dropdown from 'directives/Dropdown'
+
+  import { routerHelper } from '../../../helpers'
 
   export default {
     name: 'navbar',
@@ -104,30 +113,19 @@
 
     computed: {
       ...mapGetters([
-        'isAuth',
-        'sidebarOpened',
-        'toggleWithoutAnimation'
-      ]),
-      currentLanguage () {
-        return Vue.i18n.locale() === 'en' ? 'English' : 'Spanish'
-      }
+        'authInfo'
+      ])
     },
     methods: {
       ...mapActions([
-        'closeMenu',
-        'authenticate',
-        'toggleSidebar',
-        'isToggleWithoutAnimation'
+        'closeMenu'
       ]),
-      showLanguageModal () {
-        this.$refs.languageModal.open()
-      },
-      setLanguage (locale) {
-        Vue.i18n.set(locale)
-        this.$refs.languageModal.cancel()
-      },
       doLogout () {
-        this.$store.dispatch('authenticate', false);
+        if (!this.$store.getters.authInfo) return this.$router.replace({ name: 'Home' });
+
+        this.$store.dispatch('doLogout');
+
+        routerHelper.logoutDone();
       }
     }
   }
@@ -303,12 +301,16 @@
     padding: 0;
     margin: 0 5px;
     display: inline-block !important;
-    font-size: 1rem;
+    font-size: .9rem;
     font-family: inherit;
     letter-spacing: 0.15rem;
   }
 
   .-nav-link:hover {
+    color: #EBEBEB;
+  }
+
+  .-nav-link-active {
     color: #EBEBEB;
   }
 
