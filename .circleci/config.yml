@@ -8,7 +8,7 @@ jobs:
 
     # This indicates the docker image used will be the one built with node.js v8.9.1 from circleci repo
     docker:
-      - image: circleci/node:8.9.1
+      - image: circleci/node:8.9.4
 
     # This indicates the working directory for the following steps
     working_directory: ~/beestock-webapp
