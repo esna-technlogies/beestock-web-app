@@ -105,9 +105,6 @@
 
           this.stopLoading();
         },
-        async fetchAndRenderAllCategories() {
-          this.categoryList = await categoryService.findAll();
-        },
         async setCategoryList () {
           await categoryService.findAll()
             .then(response => {
@@ -129,7 +126,9 @@
         }
       },
       created () {
-        this.fetchAndRenderFourRandomPhotos();
+        if (this.$store.getters.authInfo) {
+          this.fetchAndRenderFourRandomPhotos();
+        }
       }
     }
 </script>

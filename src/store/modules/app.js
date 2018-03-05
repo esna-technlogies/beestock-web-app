@@ -1,6 +1,7 @@
 import * as types from '../mutation-types'
 
 import authService from '../../services/auth'
+import api from '../../api/beestock'
 import { jwtTokenHelper } from '../../helpers'
 
 const state = {
@@ -28,7 +29,6 @@ const state = {
   },
   isLoading: true,
   authInfo: null,
-  isAuth: false,
   jwtToken: ''
 }
 
@@ -46,9 +46,6 @@ const mutations = {
   },
   setLoading (state, isLoading) {
     state.isLoading = isLoading
-  },
-  setAuth (state, isAuth) {
-    state.isAuth = isAuth
   },
   setAuthInfo (state, userDetails) {
     state.authInfo = userDetails;
@@ -68,9 +65,6 @@ const actions = {
   setAuthInfo ({ commit }, value) {
     commit('setAuthInfo', value);
   },
-  clearAuthInfo ({ commit }) {
-    commit('setAuthInfo', null);
-  },
   doSignup ({ commit }, userDetails) {
     return authService.signup(userDetails)
       .then(response => {
@@ -86,6 +80,7 @@ const actions = {
         const token = response.data.token;
         jwtTokenHelper.setCookie(token);
 
+        api.setAuthorizationHeader(token);
         commit('setAuthInfo', jwtTokenHelper.getPayload());
 
         return Promise.resolve(response);

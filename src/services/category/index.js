@@ -1,5 +1,5 @@
 import { category as categoryEndpoint } from '../../api/beestock/endpoints'
-import api from '../../api/beestock/auth'
+import api from '../../api/beestock'
 import { urlHelper } from '../../helpers'
 
 

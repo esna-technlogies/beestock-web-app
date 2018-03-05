@@ -1,14 +1,9 @@
 import getFormData from 'form-urlencoded'
-// import store from '../../store'
-
-import { userSecurity as userSecurityEndpoint, userAccount as userAccountEndpoint } from '../../api/beestock/endpoints'
-
-// import beestockApi from '../../api/beestock'
+import { userAccount as userAccountEndpoint } from '../../api/beestock/endpoints'
 import { urlHelper } from '../../helpers'
 
 
-// import helpers from '../../helpers'
-import api from '../../api/beestock/auth'
+import api from '../../api/beestock'
 
 let findByUUID = (uuid) => {
   const url = urlHelper.reformatUrl({

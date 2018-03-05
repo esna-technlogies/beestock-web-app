@@ -17,7 +17,7 @@ const getCookie = () => {
     let part = cookiePartsList[i];
 
     if (part.indexOf(`jwt-token=`) === 0) {
-      return part.substring('jwt-token'.length +1, part.length);
+      return part.substring('jwt-token'.length +1, part.length).trim();
     }
   }
 
