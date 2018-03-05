@@ -35,7 +35,7 @@ jobs:
       # A build is done under ./vuejs-app/dist, so copy it remotely on 'dev.beesstock.com' server
       - deploy:
           name: Deploy dist/ to remote 'dev.beesstock.com' instance
-          command: scp -rp dist/ ubuntu@dev.beesstock.com:~/project/
+          command: scp -rpv dist/ ubuntu@dev.beesstock.com:~/project/
           working_directory: ./vuejs-app
 
       # Using 'forever' command:
