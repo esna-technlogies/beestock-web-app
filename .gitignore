@@ -2,7 +2,10 @@
 node_modules/
 dist/
 npm-debug.log
+<<<<<<< HEAD
 package-lock.json
+=======
+>>>>>>> 31e7920138429b2be2bc3313f1c1e661b32ad193
 
 ### IntelliJ IDEA ###
 .idea
