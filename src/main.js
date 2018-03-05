@@ -21,6 +21,7 @@ import beforeEachRoute from './router/before-each-route'
 
 Vue.use(VuesticPlugin)
 Vue.use(VuesticMixinsPlugin)
+Vue.use(require('vue-moment'));
 Vue.use(Meta);
 
 

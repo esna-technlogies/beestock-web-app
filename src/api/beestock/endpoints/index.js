@@ -32,9 +32,9 @@ const photo = {
 const category = {
   findAll: '/api/photo-service/category',
   create: '/api/photo-service/category',
+  findRandomPhotoByUUID: '/api/photo-service/category/random/category/{uuid}',
   delete: '/api/photo-service/category/{uuid}',
-  findByUUID: '/api/photo-service/category/{uuid}',
-  findRandomPhotoByUUID: '/api/photo-service/category/random/category/{uuid}'
+  findByUUID: '/api/photo-service/category/{uuid}'
 };
 
 

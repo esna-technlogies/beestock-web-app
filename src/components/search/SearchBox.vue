@@ -1,5 +1,5 @@
 <template>
-    <div class="search-box">
+    <div class="search-box col-12">
       <vuestic-widget>
         <form>
           <div class="row no-gutters justify-content-center">
@@ -16,7 +16,7 @@
                 </div>
               </div>
             </div>
-            <div class="">
+            <div>
               <multiselect
                 :searchable="false"
                 :show-labels="false"

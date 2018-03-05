@@ -142,6 +142,25 @@ const newUpload = {
 };
 
 
+// --------------------------------------------------
+// New Upload Routes
+const category = {
+  name: 'Category',
+  path: '/category',
+  component: lazyLoading('category/Category'),
+  meta: {
+    requiresAuthenticatedUser: true,
+  },
+  children: [
+    {
+      name: 'CategoryDetails',
+      path: ':uuid',
+      component: lazyLoading('category/CategoryDetails')
+    }
+  ]
+}
+
+
 export default [
   home,
   login,
@@ -154,5 +173,6 @@ export default [
   illustrations,
   footage,
   audio,
-  newUpload
+  newUpload,
+  category
 ]
