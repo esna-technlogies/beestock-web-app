@@ -24,7 +24,7 @@ jobs:
 
       - run:
           name: Build The Project For Production
-          command: npm run build --report
+          command: npm run build
           working_directory: ./vuejs-app
 
       # We need here to add 'dev.beesstock.com' to known_hosts so the OS can communicate with it
