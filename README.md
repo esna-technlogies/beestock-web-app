@@ -1,77 +1,127 @@
-# Vuestic Admin Dashboard
+# BeeStock WebApp
+BeeStock is an images stock platform. It has features of both traditional and social images stock websites with features similar to [500px](http://500px.com) and [shutterstock](http://shutterstock.com)
 
-Responsive admin dashboard template built with [Vue.js](https://vuejs.org) and [Bootstrap 4](https://v4-alpha.getbootstrap.com). Developed by [Epicmax](http://epicmax.co). Designed by [Vasili Savitski](https://xxsavitski.myportfolio.com/)
+The platform allows users to upload, download, purchase photos and footage and any relevant
+textual content and the implementation of these features are left to the contractor to decide and
+according to the software development industry best practices.
 
-<p align="center">
-  <a href="http://vuestic.epicmax.co" target="_blank">
-    <img src="http://i.imgur.com/pMuJVVc.png" align="center" width="888px"/>
-  </a>
-</p>
+## Getting Started For Development
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-## Demo
-Check it out [live](http://vuestic.epicmax.co)!
 
-## Prerequisites:
+* **Prerequisites**
+  - [node.js-v8.x](https://nodejs.org/en/download/)
+  - [git-v2.x](https://git-scm.com/downloads)
 
-- [Node.js](https://nodejs.org/en/) (>=4.x or 6.x preferred)
-- npm version 3+ and [Git](https://git-scm.com/).
-- [vuestic-installer](https://github.com/epicmaxco/vuestic-installer) `npm install vuestic-installer -g`.
 
-## Browser Support
-* Latest Chrome, Firefox, Safari, Edge
-* IE11 is not supported
+* **Install Dependencies**
+  
+```bash
+  git clone https://github.com/esna-technlogies/beestock-webapp.git
+  cd beestock-webapp/vuejs-app
+  npm install
+```
+ 
 
-## Installation
+  * **Running The project**
+  
+```bash
+  npm run dev
+``` 
 
-``` bash
-# create new project via vuestic-installer command.
-$ vuestic myproject
 
-or
+## Getting Started For Production
+These instructions will get you a copy of the project up and running on Ubuntu 16.04 for production.
 
-# clone the repo
-$ git clone https://github.com/epicmaxco/vuestic-admin.git myproject
-
-# go into app's directory and install dependencies:
-$ cd myproject
-$ npm install
-
-# serve with hot reload at localhost:8080.
-$ npm run dev
-
-# build for production with minification
-$ npm run build
-
-# build for production and view the bundle analyzer report.
-$ npm run build --report
+* **Prerequisites**
+  - [node.js-v8.x](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
+  - [forever](https://www.npmjs.com/package/forever#installation)
+  - [git-v2.x](https://git-scm.com/download/linux)
+  
+```bash
+# Install node.js
+  curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+  sudo apt-get install -y nodejs
+  node --version
 ```
 
-## Documentation
+```bash
+# Install forever
+  npm install -g forever
+  forever --version
+```
 
-Got stuck? Check out our [documentation](https://github.com/epicmaxco/vuestic-admin/wiki) 🤓
+```bash
+# Install git
+  sudo add-apt-repository ppa:git-core/ppa
+  sudo apt update
+  sudo apt -y install git
+  git --version
+```
 
-## Features
-* Vue.js
-* Bootstrap 4
-* Webpack
-* Responsive layout
-* Charts (Chart.js)
-* Maps (Google, Leaflet, amMap)
-* Progress bars
-* Material forms with beautiful validation
-* 4 Form wizard types
-* Static tables and datatables
-* Login/signup pages templates
-* and many more!
+  
+  * **Prepare The Project Structure**
+  
+```bash
+  mkdir -p ~/project/logs
+  cd ~/project
+```
 
-## How can I support developers?
-- Star our GitHub repo :star:
-- Create pull requests, submit bugs, suggest new features or documentation updates :wrench:
-- Follow us on [Twitter](https://twitter.com/epicmaxco) :feet:
-- Like our page on [Facebook](https://www.facebook.com/epicmaxco) :thumbsup:
+  * **Configure `express.js` To Serve The App**
+```
+  npm install express --save
+  cat <<EOF > ~/project/server.js
+  const express = require('express');
+  const path = require('path');
+  const serveStatic = require('serve-static');
 
-## Can I hire you guys?
-Yes!  Visit [our homepage](http://epicmax.co/) or simply leave us a message to [hello@epicmax.co](mailto:hello@epicmax.co). We will be happy to work with you!
+  let app = express();
+  app.use(serveStatic(__dirname + "/dist"));
+
+  const port = process.env.PORT || 8080;
+  app.listen(port, () => {
+    console.log('Listening on port ' + port)
+  });
+  EOF
+```
+
+
+  * **Clone/Build *develop* Branch Then Install Dependencies**
+```bash
+  cd ~
+  git clone -b develop https://github.com/esna-technlogies/beestock-webapp.git
+  cd beestock-webapp
+  npm install
+  npm run build
+```
+
+
+  * **Configure The Firewall To Redirect From 80 To 8080**
+```
+  sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
+```
+
+  * **Create Aliases for Start/Stop/Restart**
+```bash
+  alias start_app='forever start ~/project/server.js'
+  alias restart_app='forever restart ~/project/server.js'
+  alias stop_app='forever stop ~/project/server.js'
+```
+
+  * **Start/Stop/Restart The project**
+```bash
+  # Run any of the following aliases
+  start_app
+  restart_app
+  stop_app
+```
+
+## Built With
+* [Vue.js](https://vuejs.org/) - The Progressive JavaScript Framework
+* [Node.js](https://nodejs.org/en/) - The JavaScript runtime
+
+## Versioning
+Still under development
 
 ## License
-[MIT](https://github.com/epicmaxco/vuestic-admin/blob/master/LICENSE) license.
+This project is licensed under the MIT License.
