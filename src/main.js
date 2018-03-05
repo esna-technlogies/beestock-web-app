@@ -11,19 +11,17 @@ import VuesticPlugin from 'vuestic-components/vuestic-components-plugin';
 import VuesticMixinsPlugin from 'vuestic-mixins/vuestic-mixins-plugin';
 import './i18n'
 
-import Spinner from 'vue-simple-spinner';
-import vSelect from 'vue-select';
+import Meta from 'vue-meta'
+
 
 import VueValidateCustomDictionary from 'src/vee-validate-messages'
-
 import { jwtTokenHelper } from "./helpers";
-
 import beforeEachRoute from './router/before-each-route'
 
 
 Vue.use(VuesticPlugin)
 Vue.use(VuesticMixinsPlugin)
-Vue.use(Spinner);
+Vue.use(Meta);
 
 
 // NOTE: workaround for VeeValidate + vuetable-2
@@ -31,8 +29,6 @@ Vue.use(VeeValidate, {
   fieldsBagName: 'formFields',
   dictionary: VueValidateCustomDictionary
 });
-
-Vue.component('v-select', vSelect)
 
 sync(store, router)
 

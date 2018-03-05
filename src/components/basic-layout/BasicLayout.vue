@@ -4,7 +4,20 @@
     <div class="content-wrap" id="content-wrap">
       <main id="content" class="content" role="main">
         <!--<vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>-->
+        <vuestic-alert type="warning" :class="'justify-content-center'" v-if="userIsAuthenticatedAndNotVerifiedYet">
+          <span class="badge badge-pill badge-warning">
+            {{'notificationsPage.alerts.warning' | translate}}
+          </span>
+          <span>
+            Your account hasn't been verified yet, Please
+            <router-link
+              :to="{ name: 'VerifyUser' }"
+              :style="'color: #225194; text-decoration: underline'">verify now</router-link>.
+          </span>
+        </vuestic-alert>
+
         <vuestic-pre-loader v-show="isLoading" ref="preLoader" class="pre-loader"></vuestic-pre-loader>
+
         <router-view v-show="!isLoading"></router-view>
       </main>
     </div>
@@ -18,9 +31,10 @@
   import Resize from 'directives/ResizeHandler'
   import AppAlert from '../app-alert/AppAlert'
 
+  import auth from '../../services/auth';
+
   export default {
     name: 'basic-layout',
-
     components: {
       Navbar,
       AppAlert
@@ -42,6 +56,9 @@
       },
       breadcrumbs () {
         return this.$store.getters.breadcrumbs(this.$route.name)
+      },
+      userIsAuthenticatedAndNotVerifiedYet () {
+        return auth.isAuthenticated() && !auth.isVerifiedUser();
       }
     }
   }

@@ -12,7 +12,10 @@
 
 <script>
   export default {
-    name: "new-upload"
+    name: "new-upload",
+    metaInfo: {
+      title: "New Upload"
+    }
   }
 </script>
 

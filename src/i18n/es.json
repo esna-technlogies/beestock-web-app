@@ -102,6 +102,10 @@
       "title": "Inputs",
       "upload": "SUBIR"
     },
+    "checkboxes": {
+      "acceptTheLicenceAgreement": "",
+      "billingAddress": ""
+    },
     "heads": {
       "signin": "",
       "signup": "",
@@ -123,6 +127,7 @@
     },
     "selects": {
       "country": "",
+      "countryWithCode": "",
       "countryMulti": "País Multi Select",
       "multi": "Multi Select",
       "simple": "Select Simple",
@@ -144,7 +149,8 @@
       "signin": "",
       "signup": "",
       "submit": "",
-      "confirm": ""
+      "confirm": "",
+      "saveChanges": ""
     },
     "misc": {
       "alreadyHaveAccount": "",
@@ -152,7 +158,6 @@
       "donotHaveAccount": "",
       "signUpHere": "",
       "rememberMe": "",
-      "acceptTheLicenceAgreement": "",
       "forgetPassword": ""
     }
   },

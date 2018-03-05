@@ -8,13 +8,20 @@
             {{ errorAlertMessage }}
           </vuestic-alert>
 
-          <hollow-dots-spinner
+          <!--<hollow-dots-spinner
             :animation-duration="1000"
             :dot-size="15"
             :dots-num="3"
             color="#4ab2e3"
             class="-spinner"
-            v-show="isLoading" />
+            v-show="isLoading" />-->
+
+          <spinner
+            v-show="isLoading"
+            :size="30"
+            :line-size="4"
+            :line-fg-color="'#F9CB55'"
+            class="-spinner"></spinner>
 
           <div class="col-12 text-center m-0 p-0">
             <span class="h4"><strong>{{ 'forms.heads.signup' | translate }}</strong></span>
@@ -170,14 +177,14 @@
                     <input
                       type="checkbox"
                       class="form-check-input"
-                      id="termsAccepted"
+                      id="-terms-accepted"
                       name="termsAccepted"
                       v-model="termsAccepted"
                       v-validate.initial="'required'"
                       data-vv-as="Terms Field"
                       required>
-                    <label class="form-check-label" for="termsAccepted">
-                      <span class="abc-label-text">{{ 'forms.misc.acceptTheLicenceAgreement' | translate }}</span>
+                    <label class="form-check-label" for="-terms-accepted">
+                      <span class="abc-label-text">{{ 'forms.checkboxes.acceptTheLicenceAgreement' | translate }}</span>
                     </label>
                   </div>
                   <span><small v-show="errors.has('termsAccepted')" class="help text-danger">{{ errors.first('termsAccepted') }}</small></span>
@@ -207,6 +214,7 @@
 <script>
   import Multiselect from 'vue-multiselect';
   import { HollowDotsSpinner } from 'epic-spinners';
+  import Spinner from 'vue-simple-spinner';
 
   import CountryList from '../../../data/country-list';
   import VuesticPreLoader from "../../vuestic-components/vuestic-preloader/VuesticPreLoader";
@@ -216,10 +224,14 @@
 
   export default {
     name: 'signup',
+    metaInfo: {
+      title: "Signup"
+    },
     components: {
       Multiselect,
       VuesticPreLoader,
       HollowDotsSpinner,
+      Spinner
     },
     data() {
       return {
@@ -248,10 +260,10 @@
 
             this.$store.dispatch('doSignup', userDetails)
               .then(response => {
-                this.handleSuccessSignUp(response);
+                this.handleSuccessSignup(response);
               })
               .catch(error => {
-                this.handleFailedSigninUp(error);
+                this.handleFailedSignup(error);
               })
               .finally(() => {
                 this.stopLoading();
@@ -276,16 +288,14 @@
           }
         }
       },
-      handleSuccessSignUp (response) {
-        routerHelper.signUpDone(response.status);
+      handleSuccessSignup (response) {
+        routerHelper.signupDone(response.status);
       },
-      handleFailedSigninUp (error) {
+      handleFailedSignup (error) {
         if (!error.response) {
-          this.setErrorAlert('Please check your internet connection');
+          this.setErrorAlert('Unknown error, please call the website administrator');
           return;
         }
-
-        // this.setErrorAlert(error.response.data.error.message);
 
         const errorDetails = error.response.data.error.details;
 
@@ -359,7 +369,7 @@
 
   .-spinner {
     position: absolute;
-    top: 120px;
+    top: 125px;
     right: 40px;
   }
 

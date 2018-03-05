@@ -78,11 +78,10 @@
             </a>
             <div class="dropdown-menu last">
               <div class="dropdown-menu-content">
-                <router-link :to="{ name: 'UserUploads' }" class="dropdown-item plain-link-item"
-                             @click.prevent="closeMenu">
+                <router-link :to="{ name: 'UserUploads' }" class="dropdown-item plain-link-item">
                   {{'user.uploads' | translate}}
                 </router-link>
-                <router-link :to="{ name: 'UserSettings' }" class="dropdown-item plain-link-item">
+                <router-link :to="{ name: 'ProfileDetails' }" class="dropdown-item plain-link-item">
                   {{'user.settings' | translate}}
                 </router-link>
                 <div :to="{ name: 'Logout' }" class="dropdown-item plain-link-item" @click="doLogout">

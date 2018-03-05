@@ -32,6 +32,9 @@
 
     export default {
       name: "home",
+      metaInfo: {
+        title: 'Home'
+      },
       props: {
         alertType: {
           type: String,

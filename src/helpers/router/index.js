@@ -46,7 +46,7 @@ const pushTo = (routeName, alertType = '', alertMessage = '') => {
 
 
 export default {
-  signUpDone,
+  signupDone: signUpDone,
   signUpFailed,
   loginDone,
   logoutDone,

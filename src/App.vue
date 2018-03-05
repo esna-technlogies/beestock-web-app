@@ -13,6 +13,10 @@
 
   export default {
     name: 'app',
+    metaInfo: {
+      title: 'BeeStock :: Media Store',
+      titleTemplate: '%s | BeeStock'
+    },
     components: {
       VuesticPreLoader,
       AuthLayout,

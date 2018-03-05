@@ -9,7 +9,7 @@ import { urlHelper } from '../../helpers'
 
 import api from '../../api/beestock'
 
-const signUp = (queryParams = {}) => {
+const signup = (queryParams = {}) => {
   const url = userAccountEndpoint.create;
   return api.post(url, formUrlEncoded(queryParams));
 };
@@ -50,7 +50,7 @@ const isVerifiedUser = () => {
 
 
 export default {
-  signUp,
+  signup,
   login,
   isAuthenticated,
   isVerifiedUser,

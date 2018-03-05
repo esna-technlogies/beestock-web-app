@@ -72,7 +72,7 @@ const actions = {
     commit('setAuthInfo', null);
   },
   doSignup ({ commit }, userDetails) {
-    return authService.signUp(userDetails)
+    return authService.signup(userDetails)
       .then(response => {
         return Promise.resolve(response);
       })

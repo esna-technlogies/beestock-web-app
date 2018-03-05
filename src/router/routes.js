@@ -16,12 +16,6 @@ const login = {
   props: true
 };
 
-const logout = {
-  name: 'Logout',
-  path: '/logout',
-  component: lazyLoading('auth/logout/Logout')
-};
-
 const signup = {
   name: 'Register',
   path: '/register',
@@ -46,13 +40,39 @@ const verifyUser = {
 
 // --------------------------------------------------
 // User Routes
-const userSettings = {
-  name: 'UserSettings',
+const profile = {
+  name: 'Profile',
   path: '/profile',
-  component: lazyLoading('user-settings/UserSettings'),
+  component: lazyLoading('profile/Profile'),
   meta: {
     requiresAuthenticatedUser: true
-  }
+  },
+  children: [
+    {
+      name: 'ProfileDetails',
+      path: 'details',
+      component: lazyLoading('profile/ProfileDetails'),
+      meta: {
+        requiresAuthenticatedUser: true
+      }
+    },
+    {
+      name: 'AddressAndBillingDetails',
+      path: 'address-and-billing-details',
+      component: lazyLoading('profile/AddressAndBillingDetails'),
+      meta: {
+        requiresAuthenticatedUser: true
+      }
+    },
+    {
+      name: 'ChangePassword',
+      path: 'change-password',
+      component: lazyLoading('profile/ChangePassword'),
+      meta: {
+        requiresAuthenticatedUser: true
+      }
+    }
+  ]
 };
 
 const userUploads = {
@@ -125,11 +145,10 @@ const newUpload = {
 export default [
   home,
   login,
-  logout,
   signup,
   resetPassword,
   verifyUser,
-  userSettings,
+  profile,
   userUploads,
   photos,
   illustrations,

@@ -109,6 +109,10 @@
       "title": "Inputs",
       "upload": "UPLOAD"
     },
+    "checkboxes": {
+      "acceptTheLicenceAgreement": "Accept The Licence Agreement",
+      "billingAddress": "Billing Address"
+    },
     "heads": {
       "signin": "Sign In",
       "signup": "Sign Up",
@@ -130,8 +134,10 @@
       "title": "Medium Editor"
     },
     "selects": {
-      "country": "Country - [Mobile Code]",
+      "country": "Select Country",
+      "countryWithCode": "Select Country - [Mobile Code]",
       "countryMulti": "Country Multi Select",
+      "currency": "Select Currency",
       "multi": "Multi Select",
       "simple": "Simple Select",
       "title": "Selects"
@@ -152,7 +158,8 @@
       "signin": "Sign In",
       "signup": "Sign Up",
       "submit": "Submit",
-      "confirm": "Confirm"
+      "confirm": "Confirm",
+      "saveChanges": "Save Changes"
     },
     "alerts": {
       "signin": {
@@ -165,7 +172,6 @@
       "donotHaveAccount": "Don't have an account?",
       "signUpHere": "Sign Up Here",
       "rememberMe": "Remember Me",
-      "acceptTheLicenceAgreement": "Accept The Licence Agreement",
       "forgetPassword": "Forget Password?"
     }
   },
@@ -253,20 +259,16 @@
         "500": "The system is unable to create the user due to a server side error"
       },
       "logout": {
-        "200": "Logout has been done successfully!",
-        "201": "Logout has been done successfully!"
+        "200": "Logout has been done successfully!"
       },
       "login": {
-        "200": "Login has been done successfully!",
-        "201": "Login has been done successfully!"
+        "200": "Login has been done successfully!"
       },
       "verifyUser": {
-        "200": "Your account has been verified successfully!",
-        "201": "Your account has been verified successfully!"
+        "200": "Your account has been verified successfully!"
       },
       "resetUserPassword": {
-        "200": "Password reset has been done successfully, please check you email!",
-        "201": "Password reset has been done successfully, please check you email!"
+        "200": "Password reset has been done successfully, please check you email!"
       },
       "findUser": {
         "400": "Bad request: The system is unable to process the request",

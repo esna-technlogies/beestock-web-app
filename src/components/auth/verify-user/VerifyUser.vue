@@ -3,6 +3,12 @@
     <div class="row no-gutters justify-content-center">
       <div class="col-10 col-sm-10 col-md-8 col-lg-6">
         <vuestic-widget :class="'-verify-user-widget'">
+          <vuestic-alert type="danger" :withCloseBtn="true" v-show="isErrorAlert">
+            <span class="badge badge-pill badge-danger">{{'notificationsPage.alerts.danger' | translate}}</span>
+            {{ errorAlertMessage }}
+            <i class="fa fa-close alert-close" @click="isErrorAlert=false"></i>
+          </vuestic-alert>
+
           <hollow-dots-spinner
             :animation-duration="1000"
             :dot-size="15"
@@ -63,6 +69,9 @@
 
   export default {
     name: "verify-user",
+    metaInfo: {
+      title: 'Verify User'
+    },
     components: {
       AppAlert,
       HollowDotsSpinner
@@ -70,7 +79,9 @@
     data () {
       return {
         isLoading: false,
-        verificationCode: ''
+        verificationCode: '',
+        isErrorAlert: false,
+        errorAlertMessage: ''
       }
     },
     methods: {
@@ -82,7 +93,7 @@
             const verificationDetails = {
               uuid: this.$store.getters.authInfo.userId,
               code: this.verificationCode
-            }
+            };
 
             this.$store.dispatch('verifyUser', verificationDetails)
               .then(response => {
@@ -102,13 +113,28 @@
         routerHelper.verifyUserDone();
       },
       handleFailedVerification (error) {
-        console.error('BEESTOCK-ERROR', error.response);
+        if (!error.response) {
+          this.setErrorAlert('Unknown error, please call the website administrator');
+          return;
+        }
+
+        this.setErrorAlert(error.response.data.error.message);
+
+        console.error(error.response);
       },
       startLoading () {
         this.isLoading = true;
       },
       stopLoading () {
         this.isLoading = false;
+      },
+      clearErrorAlert () {
+        this.isErrorAlert = false;
+        this.errorAlertMessage = '';
+      },
+      setErrorAlert (message = 'Default Error Alert Message') {
+        this.isErrorAlert = true;
+        this.errorAlertMessage = message;
       }
     }
   }

@@ -11,9 +11,12 @@
 </template>
 
 <script>
-    export default {
-        name: "illustrations"
+  export default {
+    name: "illustrations",
+    metaInfo: {
+      title: "Illustrations"
     }
+  }
 </script>
 
 <style scoped>

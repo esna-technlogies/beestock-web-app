@@ -11,9 +11,12 @@
 </template>
 
 <script>
-    export default {
-        name: "footage"
+  export default {
+    name: "footage",
+    metaInfo: {
+      title: "Footage"
     }
+  }
 </script>
 
 <style scoped>

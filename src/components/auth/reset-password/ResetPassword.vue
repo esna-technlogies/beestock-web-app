@@ -70,6 +70,9 @@
 
   export default {
     name: "reset-password",
+    metaInfo: {
+      title: "Reset Password"
+    },
     props: {
       alertType: {
         type: String,
@@ -113,7 +116,7 @@
       },
       handleFailedPasswordReset (error) {
         if (!error.response) {
-          this.setErrorAlert('Please check your internet connection');
+          this.setErrorAlert('Unknown error, please call the website administrator');
           return;
         }
         this.setErrorAlert(error.response.data.error.message);

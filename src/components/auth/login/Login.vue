@@ -12,13 +12,12 @@
             <i class="fa fa-close alert-close" @click="isErrorAlert=false"></i>
           </vuestic-alert>
 
-          <hollow-dots-spinner
-            :animation-duration="1000"
-            :dot-size="15"
-            :dots-num="3"
-            color="#4ab2e3"
-            class="-spinner"
-            v-show="isLoading" />
+          <spinner
+            v-show="isLoading"
+            :size="30"
+            :line-size="4"
+            :line-fg-color="'#F9CB55'"
+            class="-spinner"></spinner>
 
           <div class="col-12 text-center">
             <h4><strong>{{ 'forms.heads.signin' | translate }}</strong></h4>
@@ -106,9 +105,13 @@
   import AppAlert from '../../app-alert/AppAlert'
 
   import { HollowDotsSpinner } from 'epic-spinners';
+  import Spinner from 'vue-simple-spinner';
 
   export default {
     name: 'login',
+    metaInfo: {
+      title: "Login"
+    },
     props: {
       alertType: {
         type: String,
@@ -121,7 +124,8 @@
     },
     components: {
       AppAlert,
-      HollowDotsSpinner
+      HollowDotsSpinner,
+      Spinner
     },
     data () {
       return {
@@ -163,7 +167,7 @@
       },
       handleFailedLogin (error) {
         if (!error.response) {
-          this.setErrorAlert('Please check your internet connection');
+          this.setErrorAlert('Unknown error, please call the website administrator');
           return;
         }
 
@@ -240,7 +244,7 @@
 
   .-spinner {
     position: absolute;
-    top: 120px;
+    top: 125px;
     right: 40px;
   }
 </style>
