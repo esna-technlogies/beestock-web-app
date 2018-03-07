@@ -12,14 +12,12 @@
             <i class="fa fa-close alert-close" @click="isErrorAlert=false"></i>
           </vuestic-alert>
 
-
-          <hollow-dots-spinner
-            :animation-duration="1000"
-            :dot-size="15"
-            :dots-num="3"
-            color="#4ab2e3"
-            class="-spinner"
-            v-show="isLoading" />
+          <spinner
+            v-show="isLoading"
+            :size="30"
+            :line-size="4"
+            :line-fg-color="'#F9CB55'"
+            class="-spinner"/>
 
           <div class="col-12 text-center">
             <h5><strong>{{ 'forms.heads.resetPassword' | translate }}</strong></h5>
@@ -63,8 +61,8 @@
 </template>
 
 <script>
-  import { HollowDotsSpinner } from 'epic-spinners';
   import AppAlert from '../../app-alert/AppAlert'
+  import Spinner from 'vue-simple-spinner';
 
   import { routerHelper } from "../../../helpers";
 
@@ -85,7 +83,7 @@
     },
     components: {
       AppAlert,
-      HollowDotsSpinner
+      Spinner
     },
     data () {
       return {
@@ -96,30 +94,27 @@
       }
     },
     methods: {
-      doResetPassword () {
+      async doResetPassword () {
         this.startLoading();
         this.clearErrorAlert();
 
-        this.$store.dispatch('doResetPassword', this.emailOrMobileNumber)
-          .then(response => {
-            this.handleSuccessPasswordReset(response);
-          })
-          .catch(error => {
-            this.handleFailedPasswordReset(error);
-          })
-          .finally(() => {
-            this.stopLoading();
-          });
-      },
-      handleSuccessPasswordReset (response) {
-        routerHelper.resetUserPasswordDone();
+        try {
+          await this.$store.dispatch('doResetPassword', this.emailOrMobileNumber);
+          routerHelper.resetUserPasswordDone();
+
+        } catch (error) {
+          this.handleFailedPasswordReset(error);
+        }
+
+        this.stopLoading();
       },
       handleFailedPasswordReset (error) {
         if (!error.response) {
-          this.setErrorAlert('Unknown error, please call the website administrator');
-          return;
+          this.setErrorAlert("Unknown error, please call the website's administrator");
+
+        } else {
+          this.setErrorAlert(error.response.data.error.message);
         }
-        this.setErrorAlert(error.response.data.error.message);
       },
       startLoading () {
         this.isLoading = true;
@@ -131,7 +126,7 @@
         this.isErrorAlert = false;
         this.errorAlertMessage = '';
       },
-      setErrorAlert (message = 'Default Error Alert Message') {
+      setErrorAlert (message = 'Default Error Message') {
         this.isErrorAlert = true;
         this.errorAlertMessage = message;
       }

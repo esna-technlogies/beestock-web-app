@@ -1,6 +1,6 @@
 import router from '../../router'
 
-const signUpDone = () => {
+const signupDone = () => {
   const alertType = 'success';
   const alertMessage = `alerts.messages.signUp.200`;
   pushTo('Login', alertType, alertMessage);
@@ -46,7 +46,7 @@ const pushTo = (routeName, alertType = '', alertMessage = '') => {
 
 
 export default {
-  signupDone: signUpDone,
+  signupDone,
   signUpFailed,
   loginDone,
   logoutDone,

@@ -8,20 +8,12 @@
             {{ errorAlertMessage }}
           </vuestic-alert>
 
-          <!--<hollow-dots-spinner
-            :animation-duration="1000"
-            :dot-size="15"
-            :dots-num="3"
-            color="#4ab2e3"
-            class="-spinner"
-            v-show="isLoading" />-->
-
           <spinner
             v-show="isLoading"
             :size="30"
             :line-size="4"
             :line-fg-color="'#F9CB55'"
-            class="-spinner"></spinner>
+            class="-spinner"/>
 
           <div class="col-12 text-center m-0 p-0">
             <span class="h4"><strong>{{ 'forms.heads.signup' | translate }}</strong></span>
@@ -219,7 +211,7 @@
   import CountryList from '../../../data/country-list';
   import VuesticPreLoader from "../../vuestic-components/vuestic-preloader/VuesticPreLoader";
 
-  import { routerHelper } from '../../../helpers'
+  import { routerHelper } from '../../../helpers';
 
 
   export default {
@@ -250,33 +242,30 @@
       }
     },
     methods: {
-      doSignup () {
-        this.$validator.validateAll().then(result => {
-          if (result) {
-            this.startLoading();
-            this.clearErrorAlert();
+      async doSignup () {
+        if (! await this.$validator.validateAll()) return;
 
-            const userDetails = this.createUserDetailsFromFormData();
+        this.startLoading();
+        this.clearErrorAlert();
 
-            this.$store.dispatch('doSignup', userDetails)
-              .then(response => {
-                this.handleSuccessSignup(response);
-              })
-              .catch(error => {
-                this.handleFailedSignup(error);
-              })
-              .finally(() => {
-                this.stopLoading();
-              });
-          }
-        });
+        try {
+          const userDetails = await this.createUserDetailsFromFormData();
+          await this.$store.dispatch('doSignup', userDetails);
+
+          routerHelper.signupDone();
+
+        } catch (error) {
+          this.handleFailedSignup(error);
+        }
+
+        this.stopLoading();
       },
       createUserDetailsFromFormData () {
         return {
           firstName: this.firstName,
           lastName: this.lastName,
           email: this.email,
-          language: 'en_US',
+          language: 'en',
           country: this.country.abbr,
           termsAccepted: this.termsAccepted,
           accessInfo: {
@@ -288,26 +277,23 @@
           }
         }
       },
-      handleSuccessSignup (response) {
-        routerHelper.signupDone(response.status);
-      },
       handleFailedSignup (error) {
         if (!error.response) {
-          this.setErrorAlert('Unknown error, please call the website administrator');
-          return;
+          this.setErrorAlert("Unknown error, please call the website's administrator");
+
+        } else {
+          const errorDetails = error.response.data.error.details;
+
+          for (const field of Object.keys(errorDetails)) {
+            const errorMessage = errorDetails[field].message.split(' - ');
+
+            const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1];
+
+            this.errors.add(field, message);
+          }
+
+          this.setErrorAlert(error.response.data.error.message);
         }
-
-        const errorDetails = error.response.data.error.details;
-
-        for (const field of Object.keys(errorDetails)) {
-          const errorMessage = errorDetails[field].message.split(' - ');
-
-          const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1];
-
-          this.errors.add(field, message);
-        }
-
-        this.setErrorAlert(error.response.data.error.message);
       },
       startLoading () {
         this.isLoading = true;
@@ -319,16 +305,16 @@
         this.isErrorAlert = false;
         this.errorAlertMessage = '';
       },
-      setErrorAlert (message = 'Default Error Alert Message') {
+      setErrorAlert (message = 'Default Error Message') {
         this.isErrorAlert = true;
         this.errorAlertMessage = message;
       },
       nameWithCountryCode ({ name, countryCode }) {
         return `${name} — [${countryCode}]`;
-      },
+      }
     },
     created () {
-      if (this.$store.getters.authInfo) {
+      if (this.$store.getters.isAuthenticatedUser) {
         return this.$router.replace({ name: 'Home' });
       }
     }
@@ -340,28 +326,6 @@
   @import '../../../../node_modules/bootstrap/scss/mixins/breakpoints';
   @import "../../../../node_modules/bootstrap/scss/functions";
   @import '../../../../node_modules/bootstrap/scss/variables';
-
-  /*.signup {
-    @include media-breakpoint-down(md) {
-      width: 100%;
-      padding-right: 2rem;
-      padding-left: 2rem;
-      .down-container {
-        .link {
-          margin-top: 2rem;
-        }
-      }
-    }
-
-    h2 {
-      text-align: center;
-    }
-    !*width: 21.375rem;*!
-
-    .down-container {
-      margin-top: 2.6875rem;
-    }
-  }*/
 
   .-logout-widget {
     margin: 100px auto !important;

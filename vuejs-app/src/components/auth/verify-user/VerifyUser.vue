@@ -9,13 +9,12 @@
             <i class="fa fa-close alert-close" @click="isErrorAlert=false"></i>
           </vuestic-alert>
 
-          <hollow-dots-spinner
-            :animation-duration="1000"
-            :dot-size="15"
-            :dots-num="3"
-            color="#4ab2e3"
-            class="-spinner"
-            v-show="isLoading" />
+          <spinner
+            v-show="isLoading"
+            :size="30"
+            :line-size="4"
+            :line-fg-color="'#F9CB55'"
+            class="-spinner"/>
 
           <div class="col-12 text-center">
             <h5><strong>{{ 'forms.heads.verifyUser' | translate }}</strong></h5>
@@ -63,9 +62,9 @@
 </template>
 
 <script>
-  import { HollowDotsSpinner } from 'epic-spinners';
   import AppAlert from '../../app-alert/AppAlert'
   import { routerHelper } from '../../../helpers';
+  import Spinner from 'vue-simple-spinner';
 
   export default {
     name: "verify-user",
@@ -74,7 +73,7 @@
     },
     components: {
       AppAlert,
-      HollowDotsSpinner
+      Spinner
     },
     data () {
       return {
@@ -85,42 +84,34 @@
       }
     },
     methods: {
-      doVerifyUser () {
-        this.$validator.validateAll().then(result => {
-          this.startLoading();
+      async doVerifyUser () {
+        if (! await this.$validator.validateAll()) return;
 
-          if (result) {
-            const verificationDetails = {
-              uuid: this.$store.getters.authInfo.userId,
-              code: this.verificationCode
-            };
+        this.startLoading();
 
-            this.$store.dispatch('verifyUser', verificationDetails)
-              .then(response => {
-                this.handleSuccessVerification(response);
-              })
-              .catch(error => {
-                this.handleFailedVerification(error);
-              })
-              .finally(() => {
-                this.stopLoading();
-              });
-          }
-        });
-      },
-      handleSuccessVerification (response) {
-        this.$store.dispatch('doLogout');
-        routerHelper.verifyUserDone();
+        const verificationDetails = {
+          uuid: this.$store.getters.userDetails.uuid,
+          code: this.verificationCode
+        };
+
+        try {
+          await this.$store.dispatch('verifyUser', verificationDetails);
+          this.$store.dispatch('doLogout');
+          routerHelper.verifyUserDone();
+
+        } catch (error) {
+          this.handleFailedVerification(error);
+        }
+
+        this.stopLoading();
       },
       handleFailedVerification (error) {
         if (!error.response) {
-          this.setErrorAlert('Unknown error, please call the website administrator');
-          return;
+          this.setErrorAlert("Unknown error, please call the website's administrator");
+
+        } else {
+          this.setErrorAlert(error.response.data.error.message);
         }
-
-        this.setErrorAlert(error.response.data.error.message);
-
-        console.error(error.response);
       },
       startLoading () {
         this.isLoading = true;
@@ -132,7 +123,7 @@
         this.isErrorAlert = false;
         this.errorAlertMessage = '';
       },
-      setErrorAlert (message = 'Default Error Alert Message') {
+      setErrorAlert (message = 'Default Error Message') {
         this.isErrorAlert = true;
         this.errorAlertMessage = message;
       }

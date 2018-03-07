@@ -9,8 +9,6 @@
   import AuthLayout from './components/basic-layout/AuthLayout'
   import VuesticPreLoader from './components/vuestic-components/vuestic-preloader/VuesticPreLoader.vue'
 
-  import { jwtTokenHelper } from './helpers'
-
   export default {
     name: 'app',
     metaInfo: {

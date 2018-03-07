@@ -149,7 +149,6 @@
   import CountryList from '../../data/country-list'
 
   import userService from '../../services/user';
-  import { routerHelper } from "../../helpers";
 
 
   export default {
@@ -176,89 +175,81 @@
     },
     computed: {
       userUUID () {
-        return this.$store.getters.authInfo.userId;
+        return this.$store.getters.userDetails.uuid;
       }
     },
     methods: {
-      fetchUserDetails (uuid) {
+      async fetchUserDetails (uuid) {
         this.$emit('loadingStart');
 
-        userService.findByUUID(uuid)
-          .then(response => {
-            const user = response.data.user;
+        try {
+          const user = await userService.findByUUID(uuid).then(response => response.data.user);
 
-            this.firstName = user.first_name;
-            this.lastName = user.last_name;
-            this.email = user.email;
-            this.mobileNumber = user.mobile_number.national_number;
+          this.firstName = user.first_name;
+          this.lastName = user.last_name;
+          this.email = user.email;
+          this.mobileNumber = user.mobile_number.national_number;
 
-            for (const country of CountryList) {
-              if (country.abbr === user.mobile_number.country_code) {
-                this.country = country;
-                break;
-              }
+          for (const country of CountryList) {
+            if (country.abbr === user.mobile_number.country_code) {
+              this.country = country;
+              break;
             }
+          };
 
-          })
-          .catch(error => {
-            console.log(error.response);
-          })
-          .finally(() => {
-            this.$emit('loadingStop');
-          })
+        } catch (error) {
+          console.log(error.response ? error.response : error);
+        }
+
+        this.$emit('loadingStop');
+
       },
-      doSaveChanges () {
-        this.$validator.validateAll().then(result => {
-          if (result) {
-            this.$emit('loadingStart');
-            this.clearErrorAlert();
+      async doSaveChanges () {
+        if (! await this.$validator.validateAll()) return;
 
-            const queryParams = {
-              firstName: this.firstName,
-              lastName: this.lastName,
-              email: this.email,
-              country: this.country.abbr,
-              mobileNumber: {
-                number: this.mobileNumber,
-                countryCode: this.country.abbr
-              }
-            };
+        this.$emit('loadingStart');
+        this.clearErrorAlert();
 
-            userService.updateByUUID(this.userUUID, queryParams)
-              .then(response => {
-                this.handleSuccessUpdate(response);
-              })
-              .catch(error => {
-                this.handleFailedUpdate(error);
-              })
-              .finally(() => {
-                this.$emit('loadingStop');
-              });
+        const queryParams = {
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.email,
+          country: this.country.abbr,
+          mobileNumber: {
+            number: this.mobileNumber,
+            countryCode: this.country.abbr
           }
-        });
-      },
-      handleSuccessUpdate (response) {
-        this.$emit('successOperation');
+        };
+
+        try {
+          await userService.updateByUUID(this.userUUID, queryParams)
+          this.$emit('successOperation');
+
+        } catch (error) {
+          this.handleFailedUpdate(error);
+        }
+
+        this.$emit('loadingStop');
       },
       handleFailedUpdate (error) {
         if (!error.response) {
-          this.setErrorAlert('Unknown error, please call the website administrator');
-          return;
+          this.setErrorAlert("Unknown error, please call the website's administrator");
+
+        } else {
+          const errorDetails = error.response.data.error.details;
+
+          for (const field of Object.keys(errorDetails)) {
+            const errorMessage = errorDetails[field].message.split(' - ');
+
+            const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1];
+
+            this.errors.add(field, message);
+          }
+
+          this.setErrorAlert(error.response.data.error.message);
         }
-
-        const errorDetails = error.response.data.error.details;
-
-        for (const field of Object.keys(errorDetails)) {
-          const errorMessage = errorDetails[field].message.split(' - ');
-
-          const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1];
-
-          this.errors.add(field, message);
-        }
-
-        this.setErrorAlert(error.response.data.error.message);
       },
-      setErrorAlert (message = 'Default Error Alert Message') {
+      setErrorAlert (message = 'Default Error Message') {
         this.isErrorAlert = true;
         this.errorAlertMessage = message;
       },

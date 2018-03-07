@@ -5,12 +5,12 @@
       <app-alert :alertType="alertType" :alertMessage="alertMessage"></app-alert>
 
       <div v-show="!isLoading">
-        <div class="row justify-content-center">
+        <div class="row no-gutters justify-content-center">
           <search-box></search-box>
         </div>
 
         <div class="row justify-content-center" style="color: white">
-          <div class="col-10 text-center">
+          <div class="col-10 text-center mt-5">
             <h6><strong>Less searching. More finding</strong></h6>
             <h6><strong>Discover royalty-free images, illustrations and videos</strong></h6>
             <h6><strong>that will make you stand out.</strong></h6>
@@ -20,7 +20,7 @@
                 <div class="-image-wrapper">
                   <div class="-image"
                        :key="photoIndex"
-                       :style="{ backgroundImage: 'url(' + photo.file_storage.sizes.size_500 + ')' }">
+                       :style="{ backgroundImage: 'url(' + photo.file_storage.sizes.size_250 + ')' }">
                   </div>
 
                   <div class="-category-name-wrapper text-center">
@@ -43,6 +43,25 @@
               </div>
             </div>
           </div>
+
+          <div class="col-10 text-center mt-5" v-show="!isAuthenticatedUser">
+            <h6><strong>Registration is FREE, and as a member you can:</strong></h6>
+
+            <div class="row mt-4 mb-4 justify-content-center">
+              <div class="col-5">
+                <router-link
+                  :to="{ name: 'Register' }"
+                  class="btn btn-primary btn-sm btn-block rounded-0">
+                  {{ 'forms.buttons.signup' | translate }}
+                </router-link>
+              </div>
+            </div>
+
+            <h6><strong>Download and use free images from our free image section</strong></h6>
+            <h6><strong>Download and use free images from our free image section</strong></h6>
+            <h6><strong>Download and use free images from our free image section</strong></h6>
+            <h6><strong>Download and use free images from our free image section</strong></h6>
+          </div>
         </div>
       </div>
     </div>
@@ -54,6 +73,8 @@
     import AppAlert from '../app-alert/AppAlert';
 
     import categoryService from '../../services/category'
+
+    import {mapGetters} from 'vuex'
 
 
     export default {
@@ -83,40 +104,53 @@
           randomPhotoList: []
         }
       },
+      computed: {
+        ...mapGetters(['isAuthenticatedUser'])
+      },
       methods: {
-        async fetchAndRenderFourRandomPhotos() {
+        async fetchFourRandomPhotos() {
           this.startLoading();
 
           await this.setCategoryList();
 
-          for (let i = 0; i < 4; i++) {
-            const randomIndex = Math.floor(Math.random() * (this.categoryList.length - 0) - 0);
-            const randomCategory = this.categoryList[randomIndex];
-
-            await categoryService.findRandomPhotoByUUID(randomCategory.uuid)
-              .then(response => {
-                response.data.photo.category_title = randomCategory.title;
-                this.randomPhotoList.push(response.data.photo);
-              })
-              .catch(error => {
-                console.log(error);
-              });
-          }
+          const fourRandomCategory = this.selectFourRandomCategory();
+          await Promise.all(fourRandomCategory.map(this.fetchRandomPhoto));
 
           this.stopLoading();
         },
         async setCategoryList () {
-          await categoryService.findAll()
-            .then(response => {
-              const categories = response.data.categories;
+          try {
+            const categories = await categoryService.findAll().then(response => response.data.categories);
 
-              for (const category of Object.values(categories)) {
-                this.categoryList.push(category);
-              }
-            })
-            .catch(error => {
-              console.log(error);
-            });
+            for (const category of Object.values(categories)) {
+              this.categoryList.push(category);
+            }
+
+          } catch (error) {
+            console.log(error.response ? error.response : error);
+          }
+        },
+        selectFourRandomCategory () {
+          const fourRandomCategory = [];
+
+          for (let i = 0; i < 4; i++) {
+            const randomIndex = Math.floor(Math.random() * (this.categoryList.length - 0) - 0);
+            fourRandomCategory.push(this.categoryList[randomIndex]);
+          }
+
+          return fourRandomCategory;
+        },
+        async fetchRandomPhoto (category) {
+          try {
+            const photo = await categoryService.findRandomPhotoByUUID(category.uuid)
+              .then(response => response.data.photo);
+
+            photo.category_title = category.title;
+            this.randomPhotoList.push(photo);
+
+          } catch (error) {
+            console.log(error.response ? error.response : error);
+          }
         },
         startLoading () {
           this.isLoading = true;
@@ -126,8 +160,8 @@
         }
       },
       created () {
-        if (this.$store.getters.authInfo) {
-          this.fetchAndRenderFourRandomPhotos();
+        if (this.$store.getters.isAuthenticatedUser) {
+          this.fetchFourRandomPhotos();
         }
       }
     }
@@ -135,7 +169,7 @@
 
 <style lang="scss" scoped>
   .-category-name-wrapper {
-    bottom: 0px;
+    bottom: 1px;
     left: 0px;
     width: 100%;
     height: 18%;
@@ -159,9 +193,10 @@
     height: 8rem;
     width: 100%;
     padding: 0;
-    box-shadow: 0px 5px 50px -20px #595959;
     cursor: pointer;
     overflow: hidden;
+    border: .9px solid #EBEBEB;
+    box-shadow: 0px 5px 50px -20px #595959;
 
     .-image {
       width: 100%;
@@ -170,7 +205,6 @@
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
-      border: .9px solid #EBEBEB;
       border-bottom: 0;
       transition: all .5s;
       -webkit-transition: all .5s;

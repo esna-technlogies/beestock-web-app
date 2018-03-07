@@ -21,6 +21,8 @@
         <router-view v-show="!isLoading"></router-view>
       </main>
     </div>
+
+    <beestock-footer></beestock-footer>
   </div>
 </template>
 
@@ -30,6 +32,7 @@
   import Navbar from './navbar/Navbar'
   import Resize from 'directives/ResizeHandler'
   import AppAlert from '../app-alert/AppAlert'
+  import BeestockFooter from '../beestock-footer/BeestockFooter'
 
   import auth from '../../services/auth';
 
@@ -37,7 +40,8 @@
     name: 'basic-layout',
     components: {
       Navbar,
-      AppAlert
+      AppAlert,
+      BeestockFooter
     },
     directives: {
       resize: Resize

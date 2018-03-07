@@ -28,10 +28,10 @@ const nextRouteWhenUserIsNotAuthenticated = (to, from, next) => {
 };
 
 const nextRouteWhenUserIsNotVerified = (to, from, next) => {
-  const { name, fullPath } = to;
-  const query = (name != undefined) ? { redirect: name } : { path: fullPath };
+  /*const { name, fullPath } = to;
+  const query = (name != undefined) ? { redirect: name } : { path: fullPath };*/
 
-  return next({ name: 'VerifyUser', query });
+  return next({ name: 'VerifyUser' });
 };
 
 

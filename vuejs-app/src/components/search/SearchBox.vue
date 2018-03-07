@@ -1,8 +1,8 @@
 <template>
     <div class="search-box col-12">
-      <vuestic-widget>
+      <vuestic-widget :class="'-search-box-widget'">
         <form>
-          <div class="row no-gutters justify-content-center">
+          <div class="row no-gutters justify-content-center mt-5">
             <div class="col-3">
               <div class="form-group with-icon-left">
                 <div class="input-group">
@@ -56,6 +56,12 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  .search-box {
+    height: 200px;
 
+    .-search-box-widget {
+      height: 100%;
+    }
+  }
 </style>

@@ -86,57 +86,51 @@
     },
     computed: {
       uuid () {
-        return this.$store.getters.authInfo.userId
+        return this.$store.getters.userDetails.uuid
       }
     },
     methods: {
-      doChangePassword () {
-        this.$validator.validateAll().then(result => {
-          if (result) {
-            this.$emit('loadingStart');
-            this.clearErrorAlert();
+      async doChangePassword () {
+        if ( ! await this.$validator.validateAll() ) return;
 
-            const queryParams = {
-              accessInfo: {
-                password: this.password
-              }
-            };
+        this.$emit('loadingStart');
+        this.clearErrorAlert();
 
-            userService.updateByUUID(this.uuid, queryParams)
-              .then(response => {
-                this.handleSuccessChangePassword(response);
-              })
-              .catch(error => {
-                this.handleFailedChangePassword(error);
-              })
-              .finally(() => {
-                this.$emit('loadingStop');
-              })
+        const queryParams = {
+          accessInfo: {
+            password: this.password
           }
-        })
-      },
-      handleSuccessChangePassword (response) {
-        this.$emit('successOperation');
+        };
+
+        try {
+          await userService.updateByUUID(this.uuid, queryParams);
+          this.$emit('successOperation');
+
+        } catch (error) {
+          this.handleFailedChangePassword(error);
+        }
+
+        this.$emit('loadingStop');
       },
       handleFailedChangePassword (error) {
         if (!error.response) {
-          this.setErrorAlert('Unknown error, please call the website administrator');
-          return;
+          this.setErrorAlert("Unknown error, please call the website's administrator");
+
+        } else {
+          const errorDetails = error.response.data.error.details;
+
+          for (const field of Object.keys(errorDetails)) {
+            const errorMessage = errorDetails[field].message.split(' - ');
+
+            const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1];
+
+            this.errors.add(field, message);
+          }
+
+          this.setErrorAlert(error.response.data.error.message);
         }
-
-        const errorDetails = error.response.data.error.details;
-
-        for (const field of Object.keys(errorDetails)) {
-          const errorMessage = errorDetails[field].message.split(' - ');
-
-          const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1];
-
-          this.errors.add(field, message);
-        }
-
-        this.setErrorAlert(error.response.data.error.message);
       },
-      setErrorAlert (message = 'Default Error Alert Message') {
+      setErrorAlert (message = 'Default Error Message') {
         this.isErrorAlert = true;
         this.errorAlertMessage = message;
       },

@@ -13,7 +13,7 @@
 <script>
 
   export default {
-      name: "photos"
+    name: "photos"
   }
 </script>
 

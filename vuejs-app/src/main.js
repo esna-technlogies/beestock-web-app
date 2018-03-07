@@ -15,7 +15,6 @@ import Meta from 'vue-meta'
 
 
 import VueValidateCustomDictionary from 'src/vee-validate-messages'
-import { jwtTokenHelper } from "./helpers";
 import beforeEachRoute from './router/before-each-route'
 
 
@@ -44,10 +43,16 @@ let mediaHandler = () => {
 router.beforeEach((to, from, next) => {
   store.commit('setLoading', true);
 
-  if (!store.getters.authInfo) {
-    const jwtToken = jwtTokenHelper.getCookie();
-    const userDetails = jwtTokenHelper.getPayload(jwtToken);
-    store.dispatch('setAuthInfo', userDetails);
+  const token = localStorage.getItem('jwtToken');
+
+  if (token) {
+    const userDetails = {};
+    Object.keys(store.getters.userDetails)
+      .map(item => userDetails[item] = localStorage.getItem(item));
+
+    store.dispatch('storeUserDetails', userDetails);
+    store.dispatch('storeJwtToken', token);
+    store.commit('setUserAsAuthenticated');
   }
 
   return beforeEachRoute(to, from, next);

@@ -1,8 +1,10 @@
 import * as types from '../mutation-types'
 
 import authService from '../../services/auth'
+import userService from '../../services/user'
 import api from '../../api/beestock'
-import { jwtTokenHelper } from '../../helpers'
+
+import JwtDecode from 'jwt-decode';
 
 const state = {
   sidebar: {
@@ -28,8 +30,15 @@ const state = {
     }
   },
   isLoading: true,
-  authInfo: null,
-  jwtToken: ''
+  isAuthenticatedUser: false,
+  jwtToken: '',
+  userDetails: {
+    uuid: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    roles: []
+  }
 }
 
 const mutations = {
@@ -47,8 +56,22 @@ const mutations = {
   setLoading (state, isLoading) {
     state.isLoading = isLoading
   },
-  setAuthInfo (state, userDetails) {
-    state.authInfo = userDetails;
+  setUserAsAuthenticated (state) {
+    state.isAuthenticatedUser = true;
+  },
+  setUserAsVisitor (state) {
+    state.isAuthenticatedUser = false;
+  },
+  setJwtToken (state, token) {
+    state.jwtToken = token;
+  },
+  setUserDetails (state, userDetails) {
+    Object.keys(userDetails)
+      .map(item => state.userDetails[item] = userDetails[item]);
+  },
+  clearUserDetails (state) {
+    Object.keys(state.userDetails)
+      .map(item => state.userDetails[item] = '');
   }
 }
 
@@ -62,57 +85,63 @@ const actions = {
   isToggleWithoutAnimation ({ commit }, value) {
     commit(types.TOGGLE_WITHOUT_ANIMATION, value)
   },
-  setAuthInfo ({ commit }, value) {
-    commit('setAuthInfo', value);
-  },
   doSignup ({ commit }, userDetails) {
     return authService.signup(userDetails)
-      .then(response => {
-        return Promise.resolve(response);
-      })
-      .catch(error => {
-        return Promise.reject(error)
-      });
+      .then(response => response);
   },
-  doLogin ({ commit }, credentials) {
-    return authService.login(credentials)
-      .then(response => {
-        const token = response.data.token;
-        jwtTokenHelper.setCookie(token);
+  async doLogin ({ commit, dispatch }, credentials) {
+    const token = await authService.login(credentials)
+      .then(response => response.data.token);
 
-        api.setAuthorizationHeader(token);
-        commit('setAuthInfo', jwtTokenHelper.getPayload());
+    await dispatch('storeJwtToken', token);
 
-        return Promise.resolve(response);
-      })
-      .catch(error => {
-        return Promise.reject(error);
+    const uuid = JwtDecode(token).userId;
+
+    const user = await userService.findByUUID(uuid)
+      .then(response => response.data.user)
+      .then(user => {
+        return {
+          uuid: user.uuid,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          email: user.email,
+          roles: user.access_info.roles
+        }
       });
+
+    await dispatch('storeUserDetails', user);
+    await commit('setUserAsAuthenticated');
   },
   doLogout ({ commit }) {
-    commit('setAuthInfo', null);
-    jwtTokenHelper.removeCookie();
-    return Promise.resolve();
+    localStorage.removeItem('jwtToken');
+
+    Object.keys(state.userDetails)
+      .map(item => localStorage.removeItem(item));
+
+    commit('clearUserDetails');
+    commit('setUserAsVisitor');
   },
   verifyUser ({ commit }, verificationDetails) {
     const queryParams = { code: verificationDetails.code };
+    const uuid = verificationDetails.uuid
 
-    return authService.verifyUser(verificationDetails.uuid, queryParams)
-      .then(response => {
-        return Promise.resolve(response);
-      })
-      .catch(error => {
-        return Promise.reject(error);
-      });
+    return authService.verifyUser(uuid, queryParams)
+      .then(response => response);
   },
   doResetPassword ({ commit }, emailOrMobileNumber) {
     return authService.resetUserPassword(emailOrMobileNumber)
-      .then(response => {
-        return Promise.resolve(response);
-      })
-      .catch(error => {
-        return Promise.reject(error);
-      })
+      .then(response => response);
+  },
+  storeUserDetails ({ commit }, userDetails) {
+    commit('setUserDetails', userDetails);
+
+    Object.keys(userDetails)
+      .map(item => localStorage.setItem(item, userDetails[item]));
+  },
+  storeJwtToken ({ commit }, token) {
+    api.setAuthorizationHeader(token);
+    commit('setJwtToken', token);
+    localStorage.setItem('jwtToken', token);
   }
 }
 

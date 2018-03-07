@@ -9,6 +9,7 @@ import { urlHelper } from '../../helpers'
 
 import api from '../../api/beestock'
 
+
 const signup = (queryParams = {}) => {
   const url = userAccountEndpoint.create;
   return api.post(url, formUrlEncoded(queryParams));
@@ -41,11 +42,11 @@ const resetUserPassword = (emailOrMobileNumber) => {
 };
 
 const isAuthenticated = () => {
-  return store.getters.authInfo !== null;
+  return store.getters.isAuthenticatedUser === true;
 };
 
 const isVerifiedUser = () => {
-  return !store.getters.authInfo.roles.includes('ROLE_INACTIVE');
+  return !store.getters.userDetails.roles.includes('ROLE_INACTIVE');
 };
 
 

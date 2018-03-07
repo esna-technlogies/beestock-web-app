@@ -44,7 +44,7 @@
               :size="25"
               :line-size="6"
               :line-fg-color="'#F9CB55'"
-              class="-spinner"></spinner>
+              class="-spinner"/>
 
             <div style="color: #41DF7C" v-show="isSuccessOperation" class="-spinner">
               <span class="align-middle mr-1">SAVED</span>
@@ -95,7 +95,7 @@
       stopLoading () {
         this.isLoading = false;
       },
-      setErrorAlert (message = 'Default Error Alert Message') {
+      setErrorAlert (message = 'Default Error Message') {
         this.isErrorAlert = true;
         this.errorAlertMessage = message;
       },

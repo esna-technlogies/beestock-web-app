@@ -1,14 +1,19 @@
 import axios from 'axios/index'
-import { jwtTokenHelper } from "../../helpers";
 
-axios.defaults.baseURL = 'http://api.beesstock.com';
-axios.defaults.headers.common['Accept'] = 'application/json';
-axios.defaults.headers.common['Authorization'] = `Bearer ${jwtTokenHelper.getCookie()}`
-axios.defaults.headers.patch['Content-Type'] = 'application/x-www-form-urlencoded';
+const baseURL = 'http://api.beesstock.com';
+const AcceptHeader = 'application/json';
+const ContentType = 'application/x-www-form-urlencoded';
+const jwtToken = localStorage.getItem('jwtToken')
 
 const setAuthorizationHeader = (jwtToken) => {
   axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`
 };
+
+axios.defaults.baseURL = baseURL
+axios.defaults.headers.common['Accept'] = AcceptHeader;
+axios.defaults.headers.patch['Content-Type'] = ContentType;
+
+if (jwtToken) setAuthorizationHeader(jwtToken);
 
 export default {
   get: axios.get,

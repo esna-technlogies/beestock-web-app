@@ -17,7 +17,7 @@
             :size="30"
             :line-size="4"
             :line-fg-color="'#F9CB55'"
-            class="-spinner"></spinner>
+            class="-spinner"/>
 
           <div class="col-12 text-center">
             <h4><strong>{{ 'forms.heads.signin' | translate }}</strong></h4>
@@ -67,17 +67,6 @@
                 </fieldset>
               </div>
 
-              <!--<div class="col-lg-10">
-                <fieldset>
-                  <div class="form-check abc-checkbox abc-checkbox-primary">
-                    <input class="form-check-input" id="checkbox1" type="checkbox">
-                    <label class="form-check-label" for="checkbox1">
-                      <span class="abc-label-text">{{ 'forms.misc.rememberMe' | translate }}</span>
-                    </label>
-                  </div>
-                </fieldset>
-              </div>-->
-
               <div class="col-lg-10 mt-3 mb-2">
                 <button class="btn btn-primary btn-micro btn-block rounded-0" :disabled="isLoading">
                   {{ 'forms.buttons.signin' | translate }}
@@ -103,8 +92,6 @@
 
 <script>
   import AppAlert from '../../app-alert/AppAlert'
-
-  import { HollowDotsSpinner } from 'epic-spinners';
   import Spinner from 'vue-simple-spinner';
 
   export default {
@@ -124,7 +111,6 @@
     },
     components: {
       AppAlert,
-      HollowDotsSpinner,
       Spinner
     },
     data () {
@@ -138,40 +124,35 @@
       }
     },
     methods: {
-      doLogin () {
-        this.$validator.validateAll().then(result => {
-          if (result) {
-            this.clearErrorAlert();
-            this.startLoading();
+      async doLogin () {
+        if (! await this.$validator.validateAll()) return;
 
-            const queryParams = {
-              userName: this.userName,
-              password: this.password
-            };
+        this.clearErrorAlert();
+        this.startLoading();
 
-            this.$store.dispatch('doLogin', queryParams)
-              .then((response) => {
-                this.handleSuccessLogin();
-              })
-              .catch((error) => {
-                this.handleFailedLogin(error);
-              })
-              .finally(() => {
-                this.stopLoading();
-              });
-          }
-        });
-      },
-      handleSuccessLogin () {
-        this.$router.push(this.sendTo);
+        const queryParams = {
+          userName: this.userName,
+          password: this.password
+        };
+
+        try {
+          await this.$store.dispatch('doLogin', queryParams);
+          this.$router.push(this.sendTo);
+
+        } catch (error) {
+          this.handleFailedLogin(error);
+
+        } finally {
+          this.stopLoading();
+        }
       },
       handleFailedLogin (error) {
         if (!error.response) {
-          this.setErrorAlert('Unknown error, please call the website administrator');
-          return;
-        }
+          this.setErrorAlert(error.message);
 
-        this.setErrorAlert(error.response.data.message);
+        } else {
+          this.setErrorAlert(error.response.data.message);
+        }
       },
       startLoading () {
         this.isLoading = true;
@@ -183,7 +164,7 @@
         this.isErrorAlert = false;
         this.errorAlertMessage = '';
       },
-      setErrorAlert (message = 'Default Error Alert Message') {
+      setErrorAlert (message = 'Default Error Message') {
         this.isErrorAlert = true;
         this.errorAlertMessage = message;
       }
@@ -198,7 +179,7 @@
       }
     },
     created () {
-      if (this.$store.getters.authInfo) {
+      if (this.$store.getters.isAuthenticatedUser) {
         return this.$router.replace({
           name: this.sendTo.name,
           params: {
