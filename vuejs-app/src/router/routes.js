@@ -145,17 +145,22 @@ const newUpload = {
 // --------------------------------------------------
 // New Upload Routes
 const category = {
-  name: 'Category',
-  path: '/category',
-  component: lazyLoading('category/Category'),
+  name: 'Categories',
+  path: '/categories',
+  component: lazyLoading('categories/Categories'),
   meta: {
     requiresAuthenticatedUser: true,
+    title: 'Categories'
   },
   children: [
     {
-      name: 'CategoryDetails',
+      name: 'Category',
       path: ':uuid',
-      component: lazyLoading('category/CategoryDetails')
+      component: lazyLoading('categories/Category'),
+      props: true,
+      meta: {
+        title: 'Category'
+      }
     }
   ]
 }

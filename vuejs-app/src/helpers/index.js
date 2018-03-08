@@ -1,5 +1,4 @@
 import router from './router'
-import jwtToken from './jwt-token'
 import url from './url'
 
 

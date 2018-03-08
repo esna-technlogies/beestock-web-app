@@ -24,8 +24,7 @@
                   </div>
 
                   <div class="-category-name-wrapper text-center">
-                    <router-link class="-category-name btn btn-warning"
-                                 :to="{ name: 'CategoryDetails', params: { uuid: photo.category }}">
+                    <router-link class="-category-name btn btn-warning" :to="{ name: 'Category', params: { uuid: photo.category } }">
                       {{ photo.category_title }}
                     </router-link>
                   </div>
@@ -39,7 +38,9 @@
 
             <div class="row mt-4 justify-content-center">
               <div class="col-3 text-left" v-for="category in categoryList">
-                <router-link :to="{ name: 'CategoryDetails', params: { uuid: category.uuid } }">{{ category.title }}</router-link>
+                <router-link :to="{ name: 'Category', params: { uuid: category.uuid } }">
+                  {{ category.title }}
+                </router-link>
               </div>
             </div>
           </div>
@@ -49,9 +50,7 @@
 
             <div class="row mt-4 mb-4 justify-content-center">
               <div class="col-5">
-                <router-link
-                  :to="{ name: 'Register' }"
-                  class="btn btn-primary btn-sm btn-block rounded-0">
+                <router-link class="btn btn-primary btn-sm btn-block rounded-0" :to="{ name: 'Register' }">
                   {{ 'forms.buttons.signup' | translate }}
                 </router-link>
               </div>
@@ -205,7 +204,6 @@
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
-      border-bottom: 0;
       transition: all .5s;
       -webkit-transition: all .5s;
       -moz-transition: all .5s;

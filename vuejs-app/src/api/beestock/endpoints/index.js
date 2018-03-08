@@ -1,5 +1,3 @@
-const baseURL = 'http://api.beesstock.com/';
-
 const changeRequest = {
   activateAccount: '/api/user-service/changeRequest/{uuid}/activate-account'
 };
@@ -39,7 +37,6 @@ const category = {
 
 
 export {
-  baseURL,
   userSecurity,
   userAccount,
   photo,

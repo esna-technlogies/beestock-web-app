@@ -113,10 +113,11 @@ const actions = {
     await commit('setUserAsAuthenticated');
   },
   doLogout ({ commit }) {
-    localStorage.removeItem('jwtToken');
+    localStorage.clear();
+    /*localStorage.removeItem('jwtToken');
 
     Object.keys(state.userDetails)
-      .map(item => localStorage.removeItem(item));
+      .map(item => localStorage.removeItem(item));*/
 
     commit('clearUserDetails');
     commit('setUserAsVisitor');

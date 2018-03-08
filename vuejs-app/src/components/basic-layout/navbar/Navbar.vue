@@ -69,7 +69,7 @@
           </div>
 
           <div
-            class="col-lg-6 col-md-10 nav-item dropdown vuestic-navbar-dropdown d-flex align-items-center justify-content-center"
+            class="col-6 nav-item dropdown vuestic-navbar-dropdown d-flex align-items-end justify-content-end"
             v-dropdown>
             <a class="nav-link dropdown-toggle d-flex align-items-center justify-content">
               <span class="align-middle mr-2">{{ userDetails.firstName + ' ' + userDetails.lastName }}</span>
