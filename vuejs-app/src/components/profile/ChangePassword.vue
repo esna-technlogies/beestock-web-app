@@ -72,16 +72,18 @@
   import userService from '../../services/user'
 
   export default {
-    name: "change-password",
-    metaInfo: {
-        title: "Change Password"
+    name: 'change-password',
+    metaInfo () {
+      return {
+        title: this.$t('titles.changePassword')
+      }
     },
     data () {
       return {
         isLoading: false,
         isErrorAlert: false,
         errorAlertMessage: '',
-        password: '',
+        password: ''
       }
     },
     computed: {
@@ -91,53 +93,51 @@
     },
     methods: {
       async doChangePassword () {
-        if ( ! await this.$validator.validateAll() ) return;
+        if (!await this.$validator.validateAll()) return
 
-        this.$emit('loadingStart');
-        this.clearErrorAlert();
+        this.$emit('loadingStart')
+        this.clearErrorAlert()
 
         const queryParams = {
           accessInfo: {
             password: this.password
           }
-        };
-
-        try {
-          await userService.updateByUUID(this.uuid, queryParams);
-          this.$emit('successOperation');
-
-        } catch (error) {
-          this.handleFailedChangePassword(error);
         }
 
-        this.$emit('loadingStop');
+        try {
+          await userService.updateByUUID(this.uuid, queryParams)
+          this.$emit('successOperation')
+        } catch (error) {
+          this.handleFailedChangePassword(error)
+        }
+
+        this.$emit('loadingStop')
       },
       handleFailedChangePassword (error) {
         if (!error.response) {
-          this.setErrorAlert("Unknown error, please call the website's administrator");
-
+          this.setErrorAlert("Unknown error, please call the website's administrator")
         } else {
-          const errorDetails = error.response.data.error.details;
+          const errorDetails = error.response.data.error.details
 
           for (const field of Object.keys(errorDetails)) {
-            const errorMessage = errorDetails[field].message.split(' - ');
+            const errorMessage = errorDetails[field].message.split(' - ')
 
-            const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1];
+            const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1]
 
-            this.errors.add(field, message);
+            this.errors.add(field, message)
           }
 
-          this.setErrorAlert(error.response.data.error.message);
+          this.setErrorAlert(error.response.data.error.message)
         }
       },
       setErrorAlert (message = 'Default Error Message') {
-        this.isErrorAlert = true;
-        this.errorAlertMessage = message;
+        this.isErrorAlert = true
+        this.errorAlertMessage = message
       },
       clearErrorAlert () {
-        this.isErrorAlert = false;
-        this.errorAlertMessage = '';
-      },
+        this.isErrorAlert = false
+        this.errorAlertMessage = ''
+      }
     }
   }
 </script>

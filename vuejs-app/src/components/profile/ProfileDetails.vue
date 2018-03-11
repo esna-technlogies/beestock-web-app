@@ -143,22 +143,24 @@
 </template>
 
 <script>
-  import Multiselect from 'vue-multiselect';
-  import { HollowDotsSpinner } from 'epic-spinners';
+  import Multiselect from 'vue-multiselect'
+import { HollowDotsSpinner } from 'epic-spinners'
 
-  import CountryList from '../../data/country-list'
+import CountryList from '../../data/country-list'
 
-  import userService from '../../services/user';
+  import userService from '../../services/user'
 
 
-  export default {
-    name: "profile-settings",
-    metaInfo: {
-        title: "Profile Settings"
+export default {
+    name: 'profile-settings',
+    metaInfo () {
+      return {
+        title: this.$t('titles.profileSettings')
+      }
     },
     components: {
       Multiselect,
-      HollowDotsSpinner,
+      HollowDotsSpinner
     },
     data () {
       return {
@@ -175,40 +177,38 @@
     },
     computed: {
       userUUID () {
-        return this.$store.getters.userDetails.uuid;
+        return this.$store.getters.userDetails.uuid
       }
     },
     methods: {
       async fetchUserDetails (uuid) {
-        this.$emit('loadingStart');
+        this.$emit('loadingStart')
 
         try {
-          const user = await userService.findByUUID(uuid).then(response => response.data.user);
+          const user = await userService.findByUUID(uuid).then(response => response.data.user)
 
-          this.firstName = user.first_name;
-          this.lastName = user.last_name;
-          this.email = user.email;
-          this.mobileNumber = user.mobile_number.national_number;
+          this.firstName = user.first_name
+          this.lastName = user.last_name
+          this.email = user.email
+          this.mobileNumber = user.mobile_number.national_number
 
           for (const country of CountryList) {
             if (country.abbr === user.mobile_number.country_code) {
-              this.country = country;
-              break;
+              this.country = country
+              break
             }
           };
-
         } catch (error) {
-          console.log(error.response ? error.response : error);
+          console.log(error.response ? error.response : error)
         }
 
-        this.$emit('loadingStop');
-
+        this.$emit('loadingStop')
       },
       async doSaveChanges () {
-        if (! await this.$validator.validateAll()) return;
+        if (!await this.$validator.validateAll()) return
 
-        this.$emit('loadingStart');
-        this.clearErrorAlert();
+        this.$emit('loadingStart')
+        this.clearErrorAlert()
 
         const queryParams = {
           firstName: this.firstName,
@@ -219,50 +219,48 @@
             number: this.mobileNumber,
             countryCode: this.country.abbr
           }
-        };
+        }
 
         try {
           await userService.updateByUUID(this.userUUID, queryParams)
-          this.$emit('successOperation');
-
+          this.$emit('successOperation')
         } catch (error) {
-          this.handleFailedUpdate(error);
+          this.handleFailedUpdate(error)
         }
 
-        this.$emit('loadingStop');
+        this.$emit('loadingStop')
       },
       handleFailedUpdate (error) {
         if (!error.response) {
-          this.setErrorAlert("Unknown error, please call the website's administrator");
-
+          this.setErrorAlert("Unknown error, please call the website's administrator")
         } else {
-          const errorDetails = error.response.data.error.details;
+          const errorDetails = error.response.data.error.details
 
           for (const field of Object.keys(errorDetails)) {
-            const errorMessage = errorDetails[field].message.split(' - ');
+            const errorMessage = errorDetails[field].message.split(' - ')
 
-            const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1];
+            const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1]
 
-            this.errors.add(field, message);
+            this.errors.add(field, message)
           }
 
-          this.setErrorAlert(error.response.data.error.message);
+          this.setErrorAlert(error.response.data.error.message)
         }
       },
       setErrorAlert (message = 'Default Error Message') {
-        this.isErrorAlert = true;
-        this.errorAlertMessage = message;
+        this.isErrorAlert = true
+        this.errorAlertMessage = message
       },
       clearErrorAlert () {
-        this.isErrorAlert = false;
-        this.errorAlertMessage = '';
+        this.isErrorAlert = false
+        this.errorAlertMessage = ''
       },
       nameWithCountryCode ({ name, countryCode }) {
-        return `${name} — [${countryCode}]`;
+        return `${name} — [${countryCode}]`
       }
     },
     created () {
-      this.fetchUserDetails(this.userUUID);
+      this.fetchUserDetails(this.userUUID)
     }
   }
 </script>

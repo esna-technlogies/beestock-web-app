@@ -4,7 +4,7 @@ import authService from '../../services/auth'
 import userService from '../../services/user'
 import api from '../../api/beestock'
 
-import JwtDecode from 'jwt-decode';
+import JwtDecode from 'jwt-decode'
 
 const state = {
   sidebar: {
@@ -57,21 +57,21 @@ const mutations = {
     state.isLoading = isLoading
   },
   setUserAsAuthenticated (state) {
-    state.isAuthenticatedUser = true;
+    state.isAuthenticatedUser = true
   },
   setUserAsVisitor (state) {
-    state.isAuthenticatedUser = false;
+    state.isAuthenticatedUser = false
   },
   setJwtToken (state, token) {
-    state.jwtToken = token;
+    state.jwtToken = token
   },
   setUserDetails (state, userDetails) {
     Object.keys(userDetails)
-      .map(item => state.userDetails[item] = userDetails[item]);
+      .map(item => { state.userDetails[item] = userDetails[item] })
   },
   clearUserDetails (state) {
     Object.keys(state.userDetails)
-      .map(item => state.userDetails[item] = '');
+      .map(item => { state.userDetails[item] = '' })
   }
 }
 
@@ -87,15 +87,15 @@ const actions = {
   },
   doSignup ({ commit }, userDetails) {
     return authService.signup(userDetails)
-      .then(response => response);
+      .then(response => response)
   },
   async doLogin ({ commit, dispatch }, credentials) {
     const token = await authService.login(credentials)
-      .then(response => response.data.token);
+      .then(response => response.data.token)
 
-    await dispatch('storeJwtToken', token);
+    await dispatch('storeJwtToken', token)
 
-    const uuid = JwtDecode(token).userId;
+    const uuid = JwtDecode(token).userId
 
     const user = await userService.findByUUID(uuid)
       .then(response => response.data.user)
@@ -107,42 +107,42 @@ const actions = {
           email: user.email,
           roles: user.access_info.roles
         }
-      });
+      })
 
-    await dispatch('storeUserDetails', user);
-    await commit('setUserAsAuthenticated');
+    await dispatch('storeUserDetails', user)
+    await commit('setUserAsAuthenticated')
   },
   doLogout ({ commit }) {
-    localStorage.clear();
-    /*localStorage.removeItem('jwtToken');
+    localStorage.clear()
+    /* localStorage.removeItem('jwtToken');
 
     Object.keys(state.userDetails)
-      .map(item => localStorage.removeItem(item));*/
+      .map(item => localStorage.removeItem(item)); */
 
-    commit('clearUserDetails');
-    commit('setUserAsVisitor');
+    commit('clearUserDetails')
+    commit('setUserAsVisitor')
   },
   verifyUser ({ commit }, verificationDetails) {
-    const queryParams = { code: verificationDetails.code };
+    const queryParams = { code: verificationDetails.code }
     const uuid = verificationDetails.uuid
 
     return authService.verifyUser(uuid, queryParams)
-      .then(response => response);
+      .then(response => response)
   },
   doResetPassword ({ commit }, emailOrMobileNumber) {
     return authService.resetUserPassword(emailOrMobileNumber)
-      .then(response => response);
+      .then(response => response)
   },
   storeUserDetails ({ commit }, userDetails) {
-    commit('setUserDetails', userDetails);
+    commit('setUserDetails', userDetails)
 
     Object.keys(userDetails)
-      .map(item => localStorage.setItem(item, userDetails[item]));
+      .map(item => localStorage.setItem(item, userDetails[item]))
   },
   storeJwtToken ({ commit }, token) {
-    api.setAuthorizationHeader(token);
-    commit('setJwtToken', token);
-    localStorage.setItem('jwtToken', token);
+    api.setAuthorizationHeader(token)
+    commit('setJwtToken', token)
+    localStorage.setItem('jwtToken', token)
   }
 }
 

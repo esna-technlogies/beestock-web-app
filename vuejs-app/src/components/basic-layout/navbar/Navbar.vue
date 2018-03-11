@@ -98,8 +98,7 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import { mapGetters, mapActions } from 'vuex'
+  import { mapGetters } from 'vuex'
   import Dropdown from 'directives/Dropdown'
 
   import { routerHelper } from '../../../helpers'
@@ -119,12 +118,11 @@
     },
     methods: {
       doLogout () {
-        if (!this.$store.getters.isAuthenticatedUser)
-          return this.$router.replace({ name: 'Home' });
+        if (!this.$store.getters.isAuthenticatedUser) { return this.$router.replace({ name: 'Home' }) }
 
-        this.$store.dispatch('doLogout');
+        this.$store.dispatch('doLogout')
 
-        routerHelper.logoutDone();
+        routerHelper.logoutDone()
       }
     }
   }

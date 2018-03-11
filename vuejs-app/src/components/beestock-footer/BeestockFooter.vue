@@ -89,7 +89,7 @@
 
 <script>
   export default {
-    name: "beestock-footer"
+    name: 'beestock-footer'
   }
 </script>
 

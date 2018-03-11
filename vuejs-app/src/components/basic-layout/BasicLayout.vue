@@ -12,7 +12,7 @@
             Your account hasn't been verified yet, Please
             <router-link
               :to="{ name: 'VerifyUser' }"
-              :style="'color: #225194; text-decoration: underline'">verify now</router-link>.
+              :style="'color: #225194 text-decoration: underline'">verify now</router-link>.
           </span>
         </vuestic-alert>
 
@@ -34,7 +34,7 @@
   import AppAlert from '../app-alert/AppAlert'
   import BeestockFooter from '../beestock-footer/BeestockFooter'
 
-  import auth from '../../services/auth';
+  import auth from '../../services/auth'
 
   export default {
     name: 'basic-layout',
@@ -62,7 +62,7 @@
         return this.$store.getters.breadcrumbs(this.$route.name)
       },
       userIsAuthenticatedAndNotVerifiedYet () {
-        return auth.isAuthenticated() && !auth.isVerifiedUser();
+        return auth.isAuthenticated() && !auth.isVerifiedUser()
       }
     }
   }

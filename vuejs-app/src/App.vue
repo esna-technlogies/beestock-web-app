@@ -11,9 +11,11 @@
 
   export default {
     name: 'app',
-    metaInfo: {
-      title: 'BeeStock :: Media Store',
-      titleTemplate: '%s | BeeStock'
+    metaInfo () {
+      return {
+        title: this.$t('titles.app'),
+        titleTemplate: this.$t('titles.titleTemplate')
+      }
     },
     components: {
       VuesticPreLoader,

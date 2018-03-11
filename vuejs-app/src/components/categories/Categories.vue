@@ -15,13 +15,15 @@
 
 <script>
   export default {
-    name: "categories",
-    metaInfo: {
-      title: "Categories"
+    name: 'categories',
+    metaInfo () {
+      return {
+        title: this.$t('titles.categories')
+      }
     },
     computed: {
       showCategoryPage () {
-        return this.$route.name === 'Category';
+        return this.$route.name === 'Category'
       }
     }
   }

@@ -1,56 +1,55 @@
-import auth from "../services/auth";
+import auth from '../services/auth'
 
-const nextRouteForRequiresAuthenticatedUserRoute = (to, from, next) => {
-  return !auth.isAuthenticated()
-    ? nextRouteWhenUserIsNotAuthenticated(to, from, next)
-    : next();
-};
+const userIsNotAuthenticated = (to, from, next) => {
+  const {name, fullPath} = to
+  const query = (name !== undefined) ? {redirect: name} : {path: fullPath}
 
-const nextRouteForRequiresVerifiedUserRoute = (to, from, next) => {
-  if (!auth.isAuthenticated()) return nextRouteWhenUserIsNotAuthenticated(to, from, next);
+  return next({name: 'Login', query})
+}
 
-  if (!auth.isVerifiedUser()) return nextRouteWhenUserIsNotVerified(to, from, next);
+const userIsNotVerified = (to, from, next) => {
+  /* const { name, fullPath } = to
+  const query = (name != undefined) ? { redirect: name } : { path: fullPath } */
 
-  return next()
-};
+  return next({ name: 'VerifyUser' })
+}
 
-const nextRouteForRequiresNoLoginRoute = (to, from, next) => {
-  return auth.isAuthenticated()
-    ? next({ name: 'Home' })
-    : next();
-};
+const nextRoute = (routeRequirement, to, from, next) => {
+  switch (routeRequirement) {
+    case 'verifiedUser':
+      if (!auth.isAuthenticated()) { return userIsNotAuthenticated(to, from, next) }
 
-const nextRouteWhenUserIsNotAuthenticated = (to, from, next) => {
-  const {name, fullPath} = to;
-  const query = (name != undefined) ? {redirect: name} : {path: fullPath};
+      if (!auth.isVerifiedUser()) { return userIsNotVerified(to, from, next) }
+      break
 
-  return next({name: 'Login', query});
-};
+    case 'authenticatedUser':
+      if (!auth.isAuthenticated()) { return userIsNotAuthenticated(to, from, next) }
+      break
 
-const nextRouteWhenUserIsNotVerified = (to, from, next) => {
-  /*const { name, fullPath } = to;
-  const query = (name != undefined) ? { redirect: name } : { path: fullPath };*/
+    case 'noLogin':
+      if (auth.isAuthenticated()) { return next({ name: 'Home' }) }
+      break
 
-  return next({ name: 'VerifyUser' });
-};
+    default:
+      return next()
+  }
+}
 
 
 const beforeEachRoute = (to, from, next) => {
-  const requiresVerifiedUserRoute = to.matched.some(({ meta }) => meta.requiresVerifiedUser);
+  const requiresVerifiedUserRoute = to.matched.some(({ meta }) => meta.requiresVerifiedUser)
 
-  if (requiresVerifiedUserRoute) return nextRouteForRequiresVerifiedUserRoute(to, from, next);
+  if (requiresVerifiedUserRoute) { return nextRoute('verifiedUser', to, from, next) }
 
+  const requiresAuthenticatedUserRoute = to.matched.some(({ meta }) => meta.requiresAuthenticatedUser)
 
-  const requiresAuthenticatedUserRoute = to.matched.some(({ meta }) => meta.requiresAuthenticatedUser);
+  if (requiresAuthenticatedUserRoute) { return nextRoute('authenticatedUser', to, from, next) }
 
-  if (requiresAuthenticatedUserRoute) return nextRouteForRequiresAuthenticatedUserRoute(to, from, next);
+  const requiresNoLoginRoute = to.matched.some(({ meta }) => meta.requiresNoLogin)
 
+  if (requiresNoLoginRoute) { return nextRoute('noLogin', to, from, next) }
 
-  const requiresNoLoginRoute = to.matched.some(({ meta }) => meta.requiresNoLogin);
+  return next()
+}
 
-  if (requiresNoLoginRoute) return nextRouteForRequiresNoLoginRoute(to, from, next);
-
-  return next();
-};
-
-export default beforeEachRoute;
+export default beforeEachRoute

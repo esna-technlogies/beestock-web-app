@@ -5,7 +5,7 @@ const home = {
   path: '/',
   component: lazyLoading('home/Home'),
   props: true
-};
+}
 
 // --------------------------------------------------
 // Auth Routes
@@ -14,13 +14,13 @@ const login = {
   path: '/login',
   component: lazyLoading('auth/login/Login'),
   props: true
-};
+}
 
 const signup = {
   name: 'Register',
   path: '/register',
   component: lazyLoading('auth/signup/Signup')
-};
+}
 
 const resetPassword = {
   name: 'ResetPassword',
@@ -30,13 +30,13 @@ const resetPassword = {
   meta: {
     requiresNoLogin: true
   }
-};
+}
 
 const verifyUser = {
   name: 'VerifyUser',
   path: '/verify-user',
   component: lazyLoading('auth/verify-user/VerifyUser')
-};
+}
 
 // --------------------------------------------------
 // User Routes
@@ -73,7 +73,7 @@ const profile = {
       }
     }
   ]
-};
+}
 
 const userUploads = {
   name: 'UserUploads',
@@ -82,7 +82,7 @@ const userUploads = {
   meta: {
     requiresAuthenticatedUser: true
   }
-};
+}
 
 
 // --------------------------------------------------
@@ -94,7 +94,7 @@ const photos = {
   meta: {
     requiresAuthenticatedUser: false
   }
-};
+}
 
 const illustrations = {
   name: 'Illustrations',
@@ -103,7 +103,7 @@ const illustrations = {
   meta: {
     requiresAuthenticatedUser: false
   }
-};
+}
 
 
 // --------------------------------------------------
@@ -115,7 +115,7 @@ const footage = {
   meta: {
     requiresAuthenticatedUser: false
   }
-};
+}
 
 
 // --------------------------------------------------
@@ -127,7 +127,7 @@ const audio = {
   meta: {
     requiresAuthenticatedUser: false
   }
-};
+}
 
 // --------------------------------------------------
 // New Upload Routes
@@ -139,7 +139,7 @@ const newUpload = {
     requiresAuthenticatedUser: true,
     requiresVerifiedUser: true
   }
-};
+}
 
 
 // --------------------------------------------------

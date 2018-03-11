@@ -67,9 +67,9 @@
 </template>
 
 <script>
-    import VuesticWidget from "../vuestic-components/vuestic-widget/VuesticWidget";
-    import SearchBox from "../search/SearchBox";
-    import AppAlert from '../app-alert/AppAlert';
+    import VuesticWidget from '../vuestic-components/vuestic-widget/VuesticWidget'
+    import SearchBox from '../search/SearchBox'
+    import AppAlert from '../app-alert/AppAlert'
 
     import categoryService from '../../services/category'
 
@@ -77,9 +77,11 @@
 
 
     export default {
-      name: "home",
-      metaInfo: {
-        title: 'Home'
+      name: 'home',
+      metaInfo () {
+        return {
+          title: this.$t('titles.home')
+        }
       },
       props: {
         alertType: {
@@ -96,7 +98,7 @@
         SearchBox,
         VuesticWidget
       },
-      data() {
+      data () {
         return {
           isLoading: false,
           categoryList: [],
@@ -107,61 +109,57 @@
         ...mapGetters(['isAuthenticatedUser'])
       },
       methods: {
-        async fetchFourRandomPhotos() {
-          this.startLoading();
+        async fetchFourRandomPhotos () {
+          this.startLoading()
 
-          await this.setCategoryList();
+          await this.setCategoryList()
 
-          const fourRandomCategory = this.selectFourRandomCategory();
-          await Promise.all(fourRandomCategory.map(this.fetchRandomPhoto));
+          const fourRandomCategory = this.selectFourRandomCategory()
+          await Promise.all(fourRandomCategory.map(this.fetchRandomPhoto))
 
-          this.stopLoading();
+          this.stopLoading()
         },
         async setCategoryList () {
           try {
-            const categories = await categoryService.findAll().then(response => response.data.categories);
+            const categories = await categoryService.findAll().then(response => response.data.categories)
 
             for (const category of Object.values(categories)) {
-              this.categoryList.push(category);
+              this.categoryList.push(category)
             }
-
           } catch (error) {
-            console.log(error.response ? error.response : error);
+            console.log(error.response ? error.response : error)
           }
         },
         selectFourRandomCategory () {
-          const fourRandomCategory = [];
+          const fourRandomCategory = []
 
           for (let i = 0; i < 4; i++) {
-            const randomIndex = Math.floor(Math.random() * (this.categoryList.length - 0) - 0);
-            fourRandomCategory.push(this.categoryList[randomIndex]);
+            const randomIndex = Math.floor(Math.random() * (this.categoryList.length - 0) - 0)
+            fourRandomCategory.push(this.categoryList[randomIndex])
           }
 
-          return fourRandomCategory;
+          return fourRandomCategory
         },
         async fetchRandomPhoto (category) {
           try {
             const photo = await categoryService.findRandomPhotoByUUID(category.uuid)
-              .then(response => response.data.photo);
+              .then(response => response.data.photo)
 
-            photo.category_title = category.title;
-            this.randomPhotoList.push(photo);
-
+            photo.category_title = category.title
+            this.randomPhotoList.push(photo)
           } catch (error) {
-            console.log(error.response ? error.response : error);
+            console.log(error.response ? error.response : error)
           }
         },
         startLoading () {
-          this.isLoading = true;
+          this.isLoading = true
         },
         stopLoading () {
-          this.isLoading = false;
+          this.isLoading = false
         }
       },
       created () {
-        if (this.$store.getters.isAuthenticatedUser) {
-          this.fetchFourRandomPhotos();
-        }
+        if (this.$store.getters.isAuthenticatedUser) this.fetchFourRandomPhotos()
       }
     }
 </script>

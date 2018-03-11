@@ -68,14 +68,12 @@
 </template>
 
 <script>
-  import { HollowDotsSpinner } from 'epic-spinners';
   import Spinner from 'vue-simple-spinner'
 
 
   export default {
-    name: "profile",
+    name: 'profile',
     components: {
-      HollowDotsSpinner,
       Spinner
     },
     data () {
@@ -86,33 +84,33 @@
     },
     methods: {
       operationSucceeded () {
-        this.isSuccessOperation = true;
+        this.isSuccessOperation = true
       },
       startLoading () {
-        this.isLoading = true;
-        this.isSuccessOperation = false;
+        this.isLoading = true
+        this.isSuccessOperation = false
       },
       stopLoading () {
-        this.isLoading = false;
+        this.isLoading = false
       },
       setErrorAlert (message = 'Default Error Message') {
-        this.isErrorAlert = true;
-        this.errorAlertMessage = message;
+        this.isErrorAlert = true
+        this.errorAlertMessage = message
       },
       clearErrorAlert () {
-        this.isErrorAlert = false;
-        this.errorAlertMessage = '';
+        this.isErrorAlert = false
+        this.errorAlertMessage = ''
       },
       resetAll () {
-        this.isLoading = false;
-        this.isErrorAlert = false;
-        this.errorAlertMessage = '';
-        this.isSuccessOperation = false;
+        this.isLoading = false
+        this.isErrorAlert = false
+        this.errorAlertMessage = ''
+        this.isSuccessOperation = false
       }
     },
     watch: {
       $route (to, from) {
-        this.resetAll();
+        this.resetAll()
       }
     }
   }

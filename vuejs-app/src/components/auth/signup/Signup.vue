@@ -204,20 +204,22 @@
 </template>
 
 <script>
-  import Multiselect from 'vue-multiselect';
-  import { HollowDotsSpinner } from 'epic-spinners';
-  import Spinner from 'vue-simple-spinner';
+  import Multiselect from 'vue-multiselect'
+import { HollowDotsSpinner } from 'epic-spinners'
+import Spinner from 'vue-simple-spinner'
 
-  import CountryList from '../../../data/country-list';
-  import VuesticPreLoader from "../../vuestic-components/vuestic-preloader/VuesticPreLoader";
+import CountryList from '../../../data/country-list'
+import VuesticPreLoader from '../../vuestic-components/vuestic-preloader/VuesticPreLoader'
 
-  import { routerHelper } from '../../../helpers';
+import { routerHelper } from '../../../helpers'
 
 
-  export default {
+export default {
     name: 'signup',
-    metaInfo: {
-      title: "Signup"
+    metaInfo () {
+      return {
+        title: this.$t('titles.signup')
+      }
     },
     components: {
       Multiselect,
@@ -225,7 +227,7 @@
       HollowDotsSpinner,
       Spinner
     },
-    data() {
+    data () {
       return {
         isLoading: false,
         isErrorAlert: false,
@@ -243,22 +245,21 @@
     },
     methods: {
       async doSignup () {
-        if (! await this.$validator.validateAll()) return;
+        if (!await this.$validator.validateAll()) return
 
-        this.startLoading();
-        this.clearErrorAlert();
+        this.startLoading()
+        this.clearErrorAlert()
 
         try {
-          const userDetails = await this.createUserDetailsFromFormData();
-          await this.$store.dispatch('doSignup', userDetails);
+          const userDetails = await this.createUserDetailsFromFormData()
+          await this.$store.dispatch('doSignup', userDetails)
 
-          routerHelper.signupDone();
-
+          routerHelper.signupDone()
         } catch (error) {
-          this.handleFailedSignup(error);
+          this.handleFailedSignup(error)
         }
 
-        this.stopLoading();
+        this.stopLoading()
       },
       createUserDetailsFromFormData () {
         return {
@@ -272,50 +273,49 @@
             password: this.password
           },
           mobileNumber: {
-            number: this.mobileNumber[0] === '0'? this.mobileNumber : `0${this.mobileNumber}`,
+            number: this.mobileNumber[0] === '0' ? this.mobileNumber : `0${this.mobileNumber}`,
             countryCode: this.country.abbr
           }
         }
       },
       handleFailedSignup (error) {
         if (!error.response) {
-          this.setErrorAlert("Unknown error, please call the website's administrator");
-
+          this.setErrorAlert("Unknown error, please call the website's administrator")
         } else {
-          const errorDetails = error.response.data.error.details;
+          const errorDetails = error.response.data.error.details
 
           for (const field of Object.keys(errorDetails)) {
-            const errorMessage = errorDetails[field].message.split(' - ');
+            const errorMessage = errorDetails[field].message.split(' - ')
 
-            const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1];
+            const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1]
 
-            this.errors.add(field, message);
+            this.errors.add(field, message)
           }
 
-          this.setErrorAlert(error.response.data.error.message);
+          this.setErrorAlert(error.response.data.error.message)
         }
       },
       startLoading () {
-        this.isLoading = true;
+        this.isLoading = true
       },
       stopLoading () {
-        this.isLoading = false;
+        this.isLoading = false
       },
       clearErrorAlert () {
-        this.isErrorAlert = false;
-        this.errorAlertMessage = '';
+        this.isErrorAlert = false
+        this.errorAlertMessage = ''
       },
       setErrorAlert (message = 'Default Error Message') {
-        this.isErrorAlert = true;
-        this.errorAlertMessage = message;
+        this.isErrorAlert = true
+        this.errorAlertMessage = message
       },
       nameWithCountryCode ({ name, countryCode }) {
-        return `${name} — [${countryCode}]`;
+        return `${name} — [${countryCode}]`
       }
     },
     created () {
       if (this.$store.getters.isAuthenticatedUser) {
-        return this.$router.replace({ name: 'Home' });
+        return this.$router.replace({ name: 'Home' })
       }
     }
   }

@@ -1,12 +1,12 @@
 const changeRequest = {
   activateAccount: '/api/user-service/changeRequest/{uuid}/activate-account'
-};
+}
 
 const userSecurity = {
   login: '/api/user-service/security/login',
   logout: '/api/user-service/security/logout/user/{uuid}',
   forgotPassword: '/api/user-service/security/forgotPassword'
-};
+}
 
 const userAccount = {
   findAll: '/api/user-service/user',
@@ -16,7 +16,7 @@ const userAccount = {
   partialUpdate: '/api/user-service/user/{uuid}',
   replace: '/api/user-service/user/{uuid}',
   suspendByUUID: '/api/user-service/user/{uuid}/suspend'
-};
+}
 
 const photo = {
   findAll: '/api/photo-service/photo',
@@ -25,7 +25,7 @@ const photo = {
   findByUserUUID: '/api/photo-service/photo/filter-by/user/{uuid}',
   findKeywordsList: '/api/photo-service/photo/keywords',
   findByCategoryUUID: '/api/photo-service/photo/filter-by/category/{uuid}'
-};
+}
 
 const category = {
   findAll: '/api/photo-service/category',
@@ -33,7 +33,7 @@ const category = {
   findRandomPhotoByUUID: '/api/photo-service/category/random/category/{uuid}',
   delete: '/api/photo-service/category/{uuid}',
   findByUUID: '/api/photo-service/category/{uuid}'
-};
+}
 
 
 export {

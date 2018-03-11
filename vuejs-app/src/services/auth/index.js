@@ -11,14 +11,14 @@ import api from '../../api/beestock'
 
 
 const signup = (queryParams = {}) => {
-  const url = userAccountEndpoint.create;
-  return api.post(url, formUrlEncoded(queryParams));
-};
+  const url = userAccountEndpoint.create
+  return api.post(url, formUrlEncoded(queryParams))
+}
 
 const login = (queryParams = {}) => {
-  const url = userSecurityEndpoint.login;
-  return api.post(url, formUrlEncoded(queryParams));
-};
+  const url = userSecurityEndpoint.login
+  return api.post(url, formUrlEncoded(queryParams))
+}
 
 const verifyUser = (uuid, queryParams = {}) => {
   const url = urlHelper.reformatUrl({
@@ -26,28 +26,28 @@ const verifyUser = (uuid, queryParams = {}) => {
     pathParams: {
       uuid
     }
-  });
+  })
 
-  return api.patch(url, formUrlEncoded(queryParams));
-};
+  return api.patch(url, formUrlEncoded(queryParams))
+}
 
 const resetUserPassword = (emailOrMobileNumber) => {
   const url = urlHelper.reformatUrl({
-    url: userSecurityEndpoint.forgotPassword,
-  });
+    url: userSecurityEndpoint.forgotPassword
+  })
 
-  const queryParams = {userName: emailOrMobileNumber};
+  const queryParams = {userName: emailOrMobileNumber}
 
-  return api.post(url, formUrlEncoded(queryParams));
-};
+  return api.post(url, formUrlEncoded(queryParams))
+}
 
 const isAuthenticated = () => {
-  return store.getters.isAuthenticatedUser === true;
-};
+  return store.getters.isAuthenticatedUser === true
+}
 
 const isVerifiedUser = () => {
-  return !store.getters.userDetails.roles.includes('ROLE_INACTIVE');
-};
+  return !store.getters.userDetails.roles.includes('ROLE_INACTIVE')
+}
 
 
 export default {

@@ -103,12 +103,12 @@
 </template>
 
 <script>
-  import Multiselect from 'vue-multiselect';
+  import Multiselect from 'vue-multiselect'
 
-  import CountryList from '../../data/country-list';
+import CountryList from '../../data/country-list'
 
-  export default {
-    name: "address-and-billing-details",
+export default {
+    name: 'address-and-billing-details',
     meta: {
       title: 'Address & Billing Details'
     },
@@ -123,8 +123,8 @@
         billingAddress: '',
         currencyList: [
           {
-            name: "US Dollar",
-            currency: "US"
+            name: 'US Dollar',
+            currency: 'US'
           }
         ],
         billingCurrency: '',

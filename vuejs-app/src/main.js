@@ -7,8 +7,8 @@ import App from './App'
 import store from './store'
 import router from './router'
 import { sync } from 'vuex-router-sync'
-import VuesticPlugin from 'vuestic-components/vuestic-components-plugin';
-import VuesticMixinsPlugin from 'vuestic-mixins/vuestic-mixins-plugin';
+import VuesticPlugin from 'vuestic-components/vuestic-components-plugin'
+import VuesticMixinsPlugin from 'vuestic-mixins/vuestic-mixins-plugin'
 import './i18n'
 
 import Meta from 'vue-meta'
@@ -20,15 +20,15 @@ import beforeEachRoute from './router/before-each-route'
 
 Vue.use(VuesticPlugin)
 Vue.use(VuesticMixinsPlugin)
-Vue.use(require('vue-moment'));
-Vue.use(Meta);
+Vue.use(require('vue-moment'))
+Vue.use(Meta)
 
 
 // NOTE: workaround for VeeValidate + vuetable-2
 Vue.use(VeeValidate, {
   fieldsBagName: 'formFields',
   dictionary: VueValidateCustomDictionary
-});
+})
 
 sync(store, router)
 
@@ -41,21 +41,21 @@ let mediaHandler = () => {
 }
 
 router.beforeEach((to, from, next) => {
-  store.commit('setLoading', true);
+  store.commit('setLoading', true)
 
-  const token = localStorage.getItem('jwtToken');
+  const token = localStorage.getItem('jwtToken')
 
   if (token) {
-    const userDetails = {};
+    const userDetails = {}
     Object.keys(store.getters.userDetails)
-      .map(item => userDetails[item] = localStorage.getItem(item));
+      .map(item => { userDetails[item] = localStorage.getItem(item) })
 
-    store.dispatch('storeUserDetails', userDetails);
-    store.dispatch('storeJwtToken', token);
-    store.commit('setUserAsAuthenticated');
+    store.dispatch('storeUserDetails', userDetails)
+    store.dispatch('storeJwtToken', token)
+    store.commit('setUserAsAuthenticated')
   }
 
-  return beforeEachRoute(to, from, next);
+  return beforeEachRoute(to, from, next)
 })
 
 router.afterEach((to, from) => {

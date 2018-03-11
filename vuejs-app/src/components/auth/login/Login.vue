@@ -92,12 +92,14 @@
 
 <script>
   import AppAlert from '../../app-alert/AppAlert'
-  import Spinner from 'vue-simple-spinner';
+  import Spinner from 'vue-simple-spinner'
 
-  export default {
+export default {
     name: 'login',
-    metaInfo: {
-      title: "Login"
+    metaInfo () {
+      return {
+        title: this.$t('titles.login')
+      }
     },
     props: {
       alertType: {
@@ -125,57 +127,54 @@
     },
     methods: {
       async doLogin () {
-        if (! await this.$validator.validateAll()) return;
+        if (!await this.$validator.validateAll()) return
 
-        this.clearErrorAlert();
-        this.startLoading();
+        this.clearErrorAlert()
+        this.startLoading()
 
         const queryParams = {
           userName: this.userName,
           password: this.password
-        };
+        }
 
         try {
-          await this.$store.dispatch('doLogin', queryParams);
-          this.$router.push(this.sendTo);
-
+          await this.$store.dispatch('doLogin', queryParams)
+          this.$router.push(this.sendTo)
         } catch (error) {
-          this.handleFailedLogin(error);
-
+          this.handleFailedLogin(error)
         } finally {
-          this.stopLoading();
+          this.stopLoading()
         }
       },
       handleFailedLogin (error) {
         if (!error.response) {
-          this.setErrorAlert(error.message);
-
+          this.setErrorAlert(error.message)
         } else {
-          this.setErrorAlert(error.response.data.message);
+          this.setErrorAlert(error.response.data.message)
         }
       },
       startLoading () {
-        this.isLoading = true;
+        this.isLoading = true
       },
       stopLoading () {
-        this.isLoading = false;
+        this.isLoading = false
       },
       clearErrorAlert () {
-        this.isErrorAlert = false;
-        this.errorAlertMessage = '';
+        this.isErrorAlert = false
+        this.errorAlertMessage = ''
       },
       setErrorAlert (message = 'Default Error Message') {
-        this.isErrorAlert = true;
-        this.errorAlertMessage = message;
+        this.isErrorAlert = true
+        this.errorAlertMessage = message
       }
     },
     computed: {
       sendTo () {
-        const { prev, redirect } = this.$route.query;
-        if (redirect !== undefined) return { name: redirect };
-        if (prev !== undefined) return { path: prev };
+        const { prev, redirect } = this.$route.query
+        if (redirect !== undefined) return { name: redirect }
+        if (prev !== undefined) return { path: prev }
 
-        return { name: 'Home' };
+        return { name: 'Home' }
       }
     },
     created () {
@@ -186,7 +185,7 @@
             alertType: this.alertType,
             alertMessage: this.alertMessage
           }
-        });
+        })
       }
     }
   }

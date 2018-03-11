@@ -32,10 +32,10 @@
 </template>
 
 <script>
-  import Multiselect from 'vue-multiselect';
+  import Multiselect from 'vue-multiselect'
 
-  export default {
-    name: "search-box",
+export default {
+    name: 'search-box',
     components: {
       Multiselect
     },
@@ -43,8 +43,8 @@
       return {
         searchSelect: {
           placeholder: 'Search for photos',
-          options: ["Photos", "Illustrations", "Footage", "Audio"],
-          selectedOption: "Photos",
+          options: ['Photos', 'Illustrations', 'Footage', 'Audio'],
+          selectedOption: 'Photos'
         }
       }
     },

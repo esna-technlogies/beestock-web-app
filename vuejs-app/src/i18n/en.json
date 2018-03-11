@@ -350,5 +350,25 @@
     "register": "REGISTER",
     "upload": "UPLOAD",
     "priceAndPlans": "PRICE & PLANS"
+  },
+  "titles": {
+    "titleTemplate": "%s | BeeStock",
+    "app": "BeeStock :: Media Store",
+    "photos": "Photos",
+    "login": "Login",
+    "signup": "Signup",
+    "changePassword": "Change Password",
+    "profileSettings": "Profile Settings",
+    "verifyUser": "Verify User",
+    "resetPassword": "Reset Password",
+    "home": "Home",
+    "footage": "Footage",
+    "categories": "Categories",
+    "audio": "Audio",
+    "illustrations": "Illustrations",
+    "category": "Category",
+    "categoryTitle": "{categoryTitle} Category",
+    "newUpload": "New Upload",
+    "myUploads": "My Uploads"
   }
 }

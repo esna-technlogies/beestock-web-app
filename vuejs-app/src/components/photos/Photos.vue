@@ -13,9 +13,11 @@
 <script>
 
   export default {
-    name: "photos",
-    metaInfo: {
-      title: 'Photos'
+    name: 'photos',
+    metaInfo () {
+      return {
+        title: this.$t('titles.photos')
+      }
     }
   }
 </script>

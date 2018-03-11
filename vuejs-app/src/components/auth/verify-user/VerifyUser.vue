@@ -63,13 +63,15 @@
 
 <script>
   import AppAlert from '../../app-alert/AppAlert'
-  import { routerHelper } from '../../../helpers';
-  import Spinner from 'vue-simple-spinner';
+  import { routerHelper } from '../../../helpers'
+import Spinner from 'vue-simple-spinner'
 
-  export default {
-    name: "verify-user",
-    metaInfo: {
-      title: 'Verify User'
+export default {
+    name: 'verify-user',
+    metaInfo () {
+      return {
+        title: this.$t('titles.verifyUser')
+      }
     },
     components: {
       AppAlert,
@@ -85,47 +87,45 @@
     },
     methods: {
       async doVerifyUser () {
-        if (! await this.$validator.validateAll()) return;
+        if (!await this.$validator.validateAll()) return
 
-        this.startLoading();
+        this.startLoading()
 
         const verificationDetails = {
           uuid: this.$store.getters.userDetails.uuid,
           code: this.verificationCode
-        };
-
-        try {
-          await this.$store.dispatch('verifyUser', verificationDetails);
-          this.$store.dispatch('doLogout');
-          routerHelper.verifyUserDone();
-
-        } catch (error) {
-          this.handleFailedVerification(error);
         }
 
-        this.stopLoading();
+        try {
+          await this.$store.dispatch('verifyUser', verificationDetails)
+          this.$store.dispatch('doLogout')
+          routerHelper.verifyUserDone()
+        } catch (error) {
+          this.handleFailedVerification(error)
+        }
+
+        this.stopLoading()
       },
       handleFailedVerification (error) {
         if (!error.response) {
-          this.setErrorAlert("Unknown error, please call the website's administrator");
-
+          this.setErrorAlert("Unknown error, please call the website's administrator")
         } else {
-          this.setErrorAlert(error.response.data.error.message);
+          this.setErrorAlert(error.response.data.error.message)
         }
       },
       startLoading () {
-        this.isLoading = true;
+        this.isLoading = true
       },
       stopLoading () {
-        this.isLoading = false;
+        this.isLoading = false
       },
       clearErrorAlert () {
-        this.isErrorAlert = false;
-        this.errorAlertMessage = '';
+        this.isErrorAlert = false
+        this.errorAlertMessage = ''
       },
       setErrorAlert (message = 'Default Error Message') {
-        this.isErrorAlert = true;
-        this.errorAlertMessage = message;
+        this.isErrorAlert = true
+        this.errorAlertMessage = message
       }
     }
   }

@@ -30,9 +30,13 @@
   import categoryService from '../../services/category'
 
   export default {
-    name: "category",
-    metaInfo: {
-      title: this.category ? `${this.category.title} Category` : 'Category'
+    name: 'category',
+    metaInfo () {
+      return {
+        title: this.category
+          ? this.$t('titles.categoryTitle', { 'categoryTitle': this.category.title })
+          : this.$t('titles.category')
+      }
     },
     props: {
       uuid: {
@@ -48,47 +52,45 @@
     },
     computed: {
       breadcrumbs () {
-        this.$route.meta.title = this.category.title;
+        this.$route.meta.title = this.category.title
 
         return [
           this.$route.matched.find(route => route.parent === undefined),
           this.$route
-        ];
+        ]
       }
     },
     methods: {
       async fetchCategoryDetails () {
         try {
           this.category = await categoryService.findByUUID(this.uuid)
-            .then(response => response.data.category);
-
+            .then(response => response.data.category)
         } catch (error) {
-          console.log(error.response ? error.response : error);
+          console.log(error.response ? error.response : error)
         }
       },
       async fetchCategoryPhotos () {
-        this.startLoading();
+        this.startLoading()
 
         try {
           this.photoList = await photoService.findByCategoryUUID(this.uuid)
-            .then(response => Object.values(response.data.photos));
-
+            .then(response => Object.values(response.data.photos))
         } catch (error) {
-          console.log(error.response ? error.response : error);
+          console.log(error.response ? error.response : error)
         }
 
-        this.stopLoading();
+        this.stopLoading()
       },
       startLoading () {
-        this.$store.commit('setLoading', true);
+        this.$store.commit('setLoading', true)
       },
       stopLoading () {
-        this.$store.commit('setLoading', false);
+        this.$store.commit('setLoading', false)
       }
     },
     created () {
-      this.fetchCategoryDetails();
-      this.fetchCategoryPhotos();
+      this.fetchCategoryDetails()
+      this.fetchCategoryPhotos()
     }
   }
 </script>

@@ -4,9 +4,9 @@ import { urlHelper } from '../../helpers'
 
 
 const findAll = () => {
-  const url = categoryEndpoint.findAll;
-  return api.get(url);
-};
+  const url = categoryEndpoint.findAll
+  return api.get(url)
+}
 
 const findByUUID = uuid => {
   const url = urlHelper.reformatUrl({
@@ -14,10 +14,10 @@ const findByUUID = uuid => {
     pathParams: {
       uuid
     }
-  });
+  })
 
-  return api.get(url);
-};
+  return api.get(url)
+}
 
 const findRandomPhotoByUUID = uuid => {
   const url = urlHelper.reformatUrl({
@@ -25,10 +25,10 @@ const findRandomPhotoByUUID = uuid => {
     pathParams: {
       uuid
     }
-  });
+  })
 
-  return api.get(url);
-};
+  return api.get(url)
+}
 
 export default {
   findAll,

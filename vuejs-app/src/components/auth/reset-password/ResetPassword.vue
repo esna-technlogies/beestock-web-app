@@ -62,14 +62,16 @@
 
 <script>
   import AppAlert from '../../app-alert/AppAlert'
-  import Spinner from 'vue-simple-spinner';
+  import Spinner from 'vue-simple-spinner'
 
-  import { routerHelper } from "../../../helpers";
+import { routerHelper } from '../../../helpers'
 
-  export default {
-    name: "reset-password",
-    metaInfo: {
-      title: "Reset Password"
+export default {
+    name: 'reset-password',
+    metaInfo () {
+      return {
+        title: this.$t('titles.resetPassword')
+      }
     },
     props: {
       alertType: {
@@ -95,40 +97,38 @@
     },
     methods: {
       async doResetPassword () {
-        this.startLoading();
-        this.clearErrorAlert();
+        this.startLoading()
+        this.clearErrorAlert()
 
         try {
-          await this.$store.dispatch('doResetPassword', this.emailOrMobileNumber);
-          routerHelper.resetUserPasswordDone();
-
+          await this.$store.dispatch('doResetPassword', this.emailOrMobileNumber)
+          routerHelper.resetUserPasswordDone()
         } catch (error) {
-          this.handleFailedPasswordReset(error);
+          this.handleFailedPasswordReset(error)
         }
 
-        this.stopLoading();
+        this.stopLoading()
       },
       handleFailedPasswordReset (error) {
         if (!error.response) {
-          this.setErrorAlert("Unknown error, please call the website's administrator");
-
+          this.setErrorAlert("Unknown error, please call the website's administrator")
         } else {
-          this.setErrorAlert(error.response.data.error.message);
+          this.setErrorAlert(error.response.data.error.message)
         }
       },
       startLoading () {
-        this.isLoading = true;
+        this.isLoading = true
       },
       stopLoading () {
-        this.isLoading = false;
+        this.isLoading = false
       },
       clearErrorAlert () {
-        this.isErrorAlert = false;
-        this.errorAlertMessage = '';
+        this.isErrorAlert = false
+        this.errorAlertMessage = ''
       },
       setErrorAlert (message = 'Default Error Message') {
-        this.isErrorAlert = true;
-        this.errorAlertMessage = message;
+        this.isErrorAlert = true
+        this.errorAlertMessage = message
       }
     }
   }

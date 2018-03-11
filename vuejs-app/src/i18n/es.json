@@ -1,335 +1,374 @@
 {
   "auth": {
-    "agree": "Acepto",
-    "alreadyJoined": "Ya tienes una cuenta?",
-    "createAccount": "Create cuenta",
-    "createNewAccount": "Crear cuenta",
+    "agree": "I agree to",
+    "alreadyJoined": "Already joined?",
+    "createAccount": "Create account",
+    "createNewAccount": "Create account",
     "email": "Email",
-    "login": "Iniciar sesión",
-    "password": "Contraseña",
-    "signUp": "Registrar",
-    "termsOfUse": "Los terminos de uso",
-    "welcome": "Bienvenido!"
+    "login": "Login",
+    "password": "Password",
+    "signUp": "Sign Up",
+    "termsOfUse": "Terms of Use.",
+    "welcome": "Welcome!"
+  },
+  "breadcrumbs": {
+    "home": "Home"
   },
   "buttons": {
-    "advanced": "Iconos, Grupos, Dropdowns",
-    "button": "BOTON",
-    "colors": "Colores",
-    "disabled": "DESHABILITADO",
-    "dropdown": "DESPLEGABLE",
+    "advanced": "Icons, Groups, Dropdowns",
+    "button": "BUTTON",
+    "colors": "Colors",
+    "disabled": "DISABLED",
+    "dropdown": "DROPDOWN",
     "hover": "HOVER",
-    "main": "Botón Primario y Secundario",
+    "main": "Primary & Secondary Buttons",
     "micro": "MICRO",
-    "pressed": "PRESIONADO",
-    "small": "PEQUEÑO"
+    "pressed": "PRESSED",
+    "small": "SMALL"
   },
   "charts": {
-    "bubbleChart": "Bubble Chart",
-    "donutChart": "Donut Chart",
     "horizontalBarChart": "Horizontal Bar Chart",
+    "verticalBarChart": "Vertical Bar Chart",
     "lineChart": "Line Chart",
     "pieChart": "Pie Chart",
-    "verticalBarChart": "Vertical Bar Chart"
+    "donutChart": "Donut Chart",
+    "bubbleChart": "Bubble Chart"
   },
   "dashboard": {
-    "elements": "Elementos",
-    "success": "ÉXITO",
-    "successMessage": "Ha leído correctamente este mensaje de alerta importante.",
-    "teamMembers": "Miembros del Equipo",
-    "versions": "Versiones"
+    "dataVisualization": "Data Visualization",
+    "success": "SUCCESS",
+    "successMessage": "You successfully read this important alert message.",
+    "elements": "Elements",
+    "features": "Features",
+    "setupProfile": "Setup Profile",
+    "teamMembers": "Team Members",
+    "usersAndMembers": "Users & Members",
+    "versions": "Versions"
   },
   "notificationsPage": {
     "alerts": {
       "title": "Alerts",
-      "success": "ÉXITO",
-      "successMessage": "Ha leído correctamente este mensaje de alerta importante.",
+      "success": "SUCCESS",
+      "successMessage": "You successfully read this important alert message.",
       "info": "INFO",
-      "infoMessage": "Esta alerta necesita tu atención, pero no es muy importante.",
-      "warning": "ADVERTENCIA",
-      "warningMessage": "Mejor compruébalo, esto no pinta bien.",
-      "danger": "PELIGRO",
-      "dangerMessage": "Cambiar algunas cosas e enviarlo de nuevo."
+      "infoMessage": "This alert needs your attention, but it's not super important.",
+      "warning": "WARNING",
+      "warningMessage": "Better check yourself, you're not looking too good.",
+      "danger": "DANGER",
+      "dangerMessage": "Change a few things up and try submitting again."
     },
     "popovers": {
       "title": "Tooltips & Popovers",
-      "popoverTitleLabel": "Title de Popover",
-      "popoverTextLabel": "Texto de Popover",
-      "popoverIconLabel": "Icono de Popover (fontawesome)",
-      "showPopover": "Mostrar Popover",
-      "topTooltip": "tope tooltip",
-      "rightTooltip": "derecha tooltip",
-      "leftTooltip": "izquierda",
-      "bottomTooltip": "fondo"
+      "popoverTitleLabel": "Popover Title",
+      "popoverTextLabel": "Popover Text",
+      "popoverIconLabel": "Popover Icon (fontawesome)",
+      "showPopover": "Show Popover",
+      "topTooltip": "top tooltip",
+      "rightTooltip": "rightside tooltip",
+      "leftTooltip": "left",
+      "bottomTooltip": "below"
     },
-    "Toasts": {
-      "title": "tostadas",
-      "textLabel": "Texto",
-      "durationLabel": "Duración (milisegundos)",
-      "iconLabel": "Icono (fontawesome)",
-      "fullWidthLabel": "Ancho total",
-      "launchToast": "Lanzar tostadas"
+    "toasts": {
+      "title": "Toasts",
+      "textLabel": "Text",
+      "durationLabel": "Duration (milliseconds)",
+      "iconLabel": "Icon (fontawesome)",
+      "fullWidthLabel": "Fullwidth",
+      "launchToast": "Launch toast"
     }
   },
   "extra": {
     "tabs": {
       "title": "Tabs",
-      "maps": "Mapas",
-      "overview": "Visión de conjunto",
-      "setupProfile": "Perfil de Configuración"
+      "maps": "Maps",
+      "overview": "Overview",
+      "setupProfile": "Setup Profile"
     },
     "chat": "Chat",
-    "profileCard": "Tarjeta de Perfil"
+    "profileCard": "Profile Card"
   },
   "forms": {
     "controls": {
-      "female": "Mujer",
-      "male": "Hombre",
+      "female": "Female",
+      "male": "Male",
       "title": "Checkboxes, Radios, Switches",
-      "radioDisabled": "Radio Desactivado",
+      "radioDisabled": "Disabled Radio",
       "radio": "Radio",
-      "subscribe": "Suscribirse a la newsletter"
+      "subscribe": "Subscribe to newsletter"
     },
     "inputs": {
-      "emailValidatedSuccess": "Email (validado con éxito)",
-      "emailValidated": "Email (validado)",
-      "inputWithIcon": "Input con Icono",
-      "inputWithButton": "Input con Boton",
+      "emailValidatedSuccess": "Email (validated with success)",
+      "emailValidated": "Email (validated)",
+      "inputWithIcon": "Input With Icon",
+      "inputWithButton": "Input With Button",
       "inputWithClearButton": "Input With Clear Button",
       "inputWithRoundButton": "Input With Round Button",
-      "textInput": "Input de Texto",
-      "textInputWithDescription": "Input de Texto (con descripcion)",
+      "textInput": "Text Input",
+      "textInputWithDescription": "Text Input (with description)",
       "textArea": "Text Area",
       "title": "Inputs",
-      "upload": "SUBIR"
+      "upload": "UPLOAD"
     },
     "checkboxes": {
-      "acceptTheLicenceAgreement": "",
-      "billingAddress": ""
+      "acceptTheLicenceAgreement": "Accept The Licence Agreement",
+      "billingAddress": "Billing Address"
     },
     "heads": {
-      "signin": "",
-      "signup": "",
-      "resetPassword": "",
-      "verifyUser": ""
+      "signin": "Sign In",
+      "signup": "Sign Up",
+      "logout": "Logout",
+      "resetPassword": "Reset Password",
+      "verifyUser": "Please Enter Your Verification Code"
     },
     "labels": {
-      "firstName": "",
-      "lastName": "",
-      "email": "",
-      "password": "",
-      "passwordConfirmation": "",
-      "mobileNumber": "",
-      "verificationCode": "",
-      "emailOrMobileNumber": ""
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "password": "Password",
+      "passwordConfirmation": "Password Confirmation",
+      "mobileNumber": "Mobile Number",
+      "verificationCode": "Your Verification Code",
+      "emailOrMobileNumber": "Email Address or Mobile Number"
     },
     "mediumEditor": {
       "title": "Medium Editor"
     },
     "selects": {
-      "country": "",
-      "countryWithCode": "",
-      "countryMulti": "País Multi Select",
+      "country": "Select Country",
+      "countryWithCode": "Select Country - [Mobile Code]",
+      "countryMulti": "Country Multi Select",
+      "currency": "Select Currency",
       "multi": "Multi Select",
-      "simple": "Select Simple",
+      "simple": "Simple Select",
       "title": "Selects"
     },
     "wizard": {
-      "completed": "Asistente Completado!",
-      "confirmSelection": "Confirmar selección",
-      "name": "Nombre",
-      "rich": "Asistente Rico",
-      "simple": "Asistente Simple",
-      "stepOne": "Step 1. Nombre",
-      "stepTwo": "Step 2. País",
-      "stepThree": "Step 3. Confirmar",
-      "verticalRich": "Asistente Rico Vertical",
-      "verticalSimple": "Asistente Simple Vertical"
+      "name": "Name",
+      "completed": "Wizard completed!",
+      "confirmSelection": "Confirm selection",
+      "rich": "Rich Wizard",
+      "simple": "Simple Wizard",
+      "stepOne": "Step 1. Name",
+      "stepTwo": "Step 2. Country",
+      "stepThree": "Step 3. Confirm",
+      "verticalRich": "Vertical Rich Wizard",
+      "verticalSimple": "Vertical Simple Wizard"
     },
     "buttons": {
-      "signin": "",
-      "signup": "",
-      "submit": "",
-      "confirm": "",
-      "saveChanges": ""
+      "signin": "Sign In",
+      "signup": "Sign Up",
+      "submit": "Submit",
+      "confirm": "Confirm",
+      "saveChanges": "Save Changes"
+    },
+    "alerts": {
+      "signin": {
+        "badCredentials": ""
+      }
     },
     "misc": {
-      "alreadyHaveAccount": "",
-      "signInHere": "",
-      "donotHaveAccount": "",
-      "signUpHere": "",
-      "rememberMe": "",
-      "forgetPassword": ""
+      "alreadyHaveAccount": "You already have account?",
+      "signInHere": "Sign In Here",
+      "donotHaveAccount": "Don't have an account?",
+      "signUpHere": "Sign Up Here",
+      "rememberMe": "Remember Me",
+      "forgetPassword": "Forget Password?"
     }
   },
   "grid": {
-    "fixed": "Grid Fijo",
     "desktop": "Desktop Grid",
-    "responsive": "Responsive Grid",
-    "offsets": "Offsets"
+    "fixed": "Fixed Grid",
+    "offsets": "Offsets",
+    "responsive": "Responsive Grid"
   },
   "icons": {
-    "back": "Volver a los iconos",
-    "none": "No se han encontrado iconos",
-    "search": "Búsqueda de iconos",
-    "title": "Iconos"
+    "back": "Back to icons",
+    "none": "No icons found",
+    "search": "Icon search",
+    "title": "Icons"
+  },
+  "spinners": {
+    "title": "Spinners",
+    "poweredBy": "Powered by"
   },
   "language": {
-    "english": "Ingles",
-    "spanish": "Español"
+    "english": "English",
+    "spanish": "Spanish"
   },
   "menu": {
-    "auth": "Autenticación",
-    "buttons": "Botones",
-    "charts": "Gráficos",
+    "auth": "Auth",
+    "buttons": "Buttons",
+    "charts": "Charts",
     "dashboard": "Dashboard",
     "extra": "Extra",
-    "formElements": "Elementos de un Formulario",
-    "forms": "Formularios",
-    "formWizards": "Asistente para Formularios",
+    "formElements": "Form Elements",
+    "forms": "Forms",
+    "formWizards": "Form Wizards",
     "mediumEditor": "Medium Editor",
     "grid": "Grid",
-    "icons": "Iconos",
-    "login": "Iniciar sesión",
-    "maps": "Mapas",
+    "icons": "Icons",
+    "spinners": "Spinners",
+    "login": "Login",
+    "maps": "Maps",
     "modals": "Modals",
-    "notifications": "Notificaciones",
-    "progressBars": "Barras de Progreso",
-    "signUp": "Registrar",
-    "statistics": "Estadisticas",
-    "tables": "Tablas",
-    "typography": "Tipografía",
-    "uiElements": "Elementos UI"
+    "notifications": "Notifications",
+    "progressBars": "Progress Bars",
+    "signUp": "Sign up",
+    "statistics": "Statistics",
+    "tables": "Tables",
+    "typography": "Typography",
+    "uiElements": "UI Elements"
   },
   "messages": {
-    "all": "Ver todos los mensajes",
-    "new": "Nuevo mensajes de {name}"
+    "all": "See all messages",
+    "new": "New messages from {name}"
   },
   "modal": {
-    "cancel": "CANCELAR",
-    "close": "CERRAR",
-    "confirm": "CONFIRMAR",
-    "large": "Largo",
-    "largeTitle": "Modal Largo",
-    "medium": "Mediano",
-    "mediumTitle": "Modal Mediana",
-    "small": "Pequeño",
-    "static": "Estático",
-    "smallTitle": "Modal Pequeña",
+    "cancel": "CANCEL",
+    "close": "CLOSE",
+    "confirm": "CONFIRM",
+    "large": "Large",
+    "largeTitle": "Large Modal",
+    "medium": "Medium",
+    "mediumTitle": "Medium Modal",
+    "small": "Small",
+    "smallTitle": "Small Modal",
+    "static": "Static",
     "staticMessage":
-      "Esto es un modal estático. No se cerrará haciendo clic en el fondo.",
-    "staticTitle": "Modal Estático",
+    "This is a static modal, backdrop click will not close it.",
+    "staticTitle": "Static Modal",
     "title": "Modals"
   },
   "notifications": {
-    "all": "Ver todos los notificaciones",
-    "sentMessage": "{name} te ha mandado un mensaje",
-    "uploadedZip": "{name} ha subido un archivo Zip con {type}",
-    "startedTopic": "{name} ha creado una tema nueva"
+    "all": "See all notifications",
+    "sentMessage": "{name} sent you a message",
+    "uploadedZip": "{name} uploaded a new Zip file with {type}",
+    "startedTopic": "{name} started a new topic"
   },
   "alerts": {
     "types": {
-      "success": "",
-      "danger": "",
-      "warning": ""
+      "success": "SUCCESS",
+      "danger": "ERROR",
+      "warning": "WARNING"
     },
     "messages": {
       "signUp": {
-        "200": "",
-        "201": "",
-        "400": "",
-        "500": ""
+        "200": "Signup has been done successfully!",
+        "201": "Signup has been done successfully!",
+        "400": "Bad request: The system is unable to process the request",
+        "500": "The system is unable to create the user due to a server side error"
       },
       "logout": {
-        "200": ""
+        "200": "Logout has been done successfully!"
       },
       "login": {
-        "200": ""
+        "200": "Login has been done successfully!"
       },
       "verifyUser": {
-        "200": ""
+        "200": "Your account has been verified successfully!"
       },
       "resetUserPassword": {
-        "200": ""
+        "200": "Password reset has been done successfully, please check you email!"
       },
       "findUser": {
-        "400": "",
-        "404": "",
-        "500": ""
+        "400": "Bad request: The system is unable to process the request",
+        "404": "No user with the provided UUID was found",
+        "500": "The system is unable to create the user due to a server side error"
       },
       "deleteUser": {
-        "200": "",
-        "204": "",
-        "400": "",
-        "404": "",
-        "500": ""
+        "200": "User has been deleted successfully!",
+        "204": "User has been deleted successfully!",
+        "400": "Bad request: The system is unable to process the request",
+        "404": "No user with the provided UUID was found",
+        "500": "The system is unable to create the user due to a server side error"
       },
       "findCategory": {
-        "400": "",
-        "404": "",
-        "500": ""
+        "400": "Bad request: The system is unable to process the request",
+        "404": "No category with the provided UUID was found",
+        "500": "The system is unable to create the user due to a server side error"
       },
       "addCategory": {
-        "200": "",
-        "201": "",
-        "400": "",
-        "500": ""
+        "200": "Category has been added successfully!",
+        "201": "Category has been added successfully!",
+        "400": "Bad request: The system is unable to process the request",
+        "500": "The system is unable to create the user due to a server side error"
       },
       "deleteCategory": {
-        "200": "",
-        "204": "",
-        "400": "",
-        "404": "",
-        "500": ""
+        "200": "Category has been deleted successfully!",
+        "204": "Category has been deleted successfully!",
+        "400": "Bad request: The system is unable to process the request",
+        "404": "No category with the provided UUID was found",
+        "500": "The system is unable to create the user due to a server side error"
       },
       "findPhotos": {
-        "200": "",
-        "204": "",
-        "400": "",
-        "404": "",
-        "500": ""
+        "200": "Category has been deleted successfully!",
+        "204": "Category has been deleted successfully!",
+        "400": "Bad request: The system is unable to process the request",
+        "404": "No photo with the provided UUID was found",
+        "500": "The system is unable to create the user due to a server side error"
       },
       "others": {
-        "400": "",
-        "500": ""
+        "400": "Bad request: The system is unable to process the request",
+        "500": "The system is unable to create the user due to a server side error"
       }
     }
   },
   "progressBars": {
-    "basic": "Basico",
-    "basicVertical": "Basico y Vertical",
-    "circle": "Circular",
-    "colorFulTitle": "Barras Coloridas",
-    "thin": "Delgado",
-    "thinVertical": "Delgado Vertical",
-    "thick": "Grueso",
-    "title": "Barras de Progresso"
+    "basic": "Basic",
+    "basicVertical": "Basic Vertical",
+    "circle": "Circle",
+    "colorFulTitle": "Colorful Bars",
+    "thin": "Thin",
+    "thinVertical": "Thin Vertical",
+    "thick": "Thick",
+    "title": "Progress Bars"
   },
   "tables": {
-    "basic": "Tabla basica",
-    "styled": "Colores, Iconos, Etiquetas",
-    "advanced": "Búsqueda y Paginación",
+    "basic": "Basic Table",
+    "styled": "Colors, Icons, Labels",
+    "advanced": "Search & Pagination",
     "headings": {
-      "city": "Ciudad",
+      "city": "City",
       "email": "Email",
-      "name": "Nombre",
-      "score": "Puntuación"
+      "name": "Name",
+      "score": "Score"
     }
   },
   "user": {
-    "language": "Cambiar Idioma",
-    "profile": "Mi Perfil",
-    "logout": "Cerrar Sesión",
-    "settings": "",
-    "uploads": ""
+    "language": "Change Language",
+    "logout": "Logout",
+    "profile": "My Profile",
+    "settings": "Settings",
+    "uploads": "Uploads"
   },
   "navLinks": {
-    "photos": "",
-    "illustrations": "",
-    "footage": "",
-    "audio": "",
-    "login": "",
-    "register": "",
-    "upload": "",
-    "priceAndPlans": ""
+    "photos": "PHOTOS",
+    "illustrations": "ILLUSTRATIONS",
+    "footage": "FOOTAGE",
+    "audio": "AUDIO",
+    "login": "LOGIN",
+    "register": "REGISTER",
+    "upload": "UPLOAD",
+    "priceAndPlans": "PRICE & PLANS"
+  },
+  "titles": {
+    "titleTemplate": "%s | BeeStock",
+    "app": "BeeStock :: Media Store",
+    "photos": "Photos",
+    "login": "Login",
+    "signup": "Signup",
+    "changePassword": "Change Password",
+    "profileSettings": "Profile Settings",
+    "verifyUser": "Verify User",
+    "resetPassword": "Reset Password",
+    "home": "Home",
+    "footage": "Footage",
+    "categories": "Categories",
+    "audio": "Audio",
+    "illustrations": "Illustrations",
+    "category": "Category",
+    "categoryTitle": "{categoryTitle} Category",
+    "newUpload": "New Upload",
+    "myUploads": "My Uploads"
   }
 }

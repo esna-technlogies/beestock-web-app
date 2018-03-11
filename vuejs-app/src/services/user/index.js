@@ -11,9 +11,9 @@ let findByUUID = (uuid) => {
     pathParams: {
       uuid
     }
-  });
-  return api.get(url);
-};
+  })
+  return api.get(url)
+}
 
 let updateByUUID = (uuid, queryParams = {}) => {
   const url = urlHelper.reformatUrl({
@@ -21,9 +21,9 @@ let updateByUUID = (uuid, queryParams = {}) => {
     pathParams: {
       uuid
     }
-  });
-  return api.patch(url, getFormData(queryParams));
-};
+  })
+  return api.patch(url, getFormData(queryParams))
+}
 
 let deleteByUUID = (uuid) => {
   const url = urlHelper.reformatUrl({
@@ -31,9 +31,9 @@ let deleteByUUID = (uuid) => {
     pathParams: {
       uuid
     }
-  });
-  return api.delete(url);
-};
+  })
+  return api.delete(url)
+}
 
 
 export default {

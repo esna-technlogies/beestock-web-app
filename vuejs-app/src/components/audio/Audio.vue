@@ -11,9 +11,14 @@
 </template>
 
 <script>
-    export default {
-        name: "audio"
+  export default {
+    name: 'audio',
+    metaInfo () {
+      return {
+        title: this.$t('titles.audio')
+      }
     }
+  }
 </script>
 
 <style scoped>
