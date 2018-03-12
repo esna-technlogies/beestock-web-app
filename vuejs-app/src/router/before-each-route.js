@@ -29,10 +29,9 @@ const nextRoute = (routeRequirement, to, from, next) => {
     case 'noLogin':
       if (auth.isAuthenticated()) { return next({ name: 'Home' }) }
       break
-
-    default:
-      return next()
   }
+
+  return next()
 }
 
 

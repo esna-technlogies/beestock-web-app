@@ -17,18 +17,20 @@
 
             <div class="row mt-5 justify-content-start">
               <div class="col-3" v-for="(photo, photoIndex) in randomPhotoList">
-                <div class="-image-wrapper">
-                  <div class="-image"
-                       :key="photoIndex"
-                       :style="{ backgroundImage: 'url(' + photo.file_storage.sizes.size_250 + ')' }">
-                  </div>
+                <router-link  :to="{ name: 'Category', params: { uuid: photo.category } }">
+                  <div class="-image-wrapper">
+                    <div class="-image"
+                         :key="photoIndex"
+                         :style="{ backgroundImage: 'url(' + photo.file_storage.sizes.size_250 + ')' }">
+                    </div>
 
-                  <div class="-category-name-wrapper text-center">
-                    <router-link class="-category-name btn btn-warning" :to="{ name: 'Category', params: { uuid: photo.category } }">
-                      {{ photo.category_title }}
-                    </router-link>
+                    <div class="-category-name-wrapper text-center">
+                      <div class="-category-name btn btn-warning">
+                        {{ photo.category_title }}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </router-link>
               </div>
             </div>
           </div>
@@ -133,8 +135,11 @@
         selectFourRandomCategory () {
           const fourRandomCategory = []
 
-          for (let i = 0; i < 4; i++) {
+          while (fourRandomCategory.length !== 4) {
             const randomIndex = Math.floor(Math.random() * (this.categoryList.length - 0) - 0)
+
+            if (fourRandomCategory[randomIndex]) continue
+
             fourRandomCategory.push(this.categoryList[randomIndex])
           }
 
