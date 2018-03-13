@@ -1,41 +1,139 @@
 <template>
     <div class="category">
-      <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
+      <template v-if="isCategoryRoute">
+        <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-      <div class="row justify-content-start">
-        <div class="col-3 mt-3" v-for="(photo, photoIndex) in photoList">
-          <div class="-image-wrapper">
-            <div class="-image"
-                 :key="photoIndex"
-                 :style="{ backgroundImage: 'url(' + photo.file_storage.sizes.size_250 + ')' }">
+        <vuestic-widget :class="'-category-widget -transparent-widget'">
+          <div class="row no-gutters justify-content-between">
+            <div class="col-1">
+              <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.photos' | translate }}</span>
             </div>
 
-            <div class="-photo-details">
-             <span class="-photo-creation-moment">
-               {{ photo.created.sec | moment("MMM Do YYYY, h:mm A") }}
-             </span>
-              <span class="-photo-title">
-               {{ photo.title }}
-             </span>
-              <span aria-hidden="true" class="-photo-download-icon fa fa-download"></span>
-            </div>
+            <router-link class="col-1 badge badge-info"
+                         :style="{ 'font-size': '.9em' }"
+                         :to="{ name: 'CategoryPhotos', params: {uuid: this.uuid} }">
+              {{ 'category.buttons.showAll' | translate }}
+            </router-link>
           </div>
-        </div>
-      </div>
+
+
+          <photos-container :photoList="photoList"></photos-container>
+
+
+          <div class="row no-gutters mb-2 justify-content-center">
+            <hr class="col-12">
+          </div>
+
+
+          <div class="row no-gutters justify-content-between">
+            <div class="col-1">
+              <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.illustrations' | translate }}</span>
+            </div>
+
+            <router-link class="col-1 badge badge-info"
+                         :style="{ 'font-size': '.9em' }"
+                         :to="{ name: 'CategoryIllustrations', params: {uuid: this.uuid} }">
+              {{ 'category.buttons.showAll' | translate }}
+            </router-link>
+          </div>
+
+          <photos-container :photoList="photoList"></photos-container>
+
+
+          <div class="row no-gutters mb-2 justify-content-center">
+            <hr class="col-12">
+          </div>
+
+
+          <div class="row no-gutters justify-content-between">
+            <div class="col-1">
+              <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.footage' | translate }}</span>
+            </div>
+
+            <router-link class="col-1 badge badge-info"
+                         :style="{ 'font-size': '.9em' }"
+                         :to="{ name: 'CategoryFootage', params: {uuid: this.uuid} }">
+              {{ 'category.buttons.showAll' | translate }}
+            </router-link>
+          </div>
+
+          <photos-container :photoList="photoList"></photos-container>
+
+
+          <div class="row no-gutters mb-2 justify-content-center">
+            <hr class="col-12">
+          </div>
+
+
+          <div class="row no-gutters justify-content-between">
+            <div class="col-1">
+              <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.audio' | translate }}</span>
+            </div>
+
+            <router-link class="col-1 badge badge-info"
+                         :style="{ 'font-size': '.9em' }"
+                         :to="{ name: 'CategoryAudio', params: {uuid: this.uuid} }">
+              {{ 'category.buttons.showAll' | translate }}
+            </router-link>
+          </div>
+
+          <photos-container :photoList="photoList"></photos-container>
+
+          <!--<div class="row justify-content-start">
+            <div class="col-12">
+              <div class="row no-gutters justify-content-between">
+                <div class="col-1">
+                  <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.audio' | translate }}</span>
+                </div>
+
+                <router-link class="col-1 badge badge-info"
+                             :style="{ 'font-size': '.9em' }"
+                             :to="{ name: 'CategoryPhotos', params: {uuid: this.uuid} }">
+                  {{ 'category.buttons.showAll' | translate }}
+                </router-link>
+              </div>
+            </div>
+
+            <div class="col-3 mt-3" v-for="(photo, photoIndex) in photoList">
+              <div class="-image-wrapper">
+                <div class="-image"
+                     :key="photoIndex"
+                     :style="{ backgroundImage: 'url(' + photo.file_storage.sizes.size_250 + ')' }">
+                </div>
+
+                <div class="-photo-details">
+                  <span class="-photo-creation-moment">
+                   {{ photo.created.sec | moment("MMM Do YYYY, h:mm A") }}
+                  </span>
+                  <span class="-photo-title">
+                   {{ photo.title }}
+                  </span>
+                  <span aria-hidden="true" class="-photo-download-icon fa fa-download"></span>
+                </div>
+              </div>
+            </div>
+          </div>-->
+
+        </vuestic-widget>
+      </template>
+
+      <router-view v-else />
     </div>
 </template>
 
 <script>
+  import VuesticAlert from '../vuestic-components/vuestic-alert/VuesticAlert'
+  import PhotosContainer from '../photos-container/PhotosContainer'
+
   import photoService from '../../services/photo'
   import categoryService from '../../services/category'
+  import {breadcrumbsHelper} from '../../helpers'
 
-  export default {
+export default {
     name: 'category',
     metaInfo () {
       return {
-        title: this.category
-          ? this.$t('titles.categoryTitle', { 'categoryTitle': this.category.title })
-          : this.$t('titles.category')
+        title: this.pageTitle
       }
     },
     props: {
@@ -44,42 +142,50 @@
         default: ''
       }
     },
+    components: {
+      VuesticAlert,
+      PhotosContainer
+    },
     data () {
       return {
+        pageTitle: this.$t('titles.loading'),
         category: '',
         photoList: []
       }
     },
     computed: {
+      isCategoryRoute () {
+        return this.$route.name === 'Category'
+      },
       breadcrumbs () {
-        this.$route.meta.title = this.category.title
-
-        return [
-          this.$route.matched.find(route => route.parent === undefined),
-          this.$route
-        ]
+        return breadcrumbsHelper.category(this.category.title)
+      }
+    },
+    watch: {
+      category () {
+        this.pageTitle = this.$t('titles.category', { categoryTitle: this.category.title })
       }
     },
     methods: {
-      async fetchCategoryDetails () {
-        try {
-          this.category = await categoryService.findByUUID(this.uuid)
-            .then(response => response.data.category)
-        } catch (error) {
-          console.log(error.response ? error.response : error)
-        }
-      },
-      async fetchCategoryPhotos () {
+      async prepareComponent () {
         this.startLoading()
 
         try {
-          this.photoList = await photoService.findByCategoryUUID(this.uuid)
-            .then(response => Object.values(response.data.photos))
+          await this.fetchCategoryDetails()
+          await this.fetchCategoryPhotos()
         } catch (error) {
-          console.log(error.response ? error.response : error)
+          console.log('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
         this.stopLoading()
+      },
+      async fetchCategoryDetails () {
+        this.category = await categoryService.findByUUID(this.uuid)
+          .then(response => response.data.category)
+      },
+      async fetchCategoryPhotos () {
+        this.photoList = await photoService.findAllByCategoryUUID(this.uuid, { page: 1, limit: 4 })
+          .then(response => Object.values(response.data.photos))
       },
       startLoading () {
         this.$store.commit('setLoading', true)
@@ -89,8 +195,7 @@
       }
     },
     created () {
-      this.fetchCategoryDetails()
-      this.fetchCategoryPhotos()
+      this.prepareComponent()
     }
   }
 </script>
@@ -167,29 +272,6 @@
     }
   }
 
-  .btn-micro {
-    font-size: 70% !important;
-  }
-
-  .top-right {
-    position: absolute;
-    top: 8px;
-    right: 22px;
-  }
-
-  .bottom-right {
-    position: absolute;
-    bottom: 23px;
-    right: 22px;
-  }
-
-  .centered {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
   .photo-information {
     min-height: 5rem;
     padding: .5rem .7rem;
@@ -233,17 +315,17 @@
     .-photo-title {
       font-size: .8em;
       position: absolute;
-      bottom: 0.05rem;
+      top: 0.05rem;
     }
 
     .-photo-creation-moment {
       font-size: .7em;
       position: absolute;
-      top: 0.05rem;
+      bottom: 0.05rem;
     }
 
     .-photo-download-icon {
-      font-size: 1.1em;
+      font-size: .9em;
       position: absolute;
       right: .5rem;
       top: 35%;
@@ -252,5 +334,9 @@
 
   .hidden {
     display: none
+  }
+
+  .-transparent-widget {
+    background: rgba(255, 255, 255, 0.95)
   }
 </style>

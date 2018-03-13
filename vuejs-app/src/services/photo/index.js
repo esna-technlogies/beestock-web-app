@@ -29,9 +29,9 @@ const deleteByUUID = (uuid) => {
   return api.delete(url)
 }
 
-const findByUserUUID = (uuid, queryParams) => {
+const findAllByUserUUID = (uuid, queryParams = {}) => {
   const url = urlHelper.reformatUrl({
-    url: photoEndpoint.findByUserUUID,
+    url: photoEndpoint.findAllByUserUUID,
     pathParams: { uuid },
     queryParams
   })
@@ -39,10 +39,11 @@ const findByUserUUID = (uuid, queryParams) => {
   return api.get(url)
 }
 
-const findByCategoryUUID = (uuid) => {
+const findAllByCategoryUUID = (uuid, queryParams = {}) => {
   const url = urlHelper.reformatUrl({
-    url: photoEndpoint.findByCategoryUUID,
-    pathParams: { uuid }
+    url: photoEndpoint.findAllByCategoryUUID,
+    pathParams: { uuid },
+    queryParams
   })
 
   return api.get(url)
@@ -61,10 +62,10 @@ const fetchPhotoCategory = (uuid) => {
 
 export default {
   findAll,
-  findByUUID,
+  findByUUID: findByUUID,
   deleteByUUID,
-  findByUserUUID,
+  findAllByUserUUID: findAllByUserUUID,
   fetchPhotoUser,
   fetchPhotoCategory,
-  findByCategoryUUID
+  findAllByCategoryUUID: findAllByCategoryUUID
 }

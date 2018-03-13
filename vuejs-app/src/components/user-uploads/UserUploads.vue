@@ -1,21 +1,29 @@
 <template>
     <div class="user-uploads">
       <div class="row no-gutters justify-content-center">
-        <div class="col-10 col-sm-10 col-md-8 col-lg-6">
-          <vuestic-widget :class="'-photos-widget'">
-            User Uploads Page
-          </vuestic-widget>
+        <div class="col-12 mt-3">
+          <under-construction :pageTitle="pageTitle"/>
         </div>
       </div>
     </div>
 </template>
 
 <script>
+    import UnderConstruction from '../under-construction/UnderConstruction'
+
     export default {
       name: 'user-uploads',
       metaInfo () {
         return {
-          title: this.$t('titles.myUploads')
+          title: this.pageTitle
+        }
+      },
+      components: {
+        UnderConstruction
+      },
+      data () {
+        return {
+          pageTitle: this.$t('titles.myUploads')
         }
       }
     }

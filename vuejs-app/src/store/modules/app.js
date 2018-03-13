@@ -95,6 +95,8 @@ const actions = {
 
     await dispatch('storeJwtToken', token)
 
+    api.setAuthorizationHeader(token)
+
     const uuid = JwtDecode(token).userId
 
     const user = await userService.findByUUID(uuid)
@@ -114,10 +116,6 @@ const actions = {
   },
   doLogout ({ commit }) {
     localStorage.clear()
-    /* localStorage.removeItem('jwtToken');
-
-    Object.keys(state.userDetails)
-      .map(item => localStorage.removeItem(item)); */
 
     commit('clearUserDetails')
     commit('setUserAsVisitor')
@@ -136,11 +134,10 @@ const actions = {
   storeUserDetails ({ commit }, userDetails) {
     commit('setUserDetails', userDetails)
 
-    Object.keys(userDetails)
-      .map(item => localStorage.setItem(item, userDetails[item]))
+    Object.keys(state.userDetails)
+      .map(item => localStorage.setItem(item, state.userDetails[item]))
   },
   storeJwtToken ({ commit }, token) {
-    api.setAuthorizationHeader(token)
     commit('setJwtToken', token)
     localStorage.setItem('jwtToken', token)
   }

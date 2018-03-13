@@ -22,9 +22,9 @@ const photo = {
   findAll: '/api/photo-service/photo',
   create: '/api/photo-service/photo',
   findByUUID: '/api/photo-service/photo/{uuid}',
-  findByUserUUID: '/api/photo-service/photo/filter-by/user/{uuid}',
+  findAllByUserUUID: '/api/photo-service/photo/filter-by/user/{uuid}',
   findKeywordsList: '/api/photo-service/photo/keywords',
-  findByCategoryUUID: '/api/photo-service/photo/filter-by/category/{uuid}'
+  findAllByCategoryUUID: '/api/photo-service/photo/filter-by/category/{uuid}'
 }
 
 const category = {

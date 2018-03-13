@@ -199,7 +199,7 @@ export default {
             }
           };
         } catch (error) {
-          console.log(error.response ? error.response : error)
+          console.log('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
         this.$emit('loadingStop')
@@ -223,6 +223,13 @@ export default {
 
         try {
           await userService.updateByUUID(this.userUUID, queryParams)
+
+          await this.$store.dispatch('storeUserDetails', {
+            firstName: queryParams.firstName,
+            lastName: queryParams.lastName,
+            email: queryParams.email
+          })
+
           this.$emit('successOperation')
         } catch (error) {
           this.handleFailedUpdate(error)

@@ -25,7 +25,7 @@ const addQueryParamsToUrl = (url, queryParams) => {
     url = url + '?'
 
     for (const param of queryParamsKeys) {
-      url = `${url}${param}=${queryParams[param]}`
+      url = `${url}${param}=${queryParams[param]}&`
     }
 
     return url.replace(/&$/, '')

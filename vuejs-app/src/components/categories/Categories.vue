@@ -1,20 +1,30 @@
 <template>
    <div class="categories">
 
-     <div class="row no-gutters justify-content-center" v-if="!showCategoryPage">
-       <div class="col-10 col-sm-10 col-md-8 col-lg-6">
-         <vuestic-widget :class="'-categories-widget'">
-           Categories Page
-         </vuestic-widget>
-       </div>
-     </div>
+     <template v-if="isCategoriesRoute">
+       <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-     <router-view v-else="showCategoryPage"/>
+       <div class="row no-gutters justify-content-center">
+         <div class="col-10 col-sm-10 col-md-8 col-lg-6">
+           <vuestic-widget :class="'-categories-widget'">
+             Categories Page
+           </vuestic-widget>
+
+
+           <router-link :to="{ name: 'CategoryPhotos', params: {uuid: '122ab71b-d971-4d04-b7cc-1b2acd11d7f1'} }">122ab71b-d971-4d04-b7cc-1b2acd11d7f1</router-link>
+         </div>
+       </div>
+     </template>
+
+     <!--<router-view v-on:expandBreadcrumbs="expandBreadcrumbs" v-else/>-->
+     <router-view v-else/>
    </div>
 </template>
 
 <script>
-  export default {
+  import {breadcrumbsHelper} from '../../helpers'
+
+export default {
     name: 'categories',
     metaInfo () {
       return {
@@ -22,8 +32,11 @@
       }
     },
     computed: {
-      showCategoryPage () {
-        return this.$route.name === 'Category'
+      isCategoriesRoute () {
+        return this.$route.name === 'Categories'
+      },
+      breadcrumbs () {
+        return breadcrumbsHelper.categories()
       }
     }
   }

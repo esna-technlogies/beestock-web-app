@@ -12,7 +12,13 @@
     "welcome": "Welcome!"
   },
   "breadcrumbs": {
-    "home": "Home"
+    "home": "Home",
+    "categories": "Categories",
+    "category": "Category",
+    "categoryPhotos": "Photos",
+    "categoryIllustrations": "Illustrations",
+    "categoryFootage": "Footage",
+    "categoryAudio": "Audio"
   },
   "buttons": {
     "advanced": "Icons, Groups, Dropdowns",
@@ -352,9 +358,10 @@
     "priceAndPlans": "PRICE & PLANS"
   },
   "titles": {
-    "titleTemplate": "%s | BeeStock",
-    "app": "BeeStock :: Media Store",
+    "titleTemplate": "%s | Beestock",
+    "app": "Beestock :: Media Store",
     "photos": "Photos",
+    "photo": "Photo",
     "login": "Login",
     "signup": "Signup",
     "changePassword": "Change Password",
@@ -364,11 +371,30 @@
     "home": "Home",
     "footage": "Footage",
     "categories": "Categories",
+    "category": "{categoryTitle} Category",
+    "categoryPhotos": "{categoryTitle} - Photos",
+    "categoryIllustrations": "{categoryTitle} - Illustrations",
+    "categoryFootage": "{categoryTitle} - Footage",
+    "categoryAudio": "{categoryTitle} - Audio",
     "audio": "Audio",
     "illustrations": "Illustrations",
-    "category": "Category",
-    "categoryTitle": "{categoryTitle} Category",
     "newUpload": "New Upload",
-    "myUploads": "My Uploads"
+    "myUploads": "My Uploads",
+    "loading": "Loading..."
+  },
+  "category": {
+    "heads": {
+      "photos": "PHOTOS",
+      "illustrations": "ILLUSTRATIONS",
+      "footage": "FOOTAGE",
+      "audio": "AUDIO"
+    },
+    "buttons": {
+      "showAll": "SHOW ALL",
+      "photos": "SHOW ALL PHOTOS",
+      "illustrations": "SHOW ALL ILLUSTRATIONS",
+      "footage": "SHOW ALL FOOTAGE",
+      "audio": "SHOW ALL AUDIO"
+    }
   }
 }
