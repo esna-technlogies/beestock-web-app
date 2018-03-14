@@ -1,16 +1,10 @@
 import auth from '../services/auth'
 
 const userIsNotAuthenticated = (to, from, next) => {
-  const {name, fullPath} = to
-  const query = (name !== undefined) ? {redirect: name} : {path: fullPath}
-
-  return next({name: 'Login', query})
+  return next({name: 'Login', query: {path: to.fullPath}})
 }
 
 const userIsNotVerified = (to, from, next) => {
-  /* const { name, fullPath } = to
-  const query = (name != undefined) ? { redirect: name } : { path: fullPath } */
-
   return next({ name: 'VerifyUser' })
 }
 

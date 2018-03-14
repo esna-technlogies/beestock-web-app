@@ -170,9 +170,8 @@ export default {
     },
     computed: {
       sendTo () {
-        const { prev, redirect } = this.$route.query
-        if (redirect !== undefined) return { name: redirect }
-        if (prev !== undefined) return { path: prev }
+        const { path } = this.$route.query
+        if (path !== undefined) return { path }
 
         return { name: 'Home' }
       }
