@@ -103,7 +103,7 @@
           this.category = await this.fetchCategoryDetails()
           this.photoList = await this.fetchCategoryPhotos()
         } catch (error) {
-          console.log('BEESTOCK-ERROR', error.response ? error.response : error)
+          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
         this.stopLoading()
@@ -130,7 +130,7 @@
         try {
           this.photoList = await this.fetchCategoryPhotos()
         } catch (error) {
-          console.log('BEESTOCK-ERROR', error.response ? error.response : error)
+          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
         this.stopLoadingNewPage()

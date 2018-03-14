@@ -1,30 +1,49 @@
 <template>
-  <div class="photos">
-    <template v-if="isPhotosRoute">
-      <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
+   <div class="user-photos">
+     <template v-if="isUserPhotosRoute">
+       <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-      <vuestic-widget :class="'-photos-widget -transparent-widget'">
-        <spinner
-          v-show="isLoadingNewPage"
-          :size="35"
-          :line-size="5"
-          :line-fg-color="'#F9CB55'"
-          class="-spinner"/>
+       <vuestic-widget :class="'-photos-widget -transparent-widget'">
+         <spinner
+           v-show="isLoadingNewPage"
+           :size="35"
+           :line-size="5"
+           :line-fg-color="'#F9CB55'"
+           class="-spinner"/>
 
-        <div class="row no-gutters mb-4 justify-content-center">
-          <vuetable-pagination ref="pagination"
-                               :css="css.pagination.micro"
-                               :onEachSide="onEachSide"
-                               @vuetable-pagination:change-page="onChangePage">
-          </vuetable-pagination>
-        </div>
+         <div class="row no-gutters mb-4 justify-content-center">
+           <vuetable-pagination ref="pagination"
+                                :css="css.pagination.micro"
+                                :onEachSide="onEachSide"
+                                @vuetable-pagination:change-page="onChangePage">
+           </vuetable-pagination>
+         </div>
 
-        <photos-container :photoList="photoList"></photos-container>
-      </vuestic-widget>
-    </template>
+         <photos-container :photoList="photoList" v-if="photoList.length > 0"></photos-container>
 
-    <router-view v-else/>
-  </div>
+         <div class="row justify-content-center mt-3" v-else>
+           <div class="well">
+             <div class="row justify-content-center">
+               <div class="col-12 text-center">
+                 {{'alerts.messages.findUserPhotos.404' | translate}}
+               </div>
+
+               <div class="col-12 text-center mt-3">
+                 <router-link
+                   :to="{ name: 'NewUpload' }"
+                   class="badge badge-info" style="font-size: .8em; padding: 10px;"
+                 >
+                   Upload Photo
+                 </router-link>
+               </div>
+             </div>
+           </div>
+         </div>
+       </vuestic-widget>
+     </template>
+
+     <router-view v-else/>
+   </div>
 </template>
 
 <script>
@@ -39,7 +58,7 @@
   import DataTableStyles from '../vuestic-components/vuestic-datatable/data/data-table-styles'
 
   export default {
-    name: 'photos',
+    name: 'user-photos',
     metaInfo () {
       return {
         title: this.pageTitle
@@ -55,13 +74,21 @@
       breadcrumbs () {
         return breadcrumbsHelper.photos()
       },
-      isPhotosRoute () {
-        return this.$route.name === 'Photos'
+      isUserPhotosRoute () {
+        return this.$route.name === 'UserPhotos'
+      },
+      uuid () {
+        return this.$store.getters.userDetails.uuid
       }
     },
+    /* watch: {
+      async '$route' (to, from) {
+        if (to.name === 'UserPhotos') await this.prepareComponent()
+      }
+    }, */
     data () {
       return {
-        pageTitle: this.$t('titles.photos'),
+        pageTitle: this.$t('titles.userPhotos'),
         css: DataTableStyles,
         onEachSide: 1,
         currentPage: 1,
@@ -73,30 +100,25 @@
         responseData: {}
       }
     },
-    watch: {
-      async '$route' (to, from) {
-        if (to.name === 'Photos') await this.prepareComponent()
-      }
-    },
     methods: {
       async prepareComponent () {
         this.startLoading()
 
         try {
-          this.photoList = await this.fetchCategoryPhotos()
+          this.photoList = await this.fetchUserPhotos()
         } catch (error) {
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
         this.stopLoading()
       },
-      fetchCategoryPhotos () {
+      fetchUserPhotos () {
         const queryParams = {
           page: this.currentPage,
           limit: this.perPage
         }
 
-        return photoService.findAll(queryParams)
+        return photoService.findAllByUserUUID(this.uuid, queryParams)
           .then(response => {
             this.responseData = response.data
             this.setPaginationData(this.responseData)
@@ -107,7 +129,7 @@
         this.startLoadingNewPage()
 
         try {
-          this.photoList = await this.fetchCategoryPhotos()
+          this.photoList = await this.fetchUserPhotos()
         } catch (error) {
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
@@ -179,7 +201,7 @@
       }
     },
     created () {
-      if (this.isPhotosRoute) this.prepareComponent()
+      if (this.isUserPhotosRoute) this.prepareComponent()
     }
   }
 </script>

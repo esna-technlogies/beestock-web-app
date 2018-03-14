@@ -313,6 +313,18 @@
         "404": "No photo with the provided UUID was found",
         "500": "The system is unable to create the user due to a server side error"
       },
+      "findUserPhotos": {
+        "404": "No photos available , please upload new photo to display."
+      },
+      "findUserIllustrations": {
+        "404": "No illustrations available , please upload new illustration to display."
+      },
+      "findUserFootage": {
+        "404": "No footage available , please upload new footage to display."
+      },
+      "findUserAudio": {
+        "404": "No audio available , please upload new audio to display."
+      },
       "others": {
         "400": "Bad request: The system is unable to process the request",
         "500": "The system is unable to create the user due to a server side error"
@@ -379,7 +391,11 @@
     "audio": "Audio",
     "illustrations": "Illustrations",
     "newUpload": "New Upload",
-    "myUploads": "My Uploads",
+    "userUploads": "My Uploads",
+    "userPhotos": "My Photos",
+    "userIllustrations": "My Illustrations",
+    "userFootage": "My Footage",
+    "userAudio": "My Audio",
     "loading": "Loading..."
   },
   "category": {

@@ -199,7 +199,7 @@ export default {
             }
           };
         } catch (error) {
-          console.log('BEESTOCK-ERROR', error.response ? error.response : error)
+          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
         this.$emit('loadingStop')

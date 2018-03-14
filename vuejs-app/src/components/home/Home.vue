@@ -129,7 +129,7 @@
               this.categoryList.push(category)
             }
           } catch (error) {
-            console.log('BEESTOCK-ERROR', error.response ? error.response : error)
+            console.error('BEESTOCK-ERROR', error.response ? error.response : error)
           }
         },
         selectFourRandomCategory () {
@@ -153,7 +153,7 @@
             photo.category_title = category.title
             this.randomPhotoList.push(photo)
           } catch (error) {
-            console.log('BEESTOCK-ERROR', error.response ? error.response : error)
+            console.error('BEESTOCK-ERROR', error.response ? error.response : error)
           }
         },
         startLoading () {

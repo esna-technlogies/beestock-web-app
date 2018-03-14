@@ -64,7 +64,7 @@ export default {
   findAll,
   findByUUID: findByUUID,
   deleteByUUID,
-  findAllByUserUUID: findAllByUserUUID,
+  findAllByUserUUID,
   fetchPhotoUser,
   fetchPhotoCategory,
   findAllByCategoryUUID: findAllByCategoryUUID
