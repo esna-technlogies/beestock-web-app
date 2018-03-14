@@ -13,7 +13,7 @@
 
         <div class="-photo-details">
           <span class="-photo-creation-moment">
-           {{ photo.created.sec | moment("MMM Do YYYY, h:mm A") }}
+           {{ photo.created.sec | moment("D MMM YYYY, h:mm A") }}
           </span>
             <span class="-photo-title">
            {{ photo.title }}
