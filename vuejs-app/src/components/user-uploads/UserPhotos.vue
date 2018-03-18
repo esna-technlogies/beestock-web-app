@@ -19,7 +19,7 @@
            </vuetable-pagination>
          </div>
 
-         <photos-container :photoList="photoList" v-if="photoList.length > 0"></photos-container>
+         <photos-container :photoList="photoList" v-if="photoList.length > 0" />
 
          <div class="row justify-content-center mt-3" v-else>
            <div class="well">
@@ -33,7 +33,7 @@
                    :to="{ name: 'NewUpload' }"
                    class="badge badge-info" style="font-size: .8em; padding: 10px;"
                  >
-                   Upload Photo
+                   {{ 'user.buttons.uploadPhoto' | translate }}
                  </router-link>
                </div>
              </div>

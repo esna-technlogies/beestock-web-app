@@ -2,6 +2,13 @@ const changeRequest = {
   activateAccount: '/api/user-service/changeRequest/{uuid}/activate-account'
 }
 
+const fileStorage = {
+  findAll: '/api/photo-service/file/storage/file',
+  create: '/api/photo-service/file/storage/file',
+  findByUUID: '/api/photo-service/file/storage/file/{fileId}',
+  getNewFileUploadPolicy: 'api/photo-service/file/storage/user/{uuid}'
+}
+
 const userSecurity = {
   login: '/api/user-service/security/login',
   logout: '/api/user-service/security/logout/user/{uuid}',
@@ -24,7 +31,8 @@ const photo = {
   findByUUID: '/api/photo-service/photo/{uuid}',
   findAllByUserUUID: '/api/photo-service/photo/filter-by/user/{uuid}',
   findKeywordsList: '/api/photo-service/photo/keywords',
-  findAllByCategoryUUID: '/api/photo-service/photo/filter-by/category/{uuid}'
+  findAllByCategoryUUID: '/api/photo-service/photo/filter-by/category/{uuid}',
+  getSuggestedKeywords: '/api/photo-service/photo/keywords'
 }
 
 const category = {
@@ -37,9 +45,10 @@ const category = {
 
 
 export {
+  changeRequest,
   userSecurity,
+  fileStorage,
   userAccount,
   photo,
-  category,
-  changeRequest
+  category
 }

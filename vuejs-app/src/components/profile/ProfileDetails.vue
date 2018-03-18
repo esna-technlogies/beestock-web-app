@@ -272,7 +272,7 @@ export default {
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .-spinner {
     position: absolute;
     top: 88px;

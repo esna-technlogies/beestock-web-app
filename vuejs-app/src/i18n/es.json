@@ -124,7 +124,8 @@
       "signup": "Sign Up",
       "logout": "Logout",
       "resetPassword": "Reset Password",
-      "verifyUser": "Please Enter Your Verification Code"
+      "verifyUser": "Please Enter Your Verification Code",
+      "photoDetails": "Photo Details"
     },
     "labels": {
       "firstName": "First Name",
@@ -134,7 +135,13 @@
       "passwordConfirmation": "Password Confirmation",
       "mobileNumber": "Mobile Number",
       "verificationCode": "Your Verification Code",
-      "emailOrMobileNumber": "Email Address or Mobile Number"
+      "emailOrMobileNumber": "Email Address or Mobile Number",
+      "keywords": "Keywords",
+      "usage": "Usage",
+      "category": "Category",
+      "title": "Title",
+      "description": "Description",
+      "suggestedPrice": "Suggested Price (USD)"
     },
     "mediumEditor": {
       "title": "Medium Editor"
@@ -165,7 +172,8 @@
       "signup": "Sign Up",
       "submit": "Submit",
       "confirm": "Confirm",
-      "saveChanges": "Save Changes"
+      "saveChanges": "Save Changes",
+      "save": "Save"
     },
     "alerts": {
       "signin": {
@@ -352,13 +360,6 @@
       "score": "Score"
     }
   },
-  "user": {
-    "language": "Change Language",
-    "logout": "Logout",
-    "profile": "My Profile",
-    "settings": "Settings",
-    "uploads": "Uploads"
-  },
   "navLinks": {
     "photos": "PHOTOS",
     "illustrations": "ILLUSTRATIONS",
@@ -397,6 +398,19 @@
     "userFootage": "My Footage",
     "userAudio": "My Audio",
     "loading": "Loading..."
+  },
+  "user": {
+    "language": "Change Language",
+    "logout": "Logout",
+    "profile": "My Profile",
+    "settings": "Settings",
+    "uploads": "Uploads",
+    "buttons": {
+      "uploadPhoto": "UPLOAD PHOTO",
+      "uploadIllustration": "UPLOAD ILLUSTRATION",
+      "uploadFootage": "UPLOAD FOOTAGE",
+      "uploadAudio": "UPLOAD AUDIO"
+    }
   },
   "category": {
     "heads": {

@@ -134,7 +134,7 @@ export default {
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .-reset-password-widget {
     margin: 100px auto !important;
   }

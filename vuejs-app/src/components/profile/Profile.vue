@@ -59,8 +59,8 @@
           <router-view
             v-on:loadingStart="startLoading"
             v-on:loadingStop="stopLoading"
-            v-on:successOperation="operationSucceeded"
-          ></router-view>
+            v-on:successOperation="operationSucceeded" />
+
         </vuestic-widget>
       </div>
     </div>
@@ -109,14 +109,14 @@
       }
     },
     watch: {
-      $route (to, from) {
+      '$route' (to, from) {
         this.resetAll()
       }
     }
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .-spinner {
     position: absolute;
     top: 90px;

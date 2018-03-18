@@ -15,7 +15,7 @@
 
   export default {
     name: 'user-illustrations',
-    metainfo () {
+    metaInfo () {
       return {
         title: this.pageTitle
       }

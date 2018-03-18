@@ -131,7 +131,7 @@ export default {
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .-verify-user-widget {
     margin: 100px auto !important;
   }

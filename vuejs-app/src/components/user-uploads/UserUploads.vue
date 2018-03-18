@@ -31,7 +31,7 @@
                   :to="{ name: 'NewUpload' }"
                   class="badge badge-info" style="font-size: .8em; padding: 10px;"
                 >
-                  Upload Photo
+                  {{ 'user.buttons.uploadPhoto' | translate }}
                 </router-link>
               </div>
             </div>
@@ -73,7 +73,7 @@
                   :to="{ name: 'NewUpload' }"
                   class="badge badge-info" style="font-size: .8em; padding: 10px;"
                 >
-                  Upload Illustration
+                  {{ 'user.buttons.uploadIllustration' | translate }}
                 </router-link>
               </div>
             </div>
@@ -115,7 +115,7 @@
                   :to="{ name: 'NewUpload' }"
                   class="badge badge-info" style="font-size: .8em; padding: 10px;"
                 >
-                  Upload Footage
+                  {{ 'user.buttons.uploadFootage' | translate }}
                 </router-link>
               </div>
             </div>
@@ -157,7 +157,7 @@
                   :to="{ name: 'NewUpload' }"
                   class="badge badge-info" style="font-size: .8em; padding: 10px;"
                 >
-                  Upload Audio
+                  {{ 'user.buttons.uploadAudio' | translate }}
                 </router-link>
               </div>
             </div>
@@ -240,6 +240,6 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

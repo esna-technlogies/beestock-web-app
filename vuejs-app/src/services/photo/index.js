@@ -1,3 +1,4 @@
+import getFormData from 'form-urlencoded'
 import api from '../../api/beestock'
 import { urlHelper } from '../../helpers'
 import userService from '../../services/user'
@@ -21,6 +22,12 @@ const findByUUID = (uuid) => {
   return api.get(url)
 }
 
+const create = (queryParams = {}) => {
+  const url = photoEndpoint.create
+
+  return api.post(url, getFormData(queryParams))
+}
+
 const deleteByUUID = (uuid) => {
   const url = urlHelper.reformatUrl({
     url: photoEndpoint.deleteByUUID,
@@ -37,6 +44,12 @@ const findAllByUserUUID = (uuid, queryParams = {}) => {
   })
 
   return api.get(url)
+}
+
+const getSuggestedKeywords = (queryParams) => {
+  const url = photoEndpoint.getSuggestedKeywords
+
+  return api.post(url, getFormData(queryParams))
 }
 
 const findAllByCategoryUUID = (uuid, queryParams = {}) => {
@@ -62,9 +75,11 @@ const fetchPhotoCategory = (uuid) => {
 
 export default {
   findAll,
-  findByUUID: findByUUID,
+  findByUUID,
+  create,
   deleteByUUID,
   findAllByUserUUID,
+  getSuggestedKeywords,
   fetchPhotoUser,
   fetchPhotoCategory,
   findAllByCategoryUUID: findAllByCategoryUUID
