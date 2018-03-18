@@ -6,10 +6,9 @@
       <div class="col-7">
         <vuestic-widget :class="'-login-widget'">
 
-          <vuestic-alert type="danger" :withCloseBtn="true" v-show="isErrorAlert">
+          <vuestic-alert type="danger" v-show="isErrorAlert"  class="-alert">
             <span class="badge badge-pill badge-danger">{{'notificationsPage.alerts.danger' | translate}}</span>
             {{ errorAlertMessage }}
-            <i class="fa fa-close alert-close" @click="isErrorAlert=false"></i>
           </vuestic-alert>
 
           <spinner
@@ -225,5 +224,12 @@ export default {
     position: absolute;
     top: 125px;
     right: 40px;
+  }
+
+  .-alert {
+    position: absolute;
+    width :100%;
+    top: 30px;
+    left: 0;
   }
 </style>
