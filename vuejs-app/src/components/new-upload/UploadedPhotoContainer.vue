@@ -14,7 +14,11 @@
           </div>
 
           <div class="col-8">
-            <router-link :to="{ name: 'Home' }" :style="{ color: '#33495C' }">
+            <router-link
+              target="_blank"
+              :to="{ name: 'Photo', params: { uuid: photo.uuid } }"
+              :style="{ color: '#33495C' }"
+            >
               <h4>{{ photo.title }}</h4>
             </router-link>
             <p>{{ photo.description }}</p>
