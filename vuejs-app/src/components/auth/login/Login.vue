@@ -1,23 +1,12 @@
 <template>
   <div class="login">
-    <app-alert :alertType="alertType" :alertMessage="alertMessage"></app-alert>
+    <main-alert v-if="alertType" :alertType="alertType" :alertMessage="alertMessage"/>
 
     <div class="row no-gutters justify-content-center">
       <div class="col-7">
+        <form-error-alert v-show="isErrorAlert" :alert-message="errorAlertMessage"/>
+
         <vuestic-widget :class="'-login-widget'">
-
-          <vuestic-alert type="danger" v-show="isErrorAlert"  class="-alert">
-            <span class="badge badge-pill badge-danger">{{'notificationsPage.alerts.danger' | translate}}</span>
-            {{ errorAlertMessage }}
-          </vuestic-alert>
-
-          <spinner
-            v-show="isLoading"
-            :size="30"
-            :line-size="4"
-            :line-fg-color="'#F9CB55'"
-            class="-spinner"/>
-
           <div class="col-12 text-center">
             <h4><strong>{{ 'forms.heads.signin' | translate }}</strong></h4>
           </div>
@@ -83,6 +72,8 @@
               </div>
             </div>
           </form>
+
+          <basic-loader v-show="isLoading" />
         </vuestic-widget>
       </div>
     </div>
@@ -90,10 +81,12 @@
 </template>
 
 <script>
-  import AppAlert from '../../app-alert/AppAlert'
+  import MainAlert from '../../alerts/MainAlert'
   import Spinner from 'vue-simple-spinner'
+  import BasicLoader from '../../loaders/BasicLoader'
+  import FormErrorAlert from '../../alerts/FormErrorAlert'
 
-export default {
+  export default {
     name: 'login',
     metaInfo () {
       return {
@@ -111,8 +104,10 @@ export default {
       }
     },
     components: {
-      AppAlert,
-      Spinner
+      Spinner,
+      MainAlert,
+      BasicLoader,
+      FormErrorAlert
     },
     data () {
       return {
@@ -209,7 +204,6 @@ export default {
     h2 {
       text-align: center;
     }
-    /*width: 21.375rem;*/
 
     .down-container {
       margin-top: 3.125rem;
@@ -218,12 +212,7 @@ export default {
 
   .-login-widget {
     margin: 100px auto !important;
-  }
-
-  .-spinner {
-    position: absolute;
-    top: 125px;
-    right: 40px;
+    position: relative;
   }
 
   .-alert {

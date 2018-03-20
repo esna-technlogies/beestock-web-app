@@ -1,25 +1,21 @@
+<!--suppress ALL -->
 <template>
-  <div class="photos">
+  <div class="photos" v-show="!isPageLoading">
     <template v-if="isPhotosRoute">
       <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-      <vuestic-widget :class="'-photos-widget -transparent-widget'">
-        <spinner
-          v-show="isLoadingNewPage"
-          :size="35"
-          :line-size="5"
-          :line-fg-color="'#F9CB55'"
-          class="-spinner"/>
-
+      <vuestic-widget class="-photos-widget -transparent-widget">
         <div class="row no-gutters mb-4 justify-content-center">
-          <vuetable-pagination ref="pagination"
-                               :css="css.pagination.micro"
-                               :onEachSide="onEachSide"
-                               @vuetable-pagination:change-page="onChangePage">
-          </vuetable-pagination>
+          <vuetable-pagination
+            ref="pagination"
+            :css="css.pagination.micro"
+            :onEachSide="onEachSide"
+            @vuetable-pagination:change-page="onChangePage"/>
         </div>
 
-        <photos-container :photoList="photoList"></photos-container>
+        <photos-container
+          :photoList="photoList"
+          :isPaginateLoader="isPaginateLoader"/>
       </vuestic-widget>
     </template>
 
@@ -33,6 +29,7 @@
   import UnderConstruction from '../under-construction/UnderConstruction'
   import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 
+  import {mapGetters} from 'vuex'
 
   import {breadcrumbsHelper} from '../../helpers'
   import photoService from '../../services/photo'
@@ -51,14 +48,6 @@
       UnderConstruction,
       VuetablePagination
     },
-    computed: {
-      breadcrumbs () {
-        return breadcrumbsHelper.photos()
-      },
-      isPhotosRoute () {
-        return this.$route.name === 'Photos'
-      }
-    },
     data () {
       return {
         pageTitle: this.$t('titles.photos'),
@@ -69,8 +58,17 @@
         category: {},
         photoList: [],
         paginationData: {},
-        isLoadingNewPage: false,
+        isPaginateLoader: false,
         responseData: {}
+      }
+    },
+    computed: {
+      ...mapGetters(['isPageLoading']),
+      breadcrumbs () {
+        return breadcrumbsHelper.photos()
+      },
+      isPhotosRoute () {
+        return this.$route.name === 'Photos'
       }
     },
     watch: {
@@ -80,7 +78,7 @@
     },
     methods: {
       async prepareComponent () {
-        this.startLoading()
+        this.showPageLoader()
 
         try {
           this.photoList = await this.fetchCategoryPhotos()
@@ -88,7 +86,7 @@
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.stopLoading()
+        this.hidePageLoader()
       },
       fetchCategoryPhotos () {
         const queryParams = {
@@ -104,7 +102,7 @@
           })
       },
       async renderNewPage () {
-        this.startLoadingNewPage()
+        this.showPaginateLoader()
 
         try {
           this.photoList = await this.fetchCategoryPhotos()
@@ -112,7 +110,7 @@
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.stopLoadingNewPage()
+        this.hidePaginateLoader()
       },
       setPaginationData (data) {
         this.paginationData = this.getPaginationData(data)
@@ -165,17 +163,17 @@
           this.renderNewPage()
         }
       },
-      startLoading () {
-        this.$store.commit('setLoading', true)
+      showPageLoader () {
+        this.$store.commit('setPageLoader', true)
       },
-      stopLoading () {
-        this.$store.commit('setLoading', false)
+      hidePageLoader () {
+        this.$store.commit('setPageLoader', false)
       },
-      startLoadingNewPage () {
-        this.isLoadingNewPage = true
+      showPaginateLoader () {
+        this.isPaginateLoader = true
       },
-      stopLoadingNewPage () {
-        this.isLoadingNewPage = false
+      hidePaginateLoader () {
+        this.isPaginateLoader = false
       }
     },
     created () {
@@ -191,11 +189,5 @@
 
   .-photos-widget {
     position: relative;
-  }
-
-  .-spinner {
-    position: absolute;
-    top: 25px;
-    right: 25px;
   }
 </style>

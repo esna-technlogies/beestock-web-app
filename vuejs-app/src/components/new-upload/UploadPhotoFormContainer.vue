@@ -4,10 +4,7 @@
      <div class="row justify-content-center">
 
        <div class="col-8" style="border: 3px solid #40A9DF;padding: 30px 50px; background-color: white; position: relative">
-         <vuestic-alert type="danger" v-show="false" class="m-0 ml-5 mr-5">
-           <span class="badge badge-pill badge-danger">{{'notificationsPage.alerts.danger' | translate}}</span>
-           {{ errorAlertMessage }}
-         </vuestic-alert>
+         <form-error-alert v-show="isErrorAlert" :alert-message="errorAlertMessage"/>
 
          <a aria-hidden="true" class="entypo entypo-cancel text-info -close-container-icon" @click="emitCloseContainer(containerId)"></a>
 
@@ -195,9 +192,7 @@
            </div>
          </form>
 
-         <div class="-beestock-loading-wrapper text-center" v-if="isLoading">
-           <img class="-beestock-loading" src="../../assets/images/loading.gif" alt="Beestock Loading">
-         </div>
+         <basic-loader v-show="isLoading"/>
        </div>
      </div>
    </div>
@@ -207,13 +202,15 @@
   import InputTag from 'vue-input-tag'
   import Multiselect from 'vue-multiselect'
   import Droply from 'droply'
+  import BasicLoader from '../loaders/BasicLoader'
+  import FormErrorAlert from '../alerts/FormErrorAlert'
 
   import categoryService from '../../services/category'
   import photoService from '../../services/photo'
   import fileStorageService from '../../services/file-storage'
 
 
-  export default {
+export default {
     name: 'upload-photo-form-container',
     props: {
       containerId: {
@@ -222,9 +219,11 @@
       }
     },
     components: {
+      Droply,
       InputTag,
+      BasicLoader,
       Multiselect,
-      Droply
+      FormErrorAlert
     },
     data () {
       return {
@@ -241,7 +240,6 @@
         description: '',
         suggestedPrice: '',
         fileUploadPolicy: {},
-        awsS3Url: 'https://beesstock-users-uploads.s3-us-west-2.amazonaws.com/',
         s3UploadDropzoneOptions: {
           thumbnailHeight: 150,
           thumbnailWidth: 250,
@@ -255,12 +253,12 @@
     },
     computed: {
       userUUID () {
-        return this.$store.getters.userDetails.uuid
+        return this.$store.getters.currentUserUUID()
       }
     },
     methods: {
       async prepareComponent () {
-        this.startLoading()
+        this.showBasicLoader()
 
         try {
           await this.setCategoryList()
@@ -270,12 +268,12 @@
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.stopLoading()
+        this.hideBasicLoader()
       },
       async doUploadPhoto () {
         if (!await this.$validator.validateAll()) return
 
-        this.startLoading()
+        this.showBasicLoader()
         this.clearErrorAlert()
 
         try {
@@ -298,7 +296,7 @@
           this.handleFailedPhotoUpload(error)
         }
 
-        this.stopLoading()
+        this.hideBasicLoader()
       },
       async setCategoryList () {
         this.categoryList = await categoryService.findAll()
@@ -337,16 +335,20 @@
           this.setErrorAlert(error.response.data.error.message)
         }
       },
+      onUploadSuccess (s3ObjectLocation) {
+        this.originalFile = s3ObjectLocation.xhr.getResponseHeader('Location')
+        this.setSuggestedKeywords()
+      },
       emitCloseContainer (containerId) {
         this.$emit('closeContainer', containerId)
       },
       emitUploadPhotoSuccess (uploadedPhoto) {
         this.$emit('uploadPhotoSuccess', uploadedPhoto)
       },
-      startLoading () {
+      showBasicLoader () {
         this.isLoading = true
       },
-      stopLoading () {
+      hideBasicLoader () {
         this.isLoading = false
       },
       clearErrorAlert () {
@@ -356,10 +358,6 @@
       setErrorAlert (message = 'Default Error Message') {
         this.isErrorAlert = true
         this.errorAlertMessage = message
-      },
-      onUploadSuccess (s3ObjectLocation) {
-        this.originalFile = s3ObjectLocation.xhr.getResponseHeader('Location')
-        this.setSuggestedKeywords()
       }
     },
     created () {

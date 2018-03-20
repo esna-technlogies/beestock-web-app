@@ -1,13 +1,17 @@
 import formUrlEncoded from 'form-urlencoded'
 import store from '../../store'
 
-import { userSecurity as userSecurityEndpoint,
-  userAccount as userAccountEndpoint,
-  changeRequest as changeRequestEndpoint } from '../../api/beestock/endpoints'
-
+import { userRoles } from '../../config'
 import { urlHelper } from '../../helpers'
-
 import api from '../../api/beestock'
+
+import {
+  userSecurity as userSecurityEndpoint,
+  userAccount as userAccountEndpoint,
+  changeRequest as changeRequestEndpoint
+} from '../../api/beestock/endpoints'
+
+
 
 
 const signup = (queryParams = {}) => {
@@ -31,12 +35,8 @@ const verifyUser = (uuid, queryParams = {}) => {
   return api.patch(url, formUrlEncoded(queryParams))
 }
 
-const resetUserPassword = (emailOrMobileNumber) => {
-  const url = urlHelper.reformatUrl({
-    url: userSecurityEndpoint.forgotPassword
-  })
-
-  const queryParams = {userName: emailOrMobileNumber}
+const resetUserPassword = (queryParams) => {
+  const url = userSecurityEndpoint.forgotPassword
 
   return api.post(url, formUrlEncoded(queryParams))
 }
@@ -46,7 +46,12 @@ const isAuthenticated = () => {
 }
 
 const isVerifiedUser = () => {
-  return !store.getters.userDetails.roles.includes('ROLE_INACTIVE')
+  return !store.getters.currentUserRoles().includes(userRoles.INACTIVE)
+}
+
+const isJwtTokenExpired = () => {
+  const expireDate = store.getters.jwtTokenExpireDate()
+  return expireDate < new Date()
 }
 
 
@@ -56,5 +61,6 @@ export default {
   isAuthenticated,
   isVerifiedUser,
   verifyUser,
-  resetUserPassword
+  resetUserPassword,
+  isJwtTokenExpired
 }

@@ -3,7 +3,7 @@
     <div class="footer-container">
       <div class="container">
         <div class="footer-logo">
-          <img src="../../assets/images/footer-logo.png" alt="">
+          <img src="../../assets/images/footer-logo.png" alt="Beestock Footer Logo">
         </div>
 
         <div class="row">
@@ -81,7 +81,7 @@
       </div>
 
       <div class="text-center" data-reactid="206">
-        <p data-reactid="207"> Copyrights reserved © BeeStock 2017</p>
+        <p data-reactid="207"> Copyrights reserved © BeeStock 2018</p>
       </div>
     </div>
   </footer>
@@ -95,17 +95,14 @@
 
 <style lang="scss" scoped>
   .footer {
-    position: relative;
-    bottom: 0;
-    width: 100%;
-
+    flex-shrink: 0;
   }
   .footer-container {
     color: black;
     padding-left: 0;
     padding-right: 0;
     max-width: 680px;
-    margin: 40px auto 30px;
+    margin: 40px auto 25px;
 
     * {
       box-sizing: border-box;
@@ -129,11 +126,6 @@
       font-size: .75rem;
       line-height: .85rem;
     }
-  }
-
-  footer .row {
-    margin-left: -25px;
-    margin-right: -25px;
   }
 
   footer .title {

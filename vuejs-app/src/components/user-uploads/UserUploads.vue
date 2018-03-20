@@ -1,6 +1,8 @@
 <template>
     <div class="user-uploads">
-      <vuestic-widget :class="'-category-widget -transparent-widget'">
+      <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
+
+      <vuestic-widget class="-category-widget -transparent-widget">
         <div class="row no-gutters justify-content-between">
           <div class="col-1">
             <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.photos' | translate }}</span>
@@ -17,7 +19,7 @@
         </div>
 
 
-        <photos-container :photoList="photoList" v-if="isPhotoList"></photos-container>
+        <photos-container :photoList="photoList" v-if="isPhotoList"/>
 
         <div class="row justify-content-center mt-3" v-else>
           <div class="well">
@@ -59,7 +61,7 @@
           </router-link>
         </div>
 
-        <photos-container :photoList="photoList" v-if="isPhotoList"></photos-container>
+        <photos-container :photoList="photoList" v-if="isPhotoList"/>
 
         <div class="row justify-content-center mt-3" v-else>
           <div class="well">
@@ -101,7 +103,7 @@
           </router-link>
         </div>
 
-        <photos-container :photoList="photoList" v-if="isPhotoList"></photos-container>
+        <photos-container :photoList="photoList" v-if="isPhotoList"/>
 
         <div class="row justify-content-center mt-3" v-else>
           <div class="well">
@@ -143,7 +145,7 @@
           </router-link>
         </div>
 
-        <photos-container :photoList="photoList" v-if="isPhotoList"></photos-container>
+        <photos-container :photoList="photoList" v-if="isPhotoList"/>
 
         <div class="row justify-content-center mt-3" v-else>
           <div class="well">
@@ -165,79 +167,77 @@
         </div>
 
       </vuestic-widget>
-
-      <!--<div class="row no-gutters justify-content-center">
-        <div class="col-12 mt-3">
-          <under-construction :pageTitle="pageTitle"/>
-        </div>
-      </div>-->
     </div>
 </template>
 
 <script>
-    import UnderConstruction from '../under-construction/UnderConstruction'
+  import photoService from '../../services/photo'
+  import {breadcrumbsHelper} from '../../helpers'
 
-    import photoService from '../../services/photo'
-    import PhotosContainer from '../photos-container/PhotosContainer'
-    import VuesticAlert from '../vuestic-components/vuestic-alert/VuesticAlert'
+  import UnderConstruction from '../under-construction/UnderConstruction'
+  import PhotosContainer from '../photos-container/PhotosContainer'
+  import VuesticAlert from '../vuestic-components/vuestic-alert/VuesticAlert'
 
-    export default {
-      name: 'user-uploads',
-      metaInfo () {
-        return {
-          title: this.pageTitle
-        }
-      },
-      components: {
-        VuesticAlert,
-        PhotosContainer,
-        UnderConstruction
-      },
-      data () {
-        return {
-          pageTitle: this.$t('titles.userUploads'),
-          photoList: []
-        }
-      },
-      computed: {
-        uuid () {
-          return this.$store.getters.userDetails.uuid
-        },
-        isPhotoList () {
-          return this.photoList.length > 0
-        }
-      },
-      methods: {
-        async prepareComponent () {
-          this.startLoading()
-
-          try {
-            await this.fetchUserPhotos()
-          } catch (error) {
-            console.error('BEESTOCK-ERROR', error.response ? error.response : error)
-          }
-
-          this.stopLoading()
-        },
-        async fetchUserPhotos () {
-          const queryParams = {
-            page: 1,
-            limit: 4
-          }
-          this.photoList = await photoService.findAllByUserUUID(this.uuid, queryParams)
-            .then(response => Object.values(response.data.photos))
-        },
-        startLoading () {
-          this.$store.commit('setLoading', true)
-        },
-        stopLoading () {
-          this.$store.commit('setLoading', false)
-        }
-      },
-      created () {
-        this.prepareComponent()
+  export default {
+    name: 'user-uploads',
+    metaInfo () {
+      return {
+        title: this.pageTitle
       }
+    },
+    components: {
+      VuesticAlert,
+      PhotosContainer,
+      UnderConstruction
+    },
+    data () {
+      return {
+        pageTitle: this.$t('titles.userUploads'),
+        photoList: []
+      }
+    },
+    computed: {
+      breadcrumbs () {
+        return breadcrumbsHelper.userUploads()
+      },
+      uuid () {
+        return this.$store.getters.currentUserUUID()
+      },
+      isPhotoList () {
+        return this.photoList.length > 0
+      }
+    },
+    methods: {
+      async prepareComponent () {
+        this.showPageLoader()
+
+        try {
+          await this.fetchUserPhotos()
+        } catch (error) {
+          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+        }
+
+        this.hidePageLoader()
+      },
+      async fetchUserPhotos () {
+        const queryParams = {
+          page: 1,
+          limit: 4
+        }
+        this.photoList = await photoService.findAllByUserUUID(this.uuid, queryParams)
+          .then(response => Object.values(response.data.photos))
+      },
+      showPageLoader () {
+        this.$store.commit('setPageLoader', true)
+      },
+      hidePageLoader () {
+        this.$store.commit('setPageLoader', false)
+      }
+    },
+    created () {
+      this.prepareComponent()
     }
+  }
 </script>
 
 <style lang="scss" scoped>

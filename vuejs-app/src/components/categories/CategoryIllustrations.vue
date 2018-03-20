@@ -2,14 +2,7 @@
     <div class="category-illustrations">
       <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-      <vuestic-widget :class="'-category-illustrations-widget -transparent-widget'">
-        <spinner
-          v-show="isLoadingNewPage"
-          :size="35"
-          :line-size="5"
-          :line-fg-color="'#F9CB55'"
-          class="-spinner"/>
-
+      <vuestic-widget class="-category-illustrations-widget -transparent-widget">
         <div class="row no-gutters mb-4 justify-content-center">
           <vuetable-pagination ref="pagination"
                                :css="css.pagination.micro"
@@ -18,29 +11,10 @@
           </vuetable-pagination>
         </div>
 
-        <photos-container :photoList="photoList"></photos-container>
+        <photos-container
+          :photoList="photoList"
+          :isPaginateLoader="isPaginateLoader"/>
       </vuestic-widget>
-
-      <!--<div class="row justify-content-start">
-        <div class="col-3 mt-3" v-for="(photo, photoIndex) in photoList">
-          <div class="-image-wrapper">
-            <div class="-image"
-                 :key="photoIndex"
-                 :style="{ backgroundImage: 'url(' + photo.file_storage.sizes.size_250 + ')' }">
-            </div>
-
-            <div class="-photo-details">
-             <span class="-photo-creation-moment">
-               {{ photo.created.sec | moment("MMM Do YYYY, h:mm A") }}
-             </span>
-              <span class="-photo-title">
-               {{ photo.title }}
-             </span>
-              <span aria-hidden="true" class="-photo-download-icon fa fa-download"></span>
-            </div>
-          </div>
-        </div>
-      </div>-->
     </div>
 </template>
 
@@ -82,7 +56,7 @@
         category: {},
         photoList: [],
         paginationData: {},
-        isLoadingNewPage: false
+        isPaginateLoader: false
       }
     },
     computed: {
@@ -97,7 +71,7 @@
     },
     methods: {
       async prepareComponent () {
-        this.startLoading()
+        this.showPageLoader()
 
         try {
           this.category = await this.fetchCategoryDetails()
@@ -106,7 +80,7 @@
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.stopLoading()
+        this.hidePageLoader()
       },
       fetchCategoryDetails () {
         return categoryService.findByUUID(this.uuid)
@@ -125,7 +99,7 @@
           })
       },
       async renderNewPage () {
-        this.startLoadingNewPage()
+        this.showPaginateLoader()
 
         try {
           this.photoList = await this.fetchCategoryPhotos()
@@ -133,7 +107,7 @@
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.stopLoadingNewPage()
+        this.hidePaginateLoader()
       },
       setPaginationData (data) {
         this.paginationData = this.getPaginationData(data)
@@ -186,17 +160,17 @@
           this.renderNewPage()
         }
       },
-      startLoading () {
-        this.$store.commit('setLoading', true)
+      showPageLoader () {
+        this.$store.commit('setPageLoader', true)
       },
-      stopLoading () {
-        this.$store.commit('setLoading', false)
+      hidePageLoader () {
+        this.$store.commit('setPageLoader', false)
       },
-      startLoadingNewPage () {
-        this.isLoadingNewPage = true
+      showPaginateLoader () {
+        this.isPaginateLoader = true
       },
-      stopLoadingNewPage () {
-        this.isLoadingNewPage = false
+      hidePaginateLoader () {
+        this.isPaginateLoader = false
       }
     },
     created () {
@@ -348,11 +322,5 @@
 
   .-category-illustrations-widget {
     position: relative;
-  }
-
-  .-spinner {
-    position: absolute;
-    top: 25px;
-    right: 25px;
   }
 </style>

@@ -1,6 +1,5 @@
 <template>
-   <div class="categories">
-
+   <div class="categories" v-show="!isPageLoading">
      <template v-if="isCategoriesRoute">
        <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
@@ -19,6 +18,8 @@
   import {breadcrumbsHelper} from '../../helpers'
   import UnderConstruction from '../under-construction/UnderConstruction'
 
+  import {mapGetters} from 'vuex'
+
   export default {
     name: 'categories',
     metaInfo () {
@@ -35,6 +36,7 @@
       }
     },
     computed: {
+      ...mapGetters(['isPageLoading']),
       isCategoriesRoute () {
         return this.$route.name === 'Categories'
       },

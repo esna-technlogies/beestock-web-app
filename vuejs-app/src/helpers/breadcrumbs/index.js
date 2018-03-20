@@ -3,6 +3,8 @@ import {categories, category, categoryPhotos,
 
 import {photos, photo} from './photos'
 
+import {userUploads, userPhotos} from './user-uploads'
+
 export default {
   categories,
   category,
@@ -11,5 +13,7 @@ export default {
   categoryFootage,
   categoryAudio,
   photos,
-  photo
+  photo,
+  userUploads,
+  userPhotos
 }

@@ -19,7 +19,7 @@
               :to="{ name: 'Photo', params: { uuid: photo.uuid } }"
               :style="{ color: '#33495C' }"
             >
-              <h4>{{ photo.title }}</h4>
+              <h5>{{ photo.title }}</h5>
             </router-link>
             <p>{{ photo.description }}</p>
           </div>
@@ -77,7 +77,7 @@
     }
 
     .-image {
-      background-size: cover;
+      background-size: contain;
       background-repeat: no-repeat;
       background-position: center center;
       border: 2px solid white;

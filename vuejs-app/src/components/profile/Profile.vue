@@ -2,7 +2,7 @@
   <div class="profile">
     <div class="row no-gutters justify-content-center">
       <div class="col-10 col-sm-10 col-md-8 col-lg-12">
-        <vuestic-widget :class="'-profile-widget'">
+        <vuestic-widget class="-profile-widget mb-0">
 
           <div class="row justify-content-center">
             <div class="col-6">
@@ -39,13 +39,6 @@
               </nav>
             </div>
 
-            <spinner
-              v-show="isLoading"
-              :size="25"
-              :line-size="6"
-              :line-fg-color="'#F9CB55'"
-              class="-spinner"/>
-
             <div style="color: #41DF7C" v-show="isSuccessOperation" class="-spinner">
               <span class="align-middle mr-1">SAVED</span>
               <span aria-hidden="true" class="fa fa-check-circle align-middle" style="font-size: 25px;"></span>
@@ -57,8 +50,8 @@
           </div>
 
           <router-view
-            v-on:loadingStart="startLoading"
-            v-on:loadingStop="stopLoading"
+            v-on:loadingStarted="startLoading"
+            v-on:loadingStopped="stopLoading"
             v-on:successOperation="operationSucceeded" />
 
         </vuestic-widget>
@@ -78,7 +71,6 @@
     },
     data () {
       return {
-        isLoading: false,
         isSuccessOperation: false
       }
     },
@@ -87,7 +79,6 @@
         this.isSuccessOperation = true
       },
       startLoading () {
-        this.isLoading = true
         this.isSuccessOperation = false
       },
       stopLoading () {
@@ -102,7 +93,6 @@
         this.errorAlertMessage = ''
       },
       resetAll () {
-        this.isLoading = false
         this.isErrorAlert = false
         this.errorAlertMessage = ''
         this.isSuccessOperation = false

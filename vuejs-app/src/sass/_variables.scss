@@ -74,6 +74,7 @@ $content-wrap-ml : calc(#{$sidebar-left} + #{$sidebar-width} + 35px);
 $content-wrap-pr : $layout-padding-right;
 $content-wrap-pt : $layout-padding;
 $content-wrap-pb : $layout-padding;
+$content-wrap-pl : $layout-padding;
 
 $greeny-box-shadow: 0 4px 9.6px 0.4px rgba($vue-green, .5);
 

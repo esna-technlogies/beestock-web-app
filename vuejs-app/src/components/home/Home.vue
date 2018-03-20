@@ -1,10 +1,8 @@
 <template>
     <div class="home">
-      <vuestic-pre-loader v-show="isLoading" ref="preLoader" class="pre-loader"></vuestic-pre-loader>
+      <main-alert v-if="alertType" :alertType="alertType" :alertMessage="alertMessage"/>
 
-      <app-alert :alertType="alertType" :alertMessage="alertMessage"></app-alert>
-
-      <div v-show="!isLoading">
+      <div v-show="!isPageLoading">
         <div class="row no-gutters justify-content-center">
           <search-box></search-box>
         </div>
@@ -71,7 +69,7 @@
 <script>
     import VuesticWidget from '../vuestic-components/vuestic-widget/VuesticWidget'
     import SearchBox from '../search/SearchBox'
-    import AppAlert from '../app-alert/AppAlert'
+    import MainAlert from '../alerts/MainAlert'
 
     import categoryService from '../../services/category'
 
@@ -96,41 +94,56 @@
         }
       },
       components: {
-        AppAlert,
+        MainAlert,
         SearchBox,
         VuesticWidget
       },
       data () {
         return {
-          isLoading: false,
+          // isLoading: false,
           categoryList: [],
           randomPhotoList: []
         }
       },
       computed: {
-        ...mapGetters(['isAuthenticatedUser'])
+        ...mapGetters([
+          'isAuthenticatedUser',
+          'isPageLoading'
+        ])
       },
       methods: {
-        async fetchFourRandomPhotos () {
-          this.startLoading()
+        async prepareComponent () {
+          this.showPageLoader()
 
-          await this.setCategoryList()
-
-          const fourRandomCategory = this.selectFourRandomCategory()
-          await Promise.all(fourRandomCategory.map(this.fetchRandomPhoto))
-
-          this.stopLoading()
-        },
-        async setCategoryList () {
           try {
-            const categories = await categoryService.findAll().then(response => response.data.categories)
-
-            for (const category of Object.values(categories)) {
-              this.categoryList.push(category)
-            }
+            await this.setCategoryList()
+            await this.setRandomPhotoList()
           } catch (error) {
             console.error('BEESTOCK-ERROR', error.response ? error.response : error)
           }
+
+          this.hidePageLoader()
+        },
+        async setCategoryList () {
+          const categories = await categoryService.findAll().then(response => response.data.categories)
+
+          for (const category of Object.values(categories)) {
+            this.categoryList.push(category)
+          }
+        },
+        async setRandomPhotoList () {
+          const fourRandomCategory = await this.selectFourRandomCategory()
+
+          await Promise.all(
+            fourRandomCategory.map(async (category) => {
+              await categoryService.findRandomPhotoByUUID(category.uuid)
+                .then(response => response.data.photo)
+                .then(photo => {
+                  photo.category_title = category.title
+                  this.randomPhotoList.push(photo)
+                })
+            })
+          )
         },
         selectFourRandomCategory () {
           const fourRandomCategory = []
@@ -145,26 +158,15 @@
 
           return fourRandomCategory
         },
-        async fetchRandomPhoto (category) {
-          try {
-            const photo = await categoryService.findRandomPhotoByUUID(category.uuid)
-              .then(response => response.data.photo)
-
-            photo.category_title = category.title
-            this.randomPhotoList.push(photo)
-          } catch (error) {
-            console.error('BEESTOCK-ERROR', error.response ? error.response : error)
-          }
+        showPageLoader () {
+          this.$store.commit('setPageLoader', true)
         },
-        startLoading () {
-          this.isLoading = true
-        },
-        stopLoading () {
-          this.isLoading = false
+        hidePageLoader () {
+          this.$store.commit('setPageLoader', false)
         }
       },
       created () {
-        if (this.$store.getters.isAuthenticatedUser) this.fetchFourRandomPhotos()
+        if (this.isAuthenticatedUser) this.prepareComponent()
       }
     }
 </script>

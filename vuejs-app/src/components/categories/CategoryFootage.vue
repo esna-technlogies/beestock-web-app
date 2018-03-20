@@ -53,7 +53,7 @@
     },
     methods: {
       async prepareComponent () {
-        this.startLoading()
+        this.showPageLoader()
 
         try {
           await this.fetchCategoryDetails()
@@ -62,7 +62,7 @@
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.stopLoading()
+        this.hidePageLoader()
       },
       async fetchCategoryDetails () {
         this.category = await categoryService.findByUUID(this.uuid)
@@ -80,11 +80,11 @@
             return Object.values(response.data.photos)
           })
       },
-      startLoading () {
-        this.$store.commit('setLoading', true)
+      showPageLoader () {
+        this.$store.commit('setPageLoader', true)
       },
-      stopLoading () {
-        this.$store.commit('setLoading', false)
+      hidePageLoader () {
+        this.$store.commit('setPageLoader', false)
       }
     },
     created () {

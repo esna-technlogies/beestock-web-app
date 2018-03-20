@@ -3,10 +3,7 @@
     <form name="changePassword" @submit.prevent="doChangePassword">
       <div class="row justify-content-center">
         <div class="col-6">
-          <vuestic-alert type="danger" v-show="isErrorAlert">
-            <span class="badge badge-pill badge-danger">{{'notificationsPage.alerts.danger' | translate}}</span>
-            {{ errorAlertMessage }}
-          </vuestic-alert>
+          <form-error-alert v-show="isErrorAlert" :alert-message="errorAlertMessage"/>
         </div>
       </div>
 
@@ -58,18 +55,21 @@
 
       <div class="row justify-content-center">
         <div class="col-6 mt-3 mb-2">
-          <button class="btn btn-primary btn-micro btn-block rounded-0" :disabled="isLoading">
+          <button class="btn btn-primary btn-micro btn-block rounded-0" :disabled="isBasicLoader">
             {{ 'forms.buttons.confirm' | translate }}
           </button>
         </div>
       </div>
 
+      <basic-loader v-show="isBasicLoader" />
     </form>
   </div>
 </template>
 
 <script>
   import userService from '../../services/user'
+  import BasicLoader from '../loaders/BasicLoader'
+  import FormErrorAlert from '../alerts/FormErrorAlert'
 
   export default {
     name: 'change-password',
@@ -78,9 +78,13 @@
         title: this.$t('titles.changePassword')
       }
     },
+    components: {
+      BasicLoader,
+      FormErrorAlert
+    },
     data () {
       return {
-        isLoading: false,
+        isBasicLoader: false,
         isErrorAlert: false,
         errorAlertMessage: '',
         password: ''
@@ -88,14 +92,14 @@
     },
     computed: {
       uuid () {
-        return this.$store.getters.userDetails.uuid
+        return this.$store.getters.currentUserUUID()
       }
     },
     methods: {
       async doChangePassword () {
         if (!await this.$validator.validateAll()) return
 
-        this.$emit('loadingStart')
+        this.startLoading()
         this.clearErrorAlert()
 
         const queryParams = {
@@ -111,7 +115,7 @@
           this.handleFailedChangePassword(error)
         }
 
-        this.$emit('loadingStop')
+        this.stopLoading()
       },
       handleFailedChangePassword (error) {
         if (!error.response) {
@@ -129,6 +133,14 @@
 
           this.setErrorAlert(error.response.data.error.message)
         }
+      },
+      startLoading () {
+        this.isBasicLoader = true
+        this.$emit('loadingStarted')
+      },
+      stopLoading () {
+        this.isBasicLoader = false
+        this.$emit('loadingStopped')
       },
       setErrorAlert (message = 'Default Error Message') {
         this.isErrorAlert = true

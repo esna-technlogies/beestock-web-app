@@ -1,8 +1,8 @@
 <template>
-    <div class="category-photos">
+    <div class="category-photos" v-show="!isPageLoading">
       <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-      <vuestic-widget :class="'-category-photos-widget -transparent-widget'">
+      <vuestic-widget class="-category-photos-widget -transparent-widget">
         <template v-for="(container, index) in photosContainerList">
           <component :is="container" :key="container.name" :photoList="photoList[index]"></component>
         </template>
@@ -29,6 +29,8 @@
 <script>
   import PhotosContainer from '../photos-container/PhotosContainer'
   import Spinner from 'vue-simple-spinner'
+
+  import {mapGetters} from 'vuex'
 
   import photoService from '../../services/photo'
   import categoryService from '../../services/category'
@@ -64,6 +66,7 @@
       }
     },
     computed: {
+      ...mapGetters(['isPageLoading']),
       breadcrumbs () {
         return breadcrumbsHelper.categoryPhotos(this.category.title)
       }
@@ -75,7 +78,7 @@
     },
     methods: {
       async prepareComponent () {
-        this.startLoading()
+        this.showPageLoader()
 
         try {
           await this.fetchCategoryDetails()
@@ -84,7 +87,7 @@
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.stopLoading()
+        this.hidePageLoader()
       },
       async fetchCategoryDetails () {
         this.category = await categoryService.findByUUID(this.uuid)
@@ -113,11 +116,11 @@
 
         this.isLoadingMorePhotos = false
       },
-      startLoading () {
-        this.$store.commit('setLoading', true)
+      showPageLoader () {
+        this.$store.commit('setPageLoader', true)
       },
-      stopLoading () {
-        this.$store.commit('setLoading', false)
+      hidePageLoader () {
+        this.$store.commit('setPageLoader', false)
       }
     },
     created () {

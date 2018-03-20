@@ -1,13 +1,15 @@
 <template>
   <div class="photos-container row justify-content-start">
-    <div class="col-3 mt-3 mb-3" v-for="(photo, photoIndex) in photoList">
+    <div class="col-3 mt-3 mb-3" v-for="(photo, index) in photoList">
       <div class="-image-wrapper">
-
-        <router-link :to="{ name: 'Photo', params: { uuid: photo.uuid } }" :key="photoIndex">
-          <!--<img :src="photo.file_storage.sizes.size_250" :alt="photo.title">-->
-          <div class="-image"
-               :key="photoIndex"
-               :style="{ backgroundImage: 'url(' + photo.file_storage.sizes.size_250 + ')' }">
+        <router-link
+          :to="{ name: 'Photo', params: { uuid: photo.uuid } }"
+          :key="index"
+        >
+          <div
+            class="-image"
+            :key="index"
+            :style="{ backgroundImage: 'url(' + photo.file_storage.sizes.size_250 + ')' }">
           </div>
         </router-link>
 
@@ -15,29 +17,44 @@
           <span class="-photo-creation-moment">
            {{ photo.created.sec | moment("D MMM YYYY, h:mm A") }}
           </span>
-            <span class="-photo-title">
+          <span class="-photo-title">
            {{ photo.title }}
           </span>
           <span aria-hidden="true" class="-photo-download-icon fa fa-download"></span>
         </div>
       </div>
     </div>
+
+    <basic-loader v-show="isPaginateLoader" />
   </div>
 </template>
 
 <script>
-  export default {
+  import BasicLoader from '../loaders/BasicLoader'
+
+export default {
     name: 'photos-container',
     props: {
       photoList: {
         type: Array,
         default: () => []
+      },
+      isPaginateLoader: {
+        type: Boolean,
+        default: false
       }
+    },
+    components: {
+      BasicLoader
     }
   }
 </script>
 
 <style lang="scss" scoped>
+  .photos-container {
+    position: relative
+  }
+
   .-image-wrapper {
     height: 10rem;
     width: 100%;

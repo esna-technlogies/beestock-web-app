@@ -1,3 +1,5 @@
+import JwtDecode from 'jwt-decode'
+
 export default {
   hex2rgb (hex, opacity) {
     hex = (hex + '').trim()
@@ -42,5 +44,40 @@ export default {
       }
     }
     return null
+  },
+
+  getCurrentUserUUID () {
+    return localStorage.getItem('uuid')
+  },
+
+  getCurrentUserJwtToken () {
+    return localStorage.getItem('jwtToken')
+  },
+
+  getCurrentUserRoles () {
+    const currentUserRoles = localStorage.getItem('roles')
+    return currentUserRoles ? currentUserRoles.split(',') : []
+  },
+
+  getJwtTokenExpireDate () {
+    const jwtToken = this.getCurrentUserJwtToken()
+    return jwtToken ? new Date(JwtDecode(jwtToken).exp * 1000) : new Date(0)
+  },
+
+  getCurrentUserFullName () {
+    return `${localStorage.getItem('firstName')} ${localStorage.getItem('lastName')}`
+  },
+
+  storeCurrentUserDetails (userDetails) {
+    Object.keys(userDetails)
+      .map(item => localStorage.setItem(item, userDetails[item]))
+  },
+
+  storeCurrentUserJwtToken (token) {
+    localStorage.setItem('jwtToken', token)
+  },
+
+  clearAuthStorage () {
+    localStorage.clear()
   }
 }

@@ -3,10 +3,7 @@
       <form name="profileDetails" @submit.prevent="doSaveChanges">
         <div class="row justify-content-center">
           <div class="col-6">
-            <vuestic-alert type="danger" v-show="isErrorAlert">
-              <span class="badge badge-pill badge-danger">{{'notificationsPage.alerts.danger' | translate}}</span>
-              {{ errorAlertMessage }}
-            </vuestic-alert>
+            <form-error-alert v-show="isErrorAlert" :alert-message="errorAlertMessage"/>
           </div>
         </div>
 
@@ -132,26 +129,28 @@
 
         <div class="row justify-content-center">
           <div class="col-6 mt-3 mb-2">
-            <button class="btn btn-primary btn-micro btn-block rounded-0" :disabled="isLoading">
+            <button class="btn btn-primary btn-micro btn-block rounded-0" :disabled="isBasicLoader">
               {{ 'forms.buttons.saveChanges' | translate }}
             </button>
           </div>
         </div>
 
+        <basic-loader v-show="isBasicLoader" />
       </form>
   </div>
 </template>
 
 <script>
   import Multiselect from 'vue-multiselect'
-import { HollowDotsSpinner } from 'epic-spinners'
+  import { HollowDotsSpinner } from 'epic-spinners'
+  import BasicLoader from '../loaders/BasicLoader'
+  import FormErrorAlert from '../alerts/FormErrorAlert'
 
-import CountryList from '../../data/country-list'
-
+  import CountryList from '../../data/country-list'
   import userService from '../../services/user'
 
 
-export default {
+  export default {
     name: 'profile-settings',
     metaInfo () {
       return {
@@ -159,12 +158,14 @@ export default {
       }
     },
     components: {
+      BasicLoader,
       Multiselect,
+      FormErrorAlert,
       HollowDotsSpinner
     },
     data () {
       return {
-        isLoading: false,
+        isBasicLoader: false,
         isErrorAlert: false,
         errorAlertMessage: '',
         firstName: '',
@@ -177,12 +178,12 @@ export default {
     },
     computed: {
       userUUID () {
-        return this.$store.getters.userDetails.uuid
+        return this.$store.getters.currentUserUUID()
       }
     },
     methods: {
       async fetchUserDetails (uuid) {
-        this.$emit('loadingStart')
+        this.startLoading()
 
         try {
           const user = await userService.findByUUID(uuid).then(response => response.data.user)
@@ -202,12 +203,12 @@ export default {
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.$emit('loadingStop')
+        this.stopLoading()
       },
       async doSaveChanges () {
         if (!await this.$validator.validateAll()) return
 
-        this.$emit('loadingStart')
+        this.startLoading()
         this.clearErrorAlert()
 
         const queryParams = {
@@ -235,7 +236,7 @@ export default {
           this.handleFailedUpdate(error)
         }
 
-        this.$emit('loadingStop')
+        this.stopLoading()
       },
       handleFailedUpdate (error) {
         if (!error.response) {
@@ -253,6 +254,14 @@ export default {
 
           this.setErrorAlert(error.response.data.error.message)
         }
+      },
+      startLoading () {
+        this.isBasicLoader = true
+        this.$emit('loadingStarted')
+      },
+      stopLoading () {
+        this.isBasicLoader = false
+        this.$emit('loadingStopped')
       },
       setErrorAlert (message = 'Default Error Message') {
         this.isErrorAlert = true

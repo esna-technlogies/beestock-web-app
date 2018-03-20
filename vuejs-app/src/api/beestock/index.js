@@ -1,19 +1,19 @@
 import axios from 'axios/index'
+import { beestockApiConf } from '../../config'
+import utils from '../../services/utils'
 
-const baseURL = 'http://api.beesstock.com'
-const AcceptHeader = 'application/json'
-const ContentType = 'application/x-www-form-urlencoded'
-const jwtToken = localStorage.getItem('jwtToken')
 
-const setAuthorizationHeader = (jwtToken) => {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`
+axios.defaults.baseURL = beestockApiConf.url
+axios.defaults.headers.common['Accept'] = beestockApiConf.acceptHeader.json
+axios.defaults.headers.patch['Content-Type'] = beestockApiConf.contentType.formUrlEncoded
+
+const setAuthorizationHeader = () => {
+  const token = utils.getCurrentUserJwtToken()
+  if (token) axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 }
 
-axios.defaults.baseURL = baseURL
-axios.defaults.headers.common['Accept'] = AcceptHeader
-axios.defaults.headers.patch['Content-Type'] = ContentType
+setAuthorizationHeader()
 
-if (jwtToken) setAuthorizationHeader(jwtToken)
 
 export default {
   get: axios.get,

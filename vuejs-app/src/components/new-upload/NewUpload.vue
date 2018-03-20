@@ -1,6 +1,6 @@
 <template>
     <div class="new-upload">
-      <vuestic-widget :class="'-new-upload-widget -transparent-widget'">
+      <vuestic-widget class="-new-upload-widget -transparent-widget">
         <div class="row justify-content-center">
           <div class="col-10 text-center">
             <router-link
@@ -83,10 +83,10 @@
         this.isSelectType = true
       },
       addUploadVectorContainer () {
-        this.isSelectType = false
+        alert('No implemented Yet')
       },
       addUploadFootageContainer () {
-        this.isSelectType = false
+        alert('No implemented Yet')
       },
       addUploadPhotoContainer () {
         this.isSelectType = false

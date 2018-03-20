@@ -1,11 +1,13 @@
 import lazyLoading from '../../store/modules/menu/lazyLoading'
+import { routeConditions } from '../../config'
+
 
 export const photos = {
   name: 'Photos',
   path: '/photos',
   component: lazyLoading('photos/Photos'),
   meta: {
-    requiresAuthenticatedUser: false
+    conditions: [routeConditions.AUTHENTICATED_USER]
   },
   children: [
     {
@@ -14,7 +16,7 @@ export const photos = {
       component: lazyLoading('photos/Photo'),
       props: true,
       meta: {
-        requiresAuthenticatedUser: false
+        conditions: [routeConditions.AUTHENTICATED_USER]
       }
     }
   ]

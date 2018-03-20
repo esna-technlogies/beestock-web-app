@@ -13,7 +13,6 @@ import './i18n'
 
 import Meta from 'vue-meta'
 
-
 import VueValidateCustomDictionary from 'src/vee-validate-messages'
 import beforeEachRoute from './router/before-each-route'
 
@@ -41,26 +40,16 @@ let mediaHandler = () => {
 }
 
 router.beforeEach((to, from, next) => {
-  store.commit('setLoading', true)
+  store.commit('setPageLoader', true)
 
-  const token = localStorage.getItem('jwtToken')
-
-  if (token) {
-    const userDetails = {}
-    Object.keys(store.getters.userDetails)
-      .map(item => { userDetails[item] = localStorage.getItem(item) })
-
-    store.dispatch('storeUserDetails', userDetails)
-    store.dispatch('storeJwtToken', token)
-    store.commit('setUserAsAuthenticated')
-  }
+  if (store.getters.currentUserJwtToken()) store.commit('setAuthenticated', true)
 
   return beforeEachRoute(to, from, next)
 })
 
 router.afterEach((to, from) => {
   mediaHandler()
-  store.commit('setLoading', false)
+  store.commit('setPageLoader', false)
 })
 
 /* eslint-disable no-new */

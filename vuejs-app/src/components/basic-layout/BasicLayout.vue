@@ -1,28 +1,25 @@
 <template>
-  <div :class="'sidebar-hidden sidebar-hidden_without-animation'">
+  <div class="basic-layout">
     <navbar></navbar>
-    <div class="content-wrap" id="content-wrap">
-      <main id="content" class="content" role="main">
-        <!--<vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>-->
-        <vuestic-alert type="warning" :class="'justify-content-center'" v-if="userIsAuthenticatedAndNotVerifiedYet">
+    <main id="content" class="content" role="main">
+      <vuestic-alert type="warning" :class="'justify-content-center'" v-if="userIsAuthenticatedAndNotVerifiedYet">
           <span class="badge badge-pill badge-warning">
             {{'notificationsPage.alerts.warning' | translate}}
           </span>
-          <span>
+        <span>
             Your account hasn't been verified yet, Please
             <router-link
               :to="{ name: 'VerifyUser' }"
               :style="'color: #225194 text-decoration: underline'">verify now</router-link>.
           </span>
-        </vuestic-alert>
+      </vuestic-alert>
 
-        <vuestic-pre-loader v-show="isLoading" ref="preLoader" class="pre-loader"></vuestic-pre-loader>
+      <router-view v-show="!isLoading"></router-view>
+    </main>
 
-        <router-view v-show="!isLoading"></router-view>
-      </main>
+    <div class="-beestock-loading-wrapper text-center" v-if="isLoading">
+      <img class="-beestock-loading" src="../../assets/images/beestock-loader.gif" alt="Beestock Loading">
     </div>
-
-    <beestock-footer></beestock-footer>
   </div>
 </template>
 
@@ -31,7 +28,6 @@
 
   import Navbar from './navbar/Navbar'
   import Resize from 'directives/ResizeHandler'
-  import AppAlert from '../app-alert/AppAlert'
   import BeestockFooter from '../beestock-footer/BeestockFooter'
 
   import auth from '../../services/auth'
@@ -40,7 +36,6 @@
     name: 'basic-layout',
     components: {
       Navbar,
-      AppAlert,
       BeestockFooter
     },
     directives: {
@@ -74,8 +69,18 @@
   @import "../../../node_modules/bootstrap/scss/functions";
   @import "../../../node_modules/bootstrap/scss/variables";
 
+  .-basic-layout {
+    padding-bottom: 215px;
+  }
+
+  .nothing {
+    .content-wrap {
+      margin-left: $content-wrap-ml;
+    }
+
+  }
+
   .content-wrap {
-    margin-left: $content-wrap-ml;
     padding: $content-wrap-pt $content-wrap-pr $content-wrap-pb 0;
     transition: margin-left 0.3s ease;
 
@@ -87,6 +92,7 @@
 
     .sidebar-hidden & {
       margin-left: $sidebar-left;
+      height: 100%;
     }
 
     @include media-breakpoint-down(md) {
@@ -96,6 +102,44 @@
       .sidebar-hidden & {
         margin-left: 0;
       }
+    }
+
+    .content {
+      position: relative;
+    }
+  }
+
+  .content {
+    padding: 0;
+    padding-bottom: 215px;
+  }
+
+  .sidebar-hidden {
+    height: 100%;
+  }
+
+  .-beestock-page-loading-wrapper {
+    position: relative;
+    height: calc(100% - #{$top-nav-height});
+  }
+
+  .-beestock-loading-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 30%;
+    width: 50%;
+    margin: -15% 0 0 -25%;
+
+    .-beestock-loading {
+      margin: auto;
+      /*position: absolute;*/
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      max-width: 256px;
+      max-height: 256px;
     }
   }
 </style>

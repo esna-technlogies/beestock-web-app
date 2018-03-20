@@ -2,19 +2,9 @@
   <div class="verify-user">
     <div class="row no-gutters justify-content-center">
       <div class="col-10 col-sm-10 col-md-8 col-lg-6">
-        <vuestic-widget :class="'-verify-user-widget'">
-          <vuestic-alert type="danger" v-show="isErrorAlert" class="-alert">
-            <span class="badge badge-pill badge-danger">{{'notificationsPage.alerts.danger' | translate}}</span>
-            {{ errorAlertMessage }}
-          </vuestic-alert>
+        <form-error-alert v-show="isErrorAlert" :alert-message="errorAlertMessage"/>
 
-          <spinner
-            v-show="isLoading"
-            :size="30"
-            :line-size="4"
-            :line-fg-color="'#F9CB55'"
-            class="-spinner"/>
-
+        <vuestic-widget class="-verify-user-widget">
           <div class="col-12 text-center">
             <h5><strong>{{ 'forms.heads.verifyUser' | translate }}</strong></h5>
           </div>
@@ -54,6 +44,8 @@
               </div>
             </div>
           </form>
+
+          <basic-loader v-show="isLoading" />
         </vuestic-widget>
       </div>
     </div>
@@ -61,11 +53,13 @@
 </template>
 
 <script>
-  import AppAlert from '../../app-alert/AppAlert'
-  import { routerHelper } from '../../../helpers'
-import Spinner from 'vue-simple-spinner'
+  import Spinner from 'vue-simple-spinner'
+  import BasicLoader from '../../loaders/BasicLoader'
 
-export default {
+  import { routerHelper } from '../../../helpers'
+  import FormErrorAlert from '../../alerts/FormErrorAlert'
+
+  export default {
     name: 'verify-user',
     metaInfo () {
       return {
@@ -73,8 +67,9 @@ export default {
       }
     },
     components: {
-      AppAlert,
-      Spinner
+      Spinner,
+      BasicLoader,
+      FormErrorAlert
     },
     data () {
       return {
@@ -91,7 +86,7 @@ export default {
         this.startLoading()
 
         const verificationDetails = {
-          uuid: this.$store.getters.userDetails.uuid,
+          uuid: this.$store.getters.currentUserUUID(),
           code: this.verificationCode
         }
 
@@ -133,12 +128,7 @@ export default {
 <style lang="scss" scoped>
   .-verify-user-widget {
     margin: 100px auto !important;
-  }
-
-  .-spinner {
-    position: absolute;
-    top: 120px;
-    right: 40px;
+    position: relative;
   }
 
   .-alert {
@@ -148,10 +138,5 @@ export default {
     left: 0;
   }
 
-  .-alert {
-    position: absolute;
-    width :100%;
-    top: 30px;
-    left: 0;
-  }
+
 </style>

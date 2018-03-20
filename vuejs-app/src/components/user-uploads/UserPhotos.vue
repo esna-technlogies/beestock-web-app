@@ -1,16 +1,9 @@
 <template>
-   <div class="user-photos">
+   <div class="user-photos" v-show="!isPageLoading">
      <template v-if="isUserPhotosRoute">
        <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-       <vuestic-widget :class="'-photos-widget -transparent-widget'">
-         <spinner
-           v-show="isLoadingNewPage"
-           :size="35"
-           :line-size="5"
-           :line-fg-color="'#F9CB55'"
-           class="-spinner"/>
-
+       <vuestic-widget class="-photos-widget -transparent-widget">
          <div class="row no-gutters mb-4 justify-content-center">
            <vuetable-pagination ref="pagination"
                                 :css="css.pagination.micro"
@@ -19,7 +12,9 @@
            </vuetable-pagination>
          </div>
 
-         <photos-container :photoList="photoList" v-if="photoList.length > 0" />
+         <photos-container
+           :photoList="photoList" v-if="photoList.length > 0"
+           :isPaginateLoader="isPaginateLoader"/>
 
          <div class="row justify-content-center mt-3" v-else>
            <div class="well">
@@ -52,6 +47,7 @@
   import UnderConstruction from '../under-construction/UnderConstruction'
   import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 
+  import {mapGetters} from 'vuex'
 
   import {breadcrumbsHelper} from '../../helpers'
   import photoService from '../../services/photo'
@@ -71,14 +67,15 @@
       VuetablePagination
     },
     computed: {
+      ...mapGetters(['isPageLoading']),
       breadcrumbs () {
-        return breadcrumbsHelper.photos()
+        return breadcrumbsHelper.userPhotos()
       },
       isUserPhotosRoute () {
         return this.$route.name === 'UserPhotos'
       },
       uuid () {
-        return this.$store.getters.userDetails.uuid
+        return this.$store.getters.currentUserUUID()
       }
     },
     /* watch: {
@@ -96,13 +93,13 @@
         category: {},
         photoList: [],
         paginationData: {},
-        isLoadingNewPage: false,
+        isPaginateLoader: false,
         responseData: {}
       }
     },
     methods: {
       async prepareComponent () {
-        this.startLoading()
+        this.showPageLoader()
 
         try {
           this.photoList = await this.fetchUserPhotos()
@@ -110,7 +107,7 @@
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.stopLoading()
+        this.hidePageLoader()
       },
       fetchUserPhotos () {
         const queryParams = {
@@ -126,7 +123,7 @@
           })
       },
       async renderNewPage () {
-        this.startLoadingNewPage()
+        this.showPaginateLoader()
 
         try {
           this.photoList = await this.fetchUserPhotos()
@@ -134,7 +131,7 @@
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.stopLoadingNewPage()
+        this.hidePaginateLoader()
       },
       setPaginationData (data) {
         this.paginationData = this.getPaginationData(data)
@@ -187,17 +184,17 @@
           this.renderNewPage()
         }
       },
-      startLoading () {
-        this.$store.commit('setLoading', true)
+      showPageLoader () {
+        this.$store.commit('setPageLoader', true)
       },
-      stopLoading () {
-        this.$store.commit('setLoading', false)
+      hidePageLoader () {
+        this.$store.commit('setPageLoader', false)
       },
-      startLoadingNewPage () {
-        this.isLoadingNewPage = true
+      showPaginateLoader () {
+        this.isPaginateLoader = true
       },
-      stopLoadingNewPage () {
-        this.isLoadingNewPage = false
+      hidePaginateLoader () {
+        this.isPaginateLoader = false
       }
     },
     created () {
@@ -213,11 +210,5 @@
 
   .-photos-widget {
     position: relative;
-  }
-
-  .-spinner {
-    position: absolute;
-    top: 25px;
-    right: 25px;
   }
 </style>

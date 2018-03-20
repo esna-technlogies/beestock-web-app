@@ -1,6 +1,18 @@
 <template>
   <div id="app" class="app">
-    <basic-layout></basic-layout>
+    <div class="content">
+      <navbar></navbar>
+
+      <main class="content-inside" role="main">
+        <not-verified-alert v-if="userIsAuthenticatedAndNotVerifiedYet"/>
+
+        <router-view v-show="!isPageLoading"></router-view>
+      </main>
+
+      <page-pre-loader v-if="isPageLoading"/>
+    </div>
+
+    <beestock-footer />
   </div>
 </template>
 
@@ -8,6 +20,17 @@
   import BasicLayout from 'components/basic-layout/BasicLayout'
   import AuthLayout from './components/basic-layout/AuthLayout'
   import VuesticPreLoader from './components/vuestic-components/vuestic-preloader/VuesticPreLoader.vue'
+  import BeestockFooter from './components/beestock-footer/BeestockFooter'
+  import NotVerifiedAlert from './components/alerts/NotVerifiedAlert'
+  import PagePreLoader from './components/loaders/PagePreLoader'
+  import Navbar from './components/basic-layout/navbar/Navbar'
+
+  import auth from './services/auth'
+  import { routerHelper } from './helpers'
+
+  import {mapGetters} from 'vuex'
+
+
 
   export default {
     name: 'app',
@@ -18,9 +41,34 @@
       }
     },
     components: {
-      VuesticPreLoader,
+      Navbar,
       AuthLayout,
-      BasicLayout
+      BasicLayout,
+      PagePreLoader,
+      BeestockFooter,
+      VuesticPreLoader,
+      NotVerifiedAlert
+    },
+    computed: {
+      ...mapGetters(['isPageLoading']),
+      /* classObject: function () {
+        return {
+          'sidebar-hidden': !this.toggleWithoutAnimation && !this.sidebarOpened,
+          'sidebar-hidden sidebar-hidden_without-animation': this.toggleWithoutAnimation && !this.sidebarOpened
+        }
+      }, */
+      /* breadcrumbs () {
+        return this.$store.getters.breadcrumbs(this.$route.name)
+      }, */
+      userIsAuthenticatedAndNotVerifiedYet () {
+        return auth.isAuthenticated() && !auth.isVerifiedUser()
+      }
+    },
+    created () {
+      if (auth.isJwtTokenExpired()) {
+        this.$store.dispatch('doLogout')
+        routerHelper.jwtTokenExpired()
+      }
     }
   }
 </script>
@@ -40,13 +88,26 @@
     font-size: 100%;
   }
 
-  body {
+  html, body {
     height: 100%;
+  }
+
+  body {
     background: url("../src/assets/images/bg.png") 0 0px no-repeat;
     background-size: 100%;
 
     .app {
-      height: 100%;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+
+      .content {
+        flex: 1 0 auto;
+
+        .content-inside {
+          padding: $content-wrap-pt $content-wrap-pr $content-wrap-pb $content-wrap-pl;
+        }
+      }
     }
   }
 </style>

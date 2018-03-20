@@ -4,7 +4,7 @@
 
     <div class="row no-gutters justify-content-center">
       <div class="col-12 mt-3">
-        <vuestic-widget :class="'-photo-widget -transparent-widget'" v-if="showPhotoWidget">
+        <vuestic-widget class="-photo-widget -transparent-widget" v-if="showPhotoWidget">
           <div class="row justify-content-center">
             <div class="col-10 -image-wrapper">
               <img :src="photo.file_storage.sizes.size_1000" :alt="photo.title">
@@ -121,7 +121,7 @@
     },
     methods: {
       async prepareComponent () {
-        this.startLoading()
+        this.showPageLoader()
 
         try {
           await this.fetchPhotoDetails()
@@ -131,7 +131,7 @@
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.stopLoading()
+        this.hidePageLoader()
       },
       async fetchPhotoDetails () {
         this.photo = await photoService.findByUUID(this.uuid)
@@ -145,11 +145,11 @@
         this.photoCategory = await categoryService.findByUUID(this.photo.category)
           .then(response => response.data.category)
       },
-      startLoading () {
-        this.$store.commit('setLoading', true)
+      showPageLoader () {
+        this.$store.commit('setPageLoader', true)
       },
-      stopLoading () {
-        this.$store.commit('setLoading', false)
+      hidePageLoader () {
+        this.$store.commit('setPageLoader', false)
       }
     },
     created () {

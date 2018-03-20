@@ -1,11 +1,12 @@
 import lazyLoading from '../../store/modules/menu/lazyLoading'
+import { routeConditions } from '../../config'
 
 export const categories = {
   name: 'Categories',
   path: '/categories',
   component: lazyLoading('categories/Categories'),
   meta: {
-    requiresAuthenticatedUser: true,
+    conditions: [routeConditions.AUTHENTICATED_USER],
     title: 'breadcrumbs.categories'
   },
   children: [

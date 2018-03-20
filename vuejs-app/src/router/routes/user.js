@@ -1,11 +1,12 @@
 import lazyLoading from '../../store/modules/menu/lazyLoading'
+import { routeConditions } from '../../config'
 
 export const profile = {
   name: 'Profile',
   path: '/profile',
   component: lazyLoading('profile/Profile'),
   meta: {
-    requiresAuthenticatedUser: true
+    conditions: [routeConditions.AUTHENTICATED_USER]
   },
   children: [
     {
@@ -13,7 +14,7 @@ export const profile = {
       path: 'details',
       component: lazyLoading('profile/ProfileDetails'),
       meta: {
-        requiresAuthenticatedUser: true
+        conditions: [routeConditions.AUTHENTICATED_USER]
       }
     },
     {
@@ -21,7 +22,7 @@ export const profile = {
       path: 'address-and-billing-details',
       component: lazyLoading('profile/AddressAndBillingDetails'),
       meta: {
-        requiresAuthenticatedUser: true
+        conditions: [routeConditions.AUTHENTICATED_USER]
       }
     },
     {
@@ -29,7 +30,7 @@ export const profile = {
       path: 'change-password',
       component: lazyLoading('profile/ChangePassword'),
       meta: {
-        requiresAuthenticatedUser: true
+        conditions: [routeConditions.AUTHENTICATED_USER]
       }
     }
   ]
@@ -40,7 +41,7 @@ export const userUploads = {
   path: '/my-uploads',
   component: lazyLoading('user-uploads/UserUploads'),
   meta: {
-    requiresAuthenticatedUser: true
+    conditions: [routeConditions.AUTHENTICATED_USER]
   }
 }
 
@@ -49,7 +50,7 @@ export const userPhotos = {
   path: '/my-photos',
   component: lazyLoading('user-uploads/UserPhotos'),
   meta: {
-    requiresAuthenticatedUser: true
+    conditions: [routeConditions.AUTHENTICATED_USER]
   }
 }
 
@@ -58,7 +59,7 @@ export const userIllustrations = {
   path: '/my-illustrations',
   component: lazyLoading('user-uploads/UserIllustrations'),
   meta: {
-    requiresAuthenticatedUser: true
+    conditions: [routeConditions.AUTHENTICATED_USER]
   }
 }
 
@@ -67,7 +68,7 @@ export const userFootage = {
   path: '/my-footage',
   component: lazyLoading('user-uploads/UserFootage'),
   meta: {
-    requiresAuthenticatedUser: true
+    conditions: [routeConditions.AUTHENTICATED_USER]
   }
 }
 
@@ -76,6 +77,6 @@ export const userAudio = {
   path: '/my-audio',
   component: lazyLoading('user-uploads/UserAudio'),
   meta: {
-    requiresAuthenticatedUser: true
+    conditions: [routeConditions.AUTHENTICATED_USER]
   }
 }

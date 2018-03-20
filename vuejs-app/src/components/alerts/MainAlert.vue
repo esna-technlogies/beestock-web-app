@@ -1,6 +1,6 @@
 <template>
-  <div class="app-alert">
-    <div class="row" v-if="alertType">
+  <div class="main-alert">
+    <div class="row">
       <div class="col-md-12">
         <vuestic-alert :type="alertType" :withCloseBtn="true" :class="'justify-content-center'">
           <span class="badge badge-pill" :class="'badge-' + alertType">{{ alertType | translate }}</span>
@@ -16,7 +16,7 @@
   import VuesticAlert from '../vuestic-components/vuestic-alert/VuesticAlert'
 
   export default {
-    name: 'app-alert',
+    name: 'main-alert',
     components: {
       VuesticAlert
     },

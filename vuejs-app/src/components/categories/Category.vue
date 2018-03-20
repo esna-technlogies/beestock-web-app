@@ -1,9 +1,9 @@
 <template>
-    <div class="category">
+    <div class="category" v-show="!isPageLoading">
       <template v-if="isCategoryRoute">
         <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-        <vuestic-widget :class="'-category-widget -transparent-widget'">
+        <vuestic-widget class="-category-widget -transparent-widget">
           <div class="row no-gutters justify-content-between">
             <div class="col-1">
               <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.photos' | translate }}</span>
@@ -17,7 +17,7 @@
           </div>
 
 
-          <photos-container :photoList="photoList"></photos-container>
+          <photos-container :photoList="photoList"/>
 
 
           <div class="row no-gutters mb-2 justify-content-center">
@@ -37,7 +37,7 @@
             </router-link>
           </div>
 
-          <photos-container :photoList="photoList"></photos-container>
+          <photos-container :photoList="photoList"/>
 
 
           <div class="row no-gutters mb-2 justify-content-center">
@@ -57,7 +57,7 @@
             </router-link>
           </div>
 
-          <photos-container :photoList="photoList"></photos-container>
+          <photos-container :photoList="photoList"/>
 
 
           <div class="row no-gutters mb-2 justify-content-center">
@@ -77,43 +77,7 @@
             </router-link>
           </div>
 
-          <photos-container :photoList="photoList"></photos-container>
-
-          <!--<div class="row justify-content-start">
-            <div class="col-12">
-              <div class="row no-gutters justify-content-between">
-                <div class="col-1">
-                  <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.audio' | translate }}</span>
-                </div>
-
-                <router-link class="col-1 badge badge-info"
-                             :style="{ 'font-size': '.9em' }"
-                             :to="{ name: 'CategoryPhotos', params: {uuid: this.uuid} }">
-                  {{ 'category.buttons.showAll' | translate }}
-                </router-link>
-              </div>
-            </div>
-
-            <div class="col-3 mt-3" v-for="(photo, photoIndex) in photoList">
-              <div class="-image-wrapper">
-                <div class="-image"
-                     :key="photoIndex"
-                     :style="{ backgroundImage: 'url(' + photo.file_storage.sizes.size_250 + ')' }">
-                </div>
-
-                <div class="-photo-details">
-                  <span class="-photo-creation-moment">
-                   {{ photo.created.sec | moment("MMM Do YYYY, h:mm A") }}
-                  </span>
-                  <span class="-photo-title">
-                   {{ photo.title }}
-                  </span>
-                  <span aria-hidden="true" class="-photo-download-icon fa fa-download"></span>
-                </div>
-              </div>
-            </div>
-          </div>-->
-
+          <photos-container :photoList="photoList"/>
         </vuestic-widget>
       </template>
 
@@ -124,6 +88,8 @@
 <script>
   import VuesticAlert from '../vuestic-components/vuestic-alert/VuesticAlert'
   import PhotosContainer from '../photos-container/PhotosContainer'
+
+  import {mapGetters} from 'vuex'
 
   import photoService from '../../services/photo'
   import categoryService from '../../services/category'
@@ -154,6 +120,7 @@ export default {
       }
     },
     computed: {
+      ...mapGetters(['isPageLoading']),
       isCategoryRoute () {
         return this.$route.name === 'Category'
       },
@@ -168,7 +135,7 @@ export default {
     },
     methods: {
       async prepareComponent () {
-        this.startLoading()
+        this.showPageLoader()
 
         try {
           await this.fetchCategoryDetails()
@@ -177,7 +144,7 @@ export default {
           console.error('BEESTOCK-ERROR', error.response ? error.response : error)
         }
 
-        this.stopLoading()
+        this.hidePageLoader()
       },
       async fetchCategoryDetails () {
         this.category = await categoryService.findByUUID(this.uuid)
@@ -187,11 +154,11 @@ export default {
         this.photoList = await photoService.findAllByCategoryUUID(this.uuid, { page: 1, limit: 4 })
           .then(response => Object.values(response.data.photos))
       },
-      startLoading () {
-        this.$store.commit('setLoading', true)
+      showPageLoader () {
+        this.$store.commit('setPageLoader', true)
       },
-      stopLoading () {
-        this.$store.commit('setLoading', false)
+      hidePageLoader () {
+        this.$store.commit('setPageLoader', false)
       }
     },
     created () {

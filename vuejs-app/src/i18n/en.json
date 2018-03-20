@@ -333,6 +333,13 @@
       "findUserAudio": {
         "404": "No audio available , please upload new audio to display."
       },
+      "jwtTokenExpired": {
+        "401": "You login session has been expired."
+      },
+      "notVerified": {
+        "text": "Your account hasn't been verified yet, Please",
+        "linkText": "verify now"
+      },
       "others": {
         "400": "Bad request: The system is unable to process the request",
         "500": "The system is unable to create the user due to a server side error"

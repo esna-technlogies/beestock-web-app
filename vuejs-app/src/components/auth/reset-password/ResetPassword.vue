@@ -1,23 +1,12 @@
 <template>
   <div class="reset-password">
-    <app-alert :alertType="alertType" :alertMessage="alertMessage"></app-alert>
+    <main-alert v-if="alertType" :alertType="alertType" :alertMessage="alertMessage"/>
 
     <div class="row no-gutters justify-content-center">
       <div class="col-7">
-        <vuestic-widget :class="'-reset-password-widget'">
+        <form-error-alert v-show="isErrorAlert" :alert-message="errorAlertMessage"/>
 
-          <vuestic-alert type="danger"v-show="isErrorAlert" class="-alert">
-            <span class="badge badge-pill badge-danger">{{'notificationsPage.alerts.danger' | translate}}</span>
-            {{ errorAlertMessage }}
-          </vuestic-alert>
-
-          <spinner
-            v-show="isLoading"
-            :size="30"
-            :line-size="4"
-            :line-fg-color="'#F9CB55'"
-            class="-spinner"/>
-
+        <vuestic-widget class="-reset-password-widget">
           <div class="col-12 text-center">
             <h5><strong>{{ 'forms.heads.resetPassword' | translate }}</strong></h5>
           </div>
@@ -53,6 +42,8 @@
               </div>
             </div>
           </form>
+
+          <basic-loader v-show="isLoading" />
         </vuestic-widget>
       </div>
     </div>
@@ -60,12 +51,14 @@
 </template>
 
 <script>
-  import AppAlert from '../../app-alert/AppAlert'
+  import MainAlert from '../../alerts/MainAlert'
   import Spinner from 'vue-simple-spinner'
+  import BasicLoader from '../../loaders/BasicLoader'
+  import FormErrorAlert from '../../alerts/FormErrorAlert'
 
-import { routerHelper } from '../../../helpers'
+  import { routerHelper } from '../../../helpers'
 
-export default {
+  export default {
     name: 'reset-password',
     metaInfo () {
       return {
@@ -83,8 +76,10 @@ export default {
       }
     },
     components: {
-      AppAlert,
-      Spinner
+      Spinner,
+      MainAlert,
+      BasicLoader,
+      FormErrorAlert
     },
     data () {
       return {
@@ -136,12 +131,7 @@ export default {
 <style lang="scss" scoped>
   .-reset-password-widget {
     margin: 100px auto !important;
-  }
-
-  .-spinner {
-    position: absolute;
-    top: 120px;
-    right: 40px;
+    position: relative;
   }
 
   .-alert {

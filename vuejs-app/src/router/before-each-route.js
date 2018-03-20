@@ -1,4 +1,6 @@
 import auth from '../services/auth'
+import config from '../config/index'
+
 
 const userIsNotAuthenticated = (to, from, next) => {
   return next({name: 'Login', query: {path: to.fullPath}})
@@ -8,39 +10,25 @@ const userIsNotVerified = (to, from, next) => {
   return next({ name: 'VerifyUser' })
 }
 
-const nextRoute = (routeRequirement, to, from, next) => {
-  switch (routeRequirement) {
-    case 'verifiedUser':
-      if (!auth.isAuthenticated()) { return userIsNotAuthenticated(to, from, next) }
-
-      if (!auth.isVerifiedUser()) { return userIsNotVerified(to, from, next) }
-      break
-
-    case 'authenticatedUser':
-      if (!auth.isAuthenticated()) { return userIsNotAuthenticated(to, from, next) }
-      break
-
-    case 'noLogin':
-      if (auth.isAuthenticated()) { return next({ name: 'Home' }) }
-      break
-  }
-
-  return next()
-}
-
-
 const beforeEachRoute = (to, from, next) => {
-  const requiresVerifiedUserRoute = to.matched.some(({ meta }) => meta.requiresVerifiedUser)
+  const { VERIFIED_USER, AUTHENTICATED_USER, NO_LOGIN } = config.routeConditions
 
-  if (requiresVerifiedUserRoute) { return nextRoute('verifiedUser', to, from, next) }
+  const routeConditions = to.meta.conditions ? to.meta.conditions : []
 
-  const requiresAuthenticatedUserRoute = to.matched.some(({ meta }) => meta.requiresAuthenticatedUser)
+  for (const condition of routeConditions) {
+    switch (condition) {
+      case VERIFIED_USER:
+      case AUTHENTICATED_USER:
+        if (!auth.isAuthenticated()) { return userIsNotAuthenticated(to, from, next) }
 
-  if (requiresAuthenticatedUserRoute) { return nextRoute('authenticatedUser', to, from, next) }
+        if (!auth.isVerifiedUser()) { return userIsNotVerified(to, from, next) }
+        break
 
-  const requiresNoLoginRoute = to.matched.some(({ meta }) => meta.requiresNoLogin)
-
-  if (requiresNoLoginRoute) { return nextRoute('noLogin', to, from, next) }
+      case NO_LOGIN:
+        if (auth.isAuthenticated()) { return next({ name: 'Home' }) }
+        break
+    }
+  }
 
   return next()
 }

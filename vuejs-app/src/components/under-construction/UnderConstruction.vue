@@ -1,6 +1,6 @@
 <template>
     <div class="under-construction">
-      <vuestic-widget :class="'-under-construction-widget -transparent-widget'">
+      <vuestic-widget class="-under-construction-widget -transparent-widget">
         <div class="row">
           <div class="col-12">
             <h4>{{ pageTitle }}</h4>

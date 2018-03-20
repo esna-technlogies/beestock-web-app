@@ -72,7 +72,7 @@
             class="col-6 nav-item dropdown vuestic-navbar-dropdown d-flex align-items-end justify-content-end"
             v-dropdown>
             <a class="nav-link dropdown-toggle d-flex align-items-center justify-content">
-              <span class="align-middle mr-2">{{ userDetails.firstName + ' ' + userDetails.lastName }}</span>
+              <span class="align-middle mr-2">{{ getUserFullName() }}</span>
               <span class="avatar-container">
                 <img src="https://www.shareicon.net/download/2015/09/18/103157_man_512x512.png" />
               </span>
@@ -102,18 +102,16 @@
   import Dropdown from 'directives/Dropdown'
 
   import { routerHelper } from '../../../helpers'
+  import utils from '../../../services/utils'
 
   export default {
     name: 'navbar',
-
     directives: {
       dropdown: Dropdown
     },
-
     computed: {
       ...mapGetters([
-        'isAuthenticatedUser',
-        'userDetails'
+        'isAuthenticatedUser'
       ])
     },
     methods: {
@@ -123,6 +121,9 @@
         this.$store.dispatch('doLogout')
 
         routerHelper.logoutDone()
+      },
+      getUserFullName () {
+        return utils.getCurrentUserFullName()
       }
     }
   }

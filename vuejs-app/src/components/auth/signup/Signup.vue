@@ -2,19 +2,9 @@
   <div class="signup">
     <div class="row no-gutters justify-content-center">
       <div class="col-7">
-        <vuestic-widget :class="'-logout-widget'">
-          <vuestic-alert type="danger" v-show="isErrorAlert" class="-alert">
-            <span class="badge badge-pill badge-danger">{{'notificationsPage.alerts.danger' | translate}}</span>
-            {{ errorAlertMessage }}
-          </vuestic-alert>
+        <form-error-alert v-show="isErrorAlert" :alert-message="errorAlertMessage"/>
 
-          <spinner
-            v-show="isLoading"
-            :size="30"
-            :line-size="4"
-            :line-fg-color="'#F9CB55'"
-            class="-spinner"/>
-
+        <vuestic-widget class="-signup-widget">
           <div class="col-12 text-center m-0 p-0">
             <span class="h4"><strong>{{ 'forms.heads.signup' | translate }}</strong></span>
           </div>
@@ -195,8 +185,9 @@
                 </span>
               </div>
             </div>
-
           </form>
+
+          <basic-loader v-show="isLoading" />
         </vuestic-widget>
       </div>
     </div>
@@ -205,13 +196,13 @@
 
 <script>
   import Multiselect from 'vue-multiselect'
-import { HollowDotsSpinner } from 'epic-spinners'
-import Spinner from 'vue-simple-spinner'
+  import { HollowDotsSpinner } from 'epic-spinners'
+  import Spinner from 'vue-simple-spinner'
+  import BasicLoader from '../../loaders/BasicLoader'
 
-import CountryList from '../../../data/country-list'
-import VuesticPreLoader from '../../vuestic-components/vuestic-preloader/VuesticPreLoader'
-
-import { routerHelper } from '../../../helpers'
+  import CountryList from '../../../data/country-list'
+  import { routerHelper } from '../../../helpers'
+  import FormErrorAlert from '../../alerts/FormErrorAlert'
 
 
 export default {
@@ -222,10 +213,11 @@ export default {
       }
     },
     components: {
+      Spinner,
       Multiselect,
-      VuesticPreLoader,
-      HollowDotsSpinner,
-      Spinner
+      BasicLoader,
+      FormErrorAlert,
+      HollowDotsSpinner
     },
     data () {
       return {
@@ -327,14 +319,9 @@ export default {
   @import "../../../../node_modules/bootstrap/scss/functions";
   @import '../../../../node_modules/bootstrap/scss/variables';
 
-  .-logout-widget {
+  .-signup-widget {
+    position: relative;
     margin: 100px auto !important;
-  }
-
-  .-spinner {
-    position: absolute;
-    top: 125px;
-    right: 40px;
   }
 
   .-alert {

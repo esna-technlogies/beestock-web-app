@@ -1,10 +1,11 @@
 import lazyLoading from '../../store/modules/menu/lazyLoading'
+import { routeConditions } from '../../config'
 
 export const illustrations = {
   name: 'Illustrations',
   path: '/illustrations',
   component: lazyLoading('illustrations/Illustrations'),
   meta: {
-    requiresAuthenticatedUser: false
+    conditions: [routeConditions.AUTHENTICATED_USER]
   }
 }

@@ -6,5 +6,6 @@ export default {
   loginDone: authMethods.loginDone,
   logoutDone: authMethods.logoutDone,
   verifyUserDone: authMethods.verifyUserDone,
-  resetUserPasswordDone: authMethods.resetUserPasswordDone
+  resetUserPasswordDone: authMethods.resetUserPasswordDone,
+  jwtTokenExpired: authMethods.jwtTokenExpired
 }

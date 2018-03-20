@@ -3,6 +3,7 @@ import * as types from '../mutation-types'
 import authService from '../../services/auth'
 import userService from '../../services/user'
 import api from '../../api/beestock'
+import utils from '../../services/utils'
 
 import JwtDecode from 'jwt-decode'
 
@@ -29,16 +30,9 @@ const state = {
       lighterGray: '#ddd'
     }
   },
+  isPageLoading: true,
   isLoading: true,
-  isAuthenticatedUser: false,
-  jwtToken: '',
-  userDetails: {
-    uuid: '',
-    email: '',
-    firstName: '',
-    lastName: '',
-    roles: []
-  }
+  isAuthenticatedUser: false
 }
 
 const mutations = {
@@ -56,22 +50,11 @@ const mutations = {
   setLoading (state, isLoading) {
     state.isLoading = isLoading
   },
-  setUserAsAuthenticated (state) {
-    state.isAuthenticatedUser = true
+  setPageLoader (state, isPageLoading) {
+    state.isPageLoading = isPageLoading
   },
-  setUserAsVisitor (state) {
-    state.isAuthenticatedUser = false
-  },
-  setJwtToken (state, token) {
-    state.jwtToken = token
-  },
-  setUserDetails (state, userDetails) {
-    Object.keys(userDetails)
-      .map(item => { state.userDetails[item] = userDetails[item] })
-  },
-  clearUserDetails (state) {
-    Object.keys(state.userDetails)
-      .map(item => { state.userDetails[item] = '' })
+  setAuthenticated (state, isAuthenticated) {
+    state.isAuthenticatedUser = isAuthenticated
   }
 }
 
@@ -95,11 +78,11 @@ const actions = {
 
     await dispatch('storeJwtToken', token)
 
-    api.setAuthorizationHeader(token)
+    api.setAuthorizationHeader()
 
-    const uuid = JwtDecode(token).userId
+    const decodedToken = JwtDecode(token)
 
-    const user = await userService.findByUUID(uuid)
+    await userService.findByUUID(decodedToken.userId)
       .then(response => response.data.user)
       .then(user => {
         return {
@@ -107,18 +90,20 @@ const actions = {
           firstName: user.first_name,
           lastName: user.last_name,
           email: user.email,
-          roles: user.access_info.roles
+          roles: user.access_info.roles.join(','),
+          expireDate: decodedToken.exp
         }
       })
-
-    await dispatch('storeUserDetails', user)
-    await commit('setUserAsAuthenticated')
+      .then(userDetails => {
+        return dispatch('storeUserDetails', userDetails)
+      })
+      .then(() => {
+        return commit('setAuthenticated', true)
+      })
   },
   doLogout ({ commit }) {
-    localStorage.clear()
-
-    commit('clearUserDetails')
-    commit('setUserAsVisitor')
+    commit('setAuthenticated', false)
+    utils.clearAuthStorage()
   },
   verifyUser ({ commit }, verificationDetails) {
     const queryParams = { code: verificationDetails.code }
@@ -128,18 +113,15 @@ const actions = {
       .then(response => response)
   },
   doResetPassword ({ commit }, emailOrMobileNumber) {
-    return authService.resetUserPassword(emailOrMobileNumber)
+    const queryParams = { userName: emailOrMobileNumber }
+    return authService.resetUserPassword(queryParams)
       .then(response => response)
   },
   storeUserDetails ({ commit }, userDetails) {
-    commit('setUserDetails', userDetails)
-
-    Object.keys(state.userDetails)
-      .map(item => localStorage.setItem(item, state.userDetails[item]))
+    utils.storeCurrentUserDetails(userDetails)
   },
   storeJwtToken ({ commit }, token) {
-    commit('setJwtToken', token)
-    localStorage.setItem('jwtToken', token)
+    utils.storeCurrentUserJwtToken(token)
   }
 }
 

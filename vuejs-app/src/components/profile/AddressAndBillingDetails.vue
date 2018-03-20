@@ -3,10 +3,7 @@
     <form name="address-and-billing-details" @submit.prevent="doSaveChanges">
       <div class="row justify-content-center">
         <div class="col-6">
-          <vuestic-alert type="danger" v-show="isErrorAlert">
-            <span class="badge badge-pill badge-danger">{{'notificationsPage.alerts.danger' | translate}}</span>
-            {{ errorAlertMessage }}
-          </vuestic-alert>
+          <form-error-alert v-show="isErrorAlert" :alert-message="errorAlertMessage"/>
         </div>
       </div>
 
@@ -36,9 +33,6 @@
           </div>
 
         </div>
-
-        <!--<div class="col-6">
-        </div>-->
 
         <div class="col-11">
           <div class="row justify-content-center">
@@ -104,8 +98,9 @@
 
 <script>
   import Multiselect from 'vue-multiselect'
+  import FormErrorAlert from '../alerts/FormErrorAlert'
 
-import CountryList from '../../data/country-list'
+  import CountryList from '../../data/country-list'
 
 export default {
     name: 'address-and-billing-details',
@@ -113,7 +108,8 @@ export default {
       title: 'Address & Billing Details'
     },
     components: {
-      Multiselect
+      Multiselect,
+      FormErrorAlert
     },
     data () {
       return {
