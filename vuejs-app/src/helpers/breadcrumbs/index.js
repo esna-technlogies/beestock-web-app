@@ -1,9 +1,15 @@
-import {categories, category, categoryPhotos,
-        categoryIllustrations, categoryFootage, categoryAudio} from './categories'
-
+import {
+  categories, category, categoryPhotos,
+  categoryIllustrations, categoryFootage,
+  categoryAudio
+} from './categories'
 import {photos, photo} from './photos'
+import {audio} from './audio'
+import {footage} from './footage'
+import {illustrations} from './illustrations'
+import {myUploads, myPhotos, myIllustrations, myFootage, myAudio} from './my-uploads'
 
-import {userUploads, userPhotos} from './user-uploads'
+
 
 export default {
   categories,
@@ -14,6 +20,12 @@ export default {
   categoryAudio,
   photos,
   photo,
-  userUploads,
-  userPhotos
+  audio,
+  footage,
+  illustrations,
+  myUploads,
+  myPhotos,
+  myIllustrations,
+  myFootage,
+  myAudio
 }

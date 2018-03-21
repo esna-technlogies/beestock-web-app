@@ -1,8 +1,10 @@
 <template>
     <div class="home">
-      <main-alert v-if="alertType" :alertType="alertType" :alertMessage="alertMessage"/>
+      <page-pre-loader v-if="isPageDataLoading"/>
 
-      <div v-show="!isPageLoading">
+      <div v-show="!isPageDataLoading">
+        <main-alert v-if="alertType" :alertType="alertType" :alertMessage="alertMessage"/>
+
         <div class="row no-gutters justify-content-center">
           <search-box></search-box>
         </div>
@@ -70,8 +72,11 @@
     import VuesticWidget from '../vuestic-components/vuestic-widget/VuesticWidget'
     import SearchBox from '../search/SearchBox'
     import MainAlert from '../alerts/MainAlert'
+    import PagePreLoader from '../loaders/PagePreLoader'
 
     import categoryService from '../../services/category'
+    import {loadComponentData} from '../../helpers/loader-wrappers'
+    import {handleServiceError} from '../../helpers/error-handlers'
 
     import {mapGetters} from 'vuex'
 
@@ -96,33 +101,30 @@
       components: {
         MainAlert,
         SearchBox,
-        VuesticWidget
+        VuesticWidget,
+        PagePreLoader
       },
       data () {
         return {
           // isLoading: false,
+          isPageDataLoading: false,
           categoryList: [],
           randomPhotoList: []
         }
       },
       computed: {
         ...mapGetters([
-          'isAuthenticatedUser',
-          'isPageLoading'
+          'isAuthenticatedUser'
         ])
       },
       methods: {
-        async prepareComponent () {
-          this.showPageLoader()
-
+        async prepareComponentData () {
           try {
             await this.setCategoryList()
             await this.setRandomPhotoList()
           } catch (error) {
-            console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+            handleServiceError(error, this.$route)
           }
-
-          this.hidePageLoader()
         },
         async setCategoryList () {
           const categories = await categoryService.findAll().then(response => response.data.categories)
@@ -157,16 +159,12 @@
           }
 
           return fourRandomCategory
-        },
-        showPageLoader () {
-          this.$store.commit('setPageLoader', true)
-        },
-        hidePageLoader () {
-          this.$store.commit('setPageLoader', false)
         }
       },
       created () {
-        if (this.isAuthenticatedUser) this.prepareComponent()
+        if (this.isAuthenticatedUser) {
+          loadComponentData(this)
+        }
       }
     }
 </script>

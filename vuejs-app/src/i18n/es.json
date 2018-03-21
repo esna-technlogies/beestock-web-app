@@ -314,27 +314,25 @@
         "404": "No category with the provided UUID was found",
         "500": "The system is unable to create the user due to a server side error"
       },
-      "findPhotos": {
-        "200": "Category has been deleted successfully!",
-        "204": "Category has been deleted successfully!",
+      "findPhoto": {
         "400": "Bad request: The system is unable to process the request",
         "404": "No photo with the provided UUID was found",
         "500": "The system is unable to create the user due to a server side error"
       },
-      "findUserPhotos": {
+      "findMyPhotos": {
         "404": "No photos available , please upload new photo to display."
       },
-      "findUserIllustrations": {
+      "findMyIllustrations": {
         "404": "No illustrations available , please upload new illustration to display."
       },
-      "findUserFootage": {
+      "findMyFootage": {
         "404": "No footage available , please upload new footage to display."
       },
-      "findUserAudio": {
+      "findMyAudio": {
         "404": "No audio available , please upload new audio to display."
       },
-      "jwtTokenExpired": {
-        "401": "You login session has been expired."
+      "loginSessionExpired": {
+        "401": "Your login session has been expired."
       },
       "notVerified": {
         "text": "Your account hasn't been verified yet, Please",
@@ -345,6 +343,10 @@
         "500": "The system is unable to create the user due to a server side error"
       }
     }
+  },
+  "errors": {
+    "networkError": "Network error, please check your internet connection",
+    "unknownError": "Unknown error, please call the website's administrator"
   },
   "progressBars": {
     "basic": "Basic",
@@ -399,12 +401,13 @@
     "audio": "Audio",
     "illustrations": "Illustrations",
     "newUpload": "New Upload",
-    "userUploads": "My Uploads",
-    "userPhotos": "My Photos",
-    "userIllustrations": "My Illustrations",
-    "userFootage": "My Footage",
-    "userAudio": "My Audio",
-    "loading": "Loading..."
+    "myUploads": "My Uploads",
+    "myPhotos": "My Photos",
+    "myIllustrations": "My Illustrations",
+    "myFootage": "My Footage",
+    "myAudio": "My Audio",
+    "loading": "Loading...",
+    "networkError": "Network Error"
   },
   "user": {
     "language": "Change Language",

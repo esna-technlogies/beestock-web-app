@@ -17,6 +17,8 @@
   import photoService from '../../services/photo'
   import categoryService from '../../services/category'
   import {breadcrumbsHelper} from '../../helpers'
+  import {handleServiceError} from '../../helpers/error-handlers'
+  import {loadComponentData} from '../../helpers/loader-wrappers'
 
   export default {
     name: 'category-footage',
@@ -52,20 +54,16 @@
       }
     },
     methods: {
-      async prepareComponent () {
-        this.showPageLoader()
-
+      async prepareComponentData () {
         try {
-          await this.fetchCategoryDetails()
+          this.category = await this.fetchCategoryDetails()
           // await this.fetchCategoryPhotos()
         } catch (error) {
-          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+          handleServiceError(error, this.$route)
         }
-
-        this.hidePageLoader()
       },
-      async fetchCategoryDetails () {
-        this.category = await categoryService.findByUUID(this.uuid)
+      fetchCategoryDetails () {
+        return categoryService.findByUUID(this.uuid)
           .then(response => response.data.category)
       },
       async fetchCategoryPhotos () {
@@ -74,21 +72,13 @@
           limit: this.perPage
         }
 
-        return photoService.findAllByCategoryUUID(this.uuid, queryParams)
-          .then(response => {
-            this.setPaginationData(response.data)
-            return Object.values(response.data.photos)
-          })
-      },
-      showPageLoader () {
-        this.$store.commit('setPageLoader', true)
-      },
-      hidePageLoader () {
-        this.$store.commit('setPageLoader', false)
+        const response = await photoService.findAllByCategoryUUID(this.uuid, queryParams).then(response => response)
+        this.setPaginationData(response.data)
+        return Object.values(response.data.photos)
       }
     },
     created () {
-      this.prepareComponent()
+      loadComponentData(this)
     }
   }
 </script>

@@ -1,38 +1,46 @@
 <!--suppress ALL -->
 <template>
-  <div class="photos" v-show="!isPageLoading">
-    <template v-if="isPhotosRoute">
-      <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
+  <div class="photos">
+    <page-pre-loader v-if="isPageDataLoading"/>
 
-      <vuestic-widget class="-photos-widget -transparent-widget">
-        <div class="row no-gutters mb-4 justify-content-center">
-          <vuetable-pagination
-            ref="pagination"
-            :css="css.pagination.micro"
-            :onEachSide="onEachSide"
-            @vuetable-pagination:change-page="onChangePage"/>
-        </div>
+    <div v-show="!isPageDataLoading">
+      <main-alert v-if="alertType" :alertType="alertType" :alertMessage="alertMessage"/>
 
-        <photos-container
-          :photoList="photoList"
-          :isPaginateLoader="isPaginateLoader"/>
-      </vuestic-widget>
-    </template>
+      <template v-if="isPhotosRoute">
+        <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-    <router-view v-else/>
+        <vuestic-widget class="-photos-widget -transparent-widget">
+          <div class="row no-gutters mb-4 justify-content-center">
+            <vuetable-pagination
+              ref="pagination"
+              :css="css.pagination.micro"
+              :onEachSide="onEachSide"
+              @vuetable-pagination:change-page="onChangePage"/>
+          </div>
+
+          <photos-container
+            :isPaginationDataLoading="isPaginationDataLoading"
+            :photoList="photoList"/>
+        </vuestic-widget>
+      </template>
+
+      <router-view v-else/>
+    </div>
   </div>
 </template>
 
 <script>
   import Spinner from 'vue-simple-spinner'
+  import MainAlert from '../alerts/MainAlert'
+  import PagePreLoader from '../loaders/PagePreLoader'
   import PhotosContainer from '../photos-container/PhotosContainer'
   import UnderConstruction from '../under-construction/UnderConstruction'
   import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 
-  import {mapGetters} from 'vuex'
-
   import {breadcrumbsHelper} from '../../helpers'
   import photoService from '../../services/photo'
+  import {handleServiceError} from '../../helpers/error-handlers'
+  import {loadComponentData, loadPageData} from '../../helpers/loader-wrappers'
   import DataTableStyles from '../vuestic-components/vuestic-datatable/data/data-table-styles'
 
   export default {
@@ -42,14 +50,28 @@
         title: this.pageTitle
       }
     },
+    props: {
+      alertType: {
+        type: String,
+        default: ''
+      },
+      alertMessage: {
+        type: String,
+        default: ''
+      }
+    },
     components: {
       Spinner,
+      MainAlert,
+      PagePreLoader,
       PhotosContainer,
       UnderConstruction,
       VuetablePagination
     },
     data () {
       return {
+        isPageDataLoading: false,
+        isPaginationDataLoading: false,
         pageTitle: this.$t('titles.photos'),
         css: DataTableStyles,
         onEachSide: 1,
@@ -57,13 +79,10 @@
         perPage: 12,
         category: {},
         photoList: [],
-        paginationData: {},
-        isPaginateLoader: false,
-        responseData: {}
+        paginationData: {}
       }
     },
     computed: {
-      ...mapGetters(['isPageLoading']),
       breadcrumbs () {
         return breadcrumbsHelper.photos()
       },
@@ -73,44 +92,34 @@
     },
     watch: {
       async '$route' (to, from) {
-        if (to.name === 'Photos') await this.prepareComponent()
+        if (to.name === 'Photos') await loadComponentData(this)
       }
     },
     methods: {
-      async prepareComponent () {
-        this.showPageLoader()
-
+      async prepareComponentData () {
         try {
-          this.photoList = await this.fetchCategoryPhotos()
+          this.photoList = await this.fetchOnePhotosPage()
         } catch (error) {
-          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+          handleServiceError(error, this.$route)
         }
-
-        this.hidePageLoader()
       },
-      fetchCategoryPhotos () {
+      async fetchOnePhotosPage () {
         const queryParams = {
           page: this.currentPage,
           limit: this.perPage
         }
 
-        return photoService.findAll(queryParams)
-          .then(response => {
-            this.responseData = response.data
-            this.setPaginationData(this.responseData)
-            return Object.values(response.data.photos)
-          })
+        const response = await photoService.findAll(queryParams).then(response => response)
+        this.setPaginationData(response.data)
+
+        return Object.values(response.data.photos)
       },
-      async renderNewPage () {
-        this.showPaginateLoader()
-
+      async preparePageData () {
         try {
-          this.photoList = await this.fetchCategoryPhotos()
+          this.photoList = await this.fetchOnePhotosPage()
         } catch (error) {
-          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+          handleServiceError(error, this.$route)
         }
-
-        this.hidePaginateLoader()
       },
       setPaginationData (data) {
         this.paginationData = this.getPaginationData(data)
@@ -148,36 +157,24 @@
       gotoPreviousPage () {
         if (this.currentPage > 1) {
           this.currentPage--
-          this.renderNewPage()
+          loadPageData(this)
         }
       },
       gotoNextPage () {
         if (this.currentPage < this.paginationData.last_page) {
           this.currentPage++
-          this.renderNewPage()
+          loadPageData(this)
         }
       },
       gotoPage (page) {
         if (page !== this.currentPage && (page > 0 && page <= this.paginationData.last_page)) {
           this.currentPage = page
-          this.renderNewPage()
+          loadPageData(this)
         }
-      },
-      showPageLoader () {
-        this.$store.commit('setPageLoader', true)
-      },
-      hidePageLoader () {
-        this.$store.commit('setPageLoader', false)
-      },
-      showPaginateLoader () {
-        this.isPaginateLoader = true
-      },
-      hidePaginateLoader () {
-        this.isPaginateLoader = false
       }
     },
     created () {
-      if (this.isPhotosRoute) this.prepareComponent()
+      if (this.isPhotosRoute) loadComponentData(this)
     }
   }
 </script>

@@ -1,5 +1,6 @@
 export const categories = () => {
   const categoriesCrumb = {
+    name: 'Categories',
     title: 'Categories'
   }
 

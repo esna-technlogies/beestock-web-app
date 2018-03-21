@@ -36,46 +36,46 @@ export const profile = {
   ]
 }
 
-export const userUploads = {
-  name: 'UserUploads',
+export const myUploads = {
+  name: 'MyUploads',
   path: '/my-uploads',
-  component: lazyLoading('user-uploads/UserUploads'),
+  component: lazyLoading('my-uploads/MyUploads'),
   meta: {
     conditions: [routeConditions.AUTHENTICATED_USER]
   }
 }
 
-export const userPhotos = {
-  name: 'UserPhotos',
+export const myPhotos = {
+  name: 'MyPhotos',
   path: '/my-photos',
-  component: lazyLoading('user-uploads/UserPhotos'),
+  component: lazyLoading('my-uploads/MyPhotos'),
   meta: {
     conditions: [routeConditions.AUTHENTICATED_USER]
   }
 }
 
-export const userIllustrations = {
-  name: 'UserIllustrations',
+export const myIllustrations = {
+  name: 'MyIllustrations',
   path: '/my-illustrations',
-  component: lazyLoading('user-uploads/UserIllustrations'),
+  component: lazyLoading('my-uploads/MyIllustrations'),
   meta: {
     conditions: [routeConditions.AUTHENTICATED_USER]
   }
 }
 
-export const userFootage = {
-  name: 'UserFootage',
+export const myFootage = {
+  name: 'MyFootage',
   path: '/my-footage',
-  component: lazyLoading('user-uploads/UserFootage'),
+  component: lazyLoading('my-uploads/MyFootage'),
   meta: {
     conditions: [routeConditions.AUTHENTICATED_USER]
   }
 }
 
-export const userAudio = {
-  name: 'UserAudio',
+export const myAudio = {
+  name: 'MyAudio',
   path: '/my-audio',
-  component: lazyLoading('user-uploads/UserAudio'),
+  component: lazyLoading('my-uploads/MyAudio'),
   meta: {
     conditions: [routeConditions.AUTHENTICATED_USER]
   }

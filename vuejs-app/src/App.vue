@@ -6,10 +6,10 @@
       <main class="content-inside" role="main">
         <not-verified-alert v-if="userIsAuthenticatedAndNotVerifiedYet"/>
 
-        <router-view v-show="!isPageLoading"></router-view>
+        <router-view />
       </main>
 
-      <page-pre-loader v-if="isPageLoading"/>
+      <!--<page-pre-loader v-if="isPageLoading"/>-->
     </div>
 
     <beestock-footer />
@@ -51,15 +51,6 @@
     },
     computed: {
       ...mapGetters(['isPageLoading']),
-      /* classObject: function () {
-        return {
-          'sidebar-hidden': !this.toggleWithoutAnimation && !this.sidebarOpened,
-          'sidebar-hidden sidebar-hidden_without-animation': this.toggleWithoutAnimation && !this.sidebarOpened
-        }
-      }, */
-      /* breadcrumbs () {
-        return this.$store.getters.breadcrumbs(this.$route.name)
-      }, */
       userIsAuthenticatedAndNotVerifiedYet () {
         return auth.isAuthenticated() && !auth.isVerifiedUser()
       }
@@ -67,7 +58,7 @@
     created () {
       if (auth.isJwtTokenExpired()) {
         this.$store.dispatch('doLogout')
-        routerHelper.jwtTokenExpired()
+        routerHelper.loginSessionExpired()
       }
     }
   }
@@ -109,5 +100,9 @@
         }
       }
     }
+  }
+
+  .-transparent-widget {
+    background: rgba(255, 255, 255, 0.95)
   }
 </style>

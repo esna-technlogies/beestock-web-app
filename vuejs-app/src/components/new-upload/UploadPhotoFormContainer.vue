@@ -13,7 +13,7 @@
 
              <droply :id="'s3-upload-dropzone-' + containerId"
                      ref="s3UploadDropzone"
-                     :class="'text-center border-0 mt-3'"
+                     :class="'border-0 mt-3'"
                      :url="s3UploadDropzoneOptions.url"
                      :thumbnailHeight="s3UploadDropzoneOptions.thumbnailHeight"
                      :thumbnailWidth="s3UploadDropzoneOptions.thumbnailWidth"
@@ -208,9 +208,10 @@
   import categoryService from '../../services/category'
   import photoService from '../../services/photo'
   import fileStorageService from '../../services/file-storage'
+  import {handleServiceError} from '../../helpers/error-handlers'
 
 
-export default {
+  export default {
     name: 'upload-photo-form-container',
     props: {
       containerId: {
@@ -257,7 +258,7 @@ export default {
       }
     },
     methods: {
-      async prepareComponent () {
+      async prepareComponentData () {
         this.showBasicLoader()
 
         try {
@@ -265,7 +266,7 @@ export default {
           await this.setFileUploadPolicy()
           await this.setS3UploadDropzoneWithUploadPolicy()
         } catch (error) {
-          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+          handleServiceError(error, this.$route)
         }
 
         this.hideBasicLoader()
@@ -276,17 +277,17 @@ export default {
         this.showBasicLoader()
         this.clearErrorAlert()
 
-        try {
-          const queryParams = {
-            title: this.title,
-            description: this.description,
-            user: this.userUUID,
-            category: this.category.uuid,
-            keywords: this.keywords.join(','),
-            originalFile: this.originalFile,
-            suggestedPrice: this.suggestedPrice ? this.suggestedPrice : 0
-          }
+        const queryParams = {
+          title: this.title,
+          description: this.description,
+          user: this.userUUID,
+          category: this.category.uuid,
+          keywords: this.keywords.join(','),
+          originalFile: this.originalFile,
+          suggestedPrice: this.suggestedPrice ? this.suggestedPrice : 0
+        }
 
+        try {
           const uploadedPhoto = await photoService.create(queryParams)
             .then(response => response.data.photo)
 
@@ -361,7 +362,7 @@ export default {
       }
     },
     created () {
-      this.prepareComponent()
+      this.prepareComponentData()
     }
   }
 </script>

@@ -31,7 +31,6 @@ const state = {
     }
   },
   isPageLoading: true,
-  isLoading: true,
   isAuthenticatedUser: false
 }
 
@@ -47,10 +46,7 @@ const mutations = {
   [types.TOGGLE_WITHOUT_ANIMATION] (state, value) {
     state.sidebar.withoutAnimation = value
   },
-  setLoading (state, isLoading) {
-    state.isLoading = isLoading
-  },
-  setPageLoader (state, isPageLoading) {
+  setPageLoading (state, isPageLoading) {
     state.isPageLoading = isPageLoading
   },
   setAuthenticated (state, isAuthenticated) {

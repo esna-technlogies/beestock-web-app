@@ -1,86 +1,92 @@
 <template>
   <div class="photo">
-    <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
+    <page-pre-loader v-if="isPageDataLoading"/>
 
-    <div class="row no-gutters justify-content-center">
-      <div class="col-12 mt-3">
-        <vuestic-widget class="-photo-widget -transparent-widget" v-if="showPhotoWidget">
-          <div class="row justify-content-center">
-            <div class="col-10 -image-wrapper">
-              <img :src="photo.file_storage.sizes.size_1000" :alt="photo.title">
+    <div v-show="!isPageDataLoading">
+      <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-              <router-link
-                :to="{ name: 'Category', params: { uuid: photoCategory.uuid } }"
-                :class="'-category-name btn btn-warning text-center'"
-              >
-                {{ photoCategory.title }}
-              </router-link>
-            </div>
-          </div>
+      <div class="row no-gutters justify-content-center">
+        <div class="col-12 mt-3">
+          <vuestic-widget class="-photo-widget -transparent-widget" v-if="showPhotoWidget">
+            <div class="row justify-content-center">
+              <div class="col-10 -image-wrapper">
+                <img :src="photo.file_storage.sizes.size_1000" :alt="photo.title">
 
-          <div class="row no-gutters">
-            <hr class="col-10">
-          </div>
-
-          <div class="row justify-content-center mt-3">
-            <div class="col-5 text-left">
-              <h5>{{ photo.title }}</h5>
-              <p>{{ photo.description }}</p>
+                <router-link
+                  :to="{ name: 'Category', params: { uuid: photoCategory.uuid } }"
+                  :class="'-category-name btn btn-warning text-center'"
+                >
+                  {{ photoCategory.title }}
+                </router-link>
+              </div>
             </div>
 
-            <div class="col-5">
-              <h5 class="text-left"><strong>Keywords</strong></h5>
-              <template v-for="keyword in photo.keywords">
-                <a class="badge badge-success text-dark border-info mr-3 mb-2" style="font-size: 1em;">{{ keyword }}</a>
-              </template>
+            <div class="row no-gutters">
+              <hr class="col-10">
             </div>
-          </div>
 
-          <div class="row no-gutters">
-            <hr class="col-10">
-          </div>
+            <div class="row justify-content-center mt-3">
+              <div class="col-5 text-left">
+                <h5>{{ photo.title }}</h5>
+                <p>{{ photo.description }}</p>
+              </div>
 
-          <div class="row justify-content-center mt-1">
-            <div class="col-5">
-              <div class="row justify-content-center">
-                <div class="col-6">
-                  <button class="btn btn-light border border-info btn-block btn-micro rounded-0">DOWNLOAD</button>
+              <div class="col-5">
+                <h5 class="text-left"><strong>Keywords</strong></h5>
+                <template v-for="keyword in photo.keywords">
+                  <a class="badge badge-success text-dark border-info mr-3 mb-2" style="font-size: 1em;">{{ keyword }}</a>
+                </template>
+              </div>
+            </div>
+
+            <div class="row no-gutters">
+              <hr class="col-10">
+            </div>
+
+            <div class="row justify-content-center mt-1">
+              <div class="col-5">
+                <div class="row justify-content-center">
+                  <div class="col-6">
+                    <button class="btn btn-light border border-info btn-block btn-micro rounded-0">DOWNLOAD</button>
+                  </div>
+                  <div class="col-6">
+                    <button class="btn btn-light border border-info btn-block btn-micro rounded-0">Add To Lightbox</button>
+                  </div>
                 </div>
-                <div class="col-6">
-                  <button class="btn btn-light border border-info btn-block btn-micro rounded-0">Add To Lightbox</button>
+              </div>
+
+              <div class="col-5">
+                <div class="row no-gutters justify-content-start">
+                  <div class="col-2 mr-3">
+                    <img src="../../assets/images/author.jpg" alt="Profile Image" style="width: 100%">
+                  </div>
+
+                  <div class="col-8 text-left">
+                    <div><strong>{{ photoUser.full_name }}</strong></div>
+                    <div>{{ photoUser.country }}</div>
+                    <!--<div>11 Mar 2018 10:03 PM</div>-->
+                    <div>{{ photo.created.sec | moment("D MMM YYYY, h:mm A") }}</div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="col-5">
-              <div class="row no-gutters justify-content-start">
-                <div class="col-2 mr-3">
-                  <img src="../../assets/images/author.jpg" alt="Profile Image" style="width: 100%">
-                </div>
-
-                <div class="col-8 text-left">
-                  <div><strong>{{ photoUser.full_name }}</strong></div>
-                  <div>{{ photoUser.country }}</div>
-                  <!--<div>11 Mar 2018 10:03 PM</div>-->
-                  <div>{{ photo.created.sec | moment("D MMM YYYY, h:mm A") }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </vuestic-widget>
+          </vuestic-widget>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import UnderConstruction from '../under-construction/UnderConstruction'
+  import PagePreLoader from '../loaders/PagePreLoader'
 
   import photoService from '../../services/photo'
   import userService from '../../services/user'
   import categoryService from '../../services/category'
   import {breadcrumbsHelper} from '../../helpers'
+  import {handleServiceError} from '../../helpers/error-handlers'
+  import {loadComponentData} from '../../helpers/loader-wrappers'
 
   export default {
     name: 'photo',
@@ -96,10 +102,11 @@
       }
     },
     components: {
-      UnderConstruction
+      PagePreLoader
     },
     data () {
       return {
+        isPageDataLoading: false,
         pageTitle: this.$t('titles.loading'),
         photo: '',
         photoUser: '',
@@ -120,18 +127,14 @@
       }
     },
     methods: {
-      async prepareComponent () {
-        this.showPageLoader()
-
+      async prepareComponentData () {
         try {
           await this.fetchPhotoDetails()
           await this.fetchPhotoUser()
           await this.fetchPhotoCategory()
         } catch (error) {
-          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+          handleServiceError(error, this.$route)
         }
-
-        this.hidePageLoader()
       },
       async fetchPhotoDetails () {
         this.photo = await photoService.findByUUID(this.uuid)
@@ -144,16 +147,10 @@
       async fetchPhotoCategory () {
         this.photoCategory = await categoryService.findByUUID(this.photo.category)
           .then(response => response.data.category)
-      },
-      showPageLoader () {
-        this.$store.commit('setPageLoader', true)
-      },
-      hidePageLoader () {
-        this.$store.commit('setPageLoader', false)
       }
     },
     created () {
-      this.prepareComponent()
+      loadComponentData(this)
     }
   }
 </script>

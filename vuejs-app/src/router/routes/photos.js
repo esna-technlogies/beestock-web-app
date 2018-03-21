@@ -6,6 +6,7 @@ export const photos = {
   name: 'Photos',
   path: '/photos',
   component: lazyLoading('photos/Photos'),
+  props: true,
   meta: {
     conditions: [routeConditions.AUTHENTICATED_USER]
   },

@@ -34,9 +34,9 @@ const resetUserPasswordDone = () => {
   redirectTo('Login', alertType, alertMessage)
 }
 
-const jwtTokenExpired = () => {
+const loginSessionExpired = () => {
   const alertType = 'warning'
-  const alertMessage = `alerts.messages.jwtTokenExpired.401`
+  const alertMessage = `alerts.messages.loginSessionExpired.401`
   redirectTo('Login', alertType, alertMessage)
 }
 
@@ -48,5 +48,5 @@ export default {
   logoutDone,
   verifyUserDone,
   resetUserPasswordDone,
-  jwtTokenExpired
+  loginSessionExpired
 }

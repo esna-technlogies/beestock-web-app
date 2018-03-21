@@ -40,7 +40,7 @@ let mediaHandler = () => {
 }
 
 router.beforeEach((to, from, next) => {
-  store.commit('setPageLoader', true)
+  store.commit('setPageLoading', true)
 
   if (store.getters.currentUserJwtToken()) store.commit('setAuthenticated', true)
 
@@ -49,7 +49,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
   mediaHandler()
-  store.commit('setPageLoader', false)
+  store.commit('setPageLoading', false)
 })
 
 /* eslint-disable no-new */

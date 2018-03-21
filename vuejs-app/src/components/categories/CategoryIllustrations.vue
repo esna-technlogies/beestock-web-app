@@ -1,32 +1,39 @@
 <template>
     <div class="category-illustrations">
-      <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
+      <page-pre-loader v-if="isPageDataLoading"/>
 
-      <vuestic-widget class="-category-illustrations-widget -transparent-widget">
-        <div class="row no-gutters mb-4 justify-content-center">
-          <vuetable-pagination ref="pagination"
-                               :css="css.pagination.micro"
-                               :onEachSide="onEachSide"
-                               @vuetable-pagination:change-page="onChangePage">
-          </vuetable-pagination>
-        </div>
+      <div v-show="!isPageDataLoading">
+        <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-        <photos-container
-          :photoList="photoList"
-          :isPaginateLoader="isPaginateLoader"/>
-      </vuestic-widget>
+        <vuestic-widget class="-category-illustrations-widget -transparent-widget">
+          <div class="row no-gutters mb-4 justify-content-center">
+            <vuetable-pagination ref="pagination"
+                                 :css="css.pagination.micro"
+                                 :onEachSide="onEachSide"
+                                 @vuetable-pagination:change-page="onChangePage">
+            </vuetable-pagination>
+          </div>
+
+          <photos-container
+            :photoList="photoList"
+            :isPaginationDataLoading="isPaginationDataLoading"/>
+        </vuestic-widget>
+      </div>
     </div>
 </template>
 
 <script>
+  import Spinner from 'vue-simple-spinner'
+  import PagePreLoader from '../loaders/PagePreLoader'
   import PhotosContainer from '../photos-container/PhotosContainer'
   import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
-  import Spinner from 'vue-simple-spinner'
   import DataTableStyles from '../vuestic-components/vuestic-datatable/data/data-table-styles'
 
   import photoService from '../../services/photo'
   import categoryService from '../../services/category'
   import {breadcrumbsHelper} from '../../helpers'
+  import {handleServiceError} from '../../helpers/error-handlers'
+  import {loadComponentData, loadPageData} from '../../helpers/loader-wrappers'
 
   export default {
     name: 'category-illustrations',
@@ -43,6 +50,7 @@
     },
     components: {
       Spinner,
+      PagePreLoader,
       PhotosContainer,
       VuetablePagination
     },
@@ -56,7 +64,8 @@
         category: {},
         photoList: [],
         paginationData: {},
-        isPaginateLoader: false
+        isPageDataLoading: false,
+        isPaginationDataLoading: false
       }
     },
     computed: {
@@ -70,44 +79,34 @@
       }
     },
     methods: {
-      async prepareComponent () {
-        this.showPageLoader()
-
+      async prepareComponentData () {
         try {
           this.category = await this.fetchCategoryDetails()
           this.photoList = await this.fetchCategoryPhotos()
         } catch (error) {
-          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+          handleServiceError(error, this.$route)
         }
-
-        this.hidePageLoader()
       },
       fetchCategoryDetails () {
         return categoryService.findByUUID(this.uuid)
           .then(response => response.data.category)
       },
-      fetchCategoryPhotos () {
+      async fetchCategoryPhotos () {
         const queryParams = {
           page: this.currentPage,
           limit: this.perPage
         }
 
-        return photoService.findAllByCategoryUUID(this.uuid, queryParams)
-          .then(response => {
-            this.setPaginationData(response.data)
-            return Object.values(response.data.photos)
-          })
+        const response = await photoService.findAllByCategoryUUID(this.uuid, queryParams).then(response => response)
+        this.setPaginationData(response.data)
+        return Object.values(response.data.photos)
       },
-      async renderNewPage () {
-        this.showPaginateLoader()
-
+      async preparePageData () {
         try {
           this.photoList = await this.fetchCategoryPhotos()
         } catch (error) {
-          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+          handleServiceError(error, this.$route)
         }
-
-        this.hidePaginateLoader()
       },
       setPaginationData (data) {
         this.paginationData = this.getPaginationData(data)
@@ -145,36 +144,24 @@
       gotoPreviousPage () {
         if (this.currentPage > 1) {
           this.currentPage--
-          this.renderNewPage()
+          loadPageData(this)
         }
       },
       gotoNextPage () {
         if (this.currentPage < this.paginationData.last_page) {
           this.currentPage++
-          this.renderNewPage()
+          loadPageData(this)
         }
       },
       gotoPage (page) {
         if (page !== this.currentPage && (page > 0 && page <= this.paginationData.last_page)) {
           this.currentPage = page
-          this.renderNewPage()
+          loadPageData(this)
         }
-      },
-      showPageLoader () {
-        this.$store.commit('setPageLoader', true)
-      },
-      hidePageLoader () {
-        this.$store.commit('setPageLoader', false)
-      },
-      showPaginateLoader () {
-        this.isPaginateLoader = true
-      },
-      hidePaginateLoader () {
-        this.isPaginateLoader = false
       }
     },
     created () {
-      this.prepareComponent()
+      loadComponentData(this)
     }
   }
 </script>

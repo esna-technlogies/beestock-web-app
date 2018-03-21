@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
           <div class="col-10 text-center">
             <router-link
-              :to="{ name: 'UserUploads' }"
+              :to="{ name: 'MyUploads' }"
               class="col-4 btn btn-light border border-info btn-micro rounded-0 text-muted mr-3"
             >
               Preview Downloads

@@ -24,9 +24,10 @@ export const userRoles = {
 }
 
 export const routeConditions = {
-  AUTHENTICATED_USER: 'AuthenticatedUser',
+  NO_LOGIN: 'NoLogin',
+  SYSTEM_ONLY: 'SystemOnly',
   VERIFIED_USER: 'VerifiedUser',
-  NO_LOGIN: 'NoLogin'
+  AUTHENTICATED_USER: 'AuthenticatedUser'
 }
 
 let config = {
@@ -46,7 +47,7 @@ switch (process.env.NODE_ENV) {
     break
 
   default:
-    console.error(config.logPrefixes.errorLogPrefix, 'Configured environment is not supported!')
+    console.error(logPrefixes.errorLogPrefix, 'Configured environment is not supported!')
 }
 
 export default config

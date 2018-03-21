@@ -1,4 +1,8 @@
 import authMethods from './auth-methods'
+import {
+  networkError, categoryNotFound,
+  unknownServiceError, photoNotFound
+} from './error-methods'
 
 export default {
   signupDone: authMethods.signupDone,
@@ -7,5 +11,9 @@ export default {
   logoutDone: authMethods.logoutDone,
   verifyUserDone: authMethods.verifyUserDone,
   resetUserPasswordDone: authMethods.resetUserPasswordDone,
-  jwtTokenExpired: authMethods.jwtTokenExpired
+  loginSessionExpired: authMethods.loginSessionExpired,
+  networkError,
+  categoryNotFound,
+  photoNotFound,
+  unknownServiceError
 }

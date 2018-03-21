@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <basic-loader v-show="isPaginateLoader" />
+    <basic-loader v-show="isPaginationDataLoading" />
   </div>
 </template>
 
@@ -39,7 +39,7 @@ export default {
         type: Array,
         default: () => []
       },
-      isPaginateLoader: {
+      isPaginationDataLoading: {
         type: Boolean,
         default: false
       }

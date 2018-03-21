@@ -1,6 +1,8 @@
 <template>
-   <div class="user-photos" v-show="!isPageLoading">
-     <template v-if="isUserPhotosRoute">
+   <div class="my-photos">
+     <page-pre-loader v-if="isPageDataLoading"/>
+
+     <div v-show="!isPageDataLoading">
        <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
        <vuestic-widget class="-photos-widget -transparent-widget">
@@ -13,14 +15,15 @@
          </div>
 
          <photos-container
-           :photoList="photoList" v-if="photoList.length > 0"
-           :isPaginateLoader="isPaginateLoader"/>
+           v-if="photoList.length > 0"
+           :photoList="photoList"
+           :isPaginationDataLoading="isPaginationDataLoading" />
 
          <div class="row justify-content-center mt-3" v-else>
            <div class="well">
              <div class="row justify-content-center">
                <div class="col-12 text-center">
-                 {{'alerts.messages.findUserPhotos.404' | translate}}
+                 {{'alerts.messages.findMyPhotos.404' | translate}}
                </div>
 
                <div class="col-12 text-center mt-3">
@@ -35,9 +38,7 @@
            </div>
          </div>
        </vuestic-widget>
-     </template>
-
-     <router-view v-else/>
+     </div>
    </div>
 </template>
 
@@ -46,15 +47,16 @@
   import PhotosContainer from '../photos-container/PhotosContainer'
   import UnderConstruction from '../under-construction/UnderConstruction'
   import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
-
-  import {mapGetters} from 'vuex'
+  import PagePreLoader from '../loaders/PagePreLoader'
 
   import {breadcrumbsHelper} from '../../helpers'
   import photoService from '../../services/photo'
   import DataTableStyles from '../vuestic-components/vuestic-datatable/data/data-table-styles'
+  import {handleServiceError} from '../../helpers/error-handlers'
+  import {loadComponentData, loadPageData} from '../../helpers/loader-wrappers'
 
   export default {
-    name: 'user-photos',
+    name: 'my-photos',
     metaInfo () {
       return {
         title: this.pageTitle
@@ -62,30 +64,25 @@
     },
     components: {
       Spinner,
+      PagePreLoader,
       PhotosContainer,
       UnderConstruction,
       VuetablePagination
     },
     computed: {
-      ...mapGetters(['isPageLoading']),
       breadcrumbs () {
-        return breadcrumbsHelper.userPhotos()
+        return breadcrumbsHelper.myPhotos()
       },
-      isUserPhotosRoute () {
-        return this.$route.name === 'UserPhotos'
+      isMyPhotosRoute () {
+        return this.$route.name === 'MyPhotos'
       },
       uuid () {
         return this.$store.getters.currentUserUUID()
       }
     },
-    /* watch: {
-      async '$route' (to, from) {
-        if (to.name === 'UserPhotos') await this.prepareComponent()
-      }
-    }, */
     data () {
       return {
-        pageTitle: this.$t('titles.userPhotos'),
+        pageTitle: this.$t('titles.myPhotos'),
         css: DataTableStyles,
         onEachSide: 1,
         currentPage: 1,
@@ -93,45 +90,35 @@
         category: {},
         photoList: [],
         paginationData: {},
-        isPaginateLoader: false,
-        responseData: {}
+        responseData: {},
+        isPageDataLoading: false,
+        isPaginationDataLoading: false
       }
     },
     methods: {
-      async prepareComponent () {
-        this.showPageLoader()
-
+      async prepareComponentData () {
         try {
-          this.photoList = await this.fetchUserPhotos()
+          this.photoList = await this.fetchMyPhotos()
         } catch (error) {
-          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+          handleServiceError(error, this.$route)
         }
-
-        this.hidePageLoader()
       },
-      fetchUserPhotos () {
+      async fetchMyPhotos () {
         const queryParams = {
           page: this.currentPage,
           limit: this.perPage
         }
 
-        return photoService.findAllByUserUUID(this.uuid, queryParams)
-          .then(response => {
-            this.responseData = response.data
-            this.setPaginationData(this.responseData)
-            return Object.values(response.data.photos)
-          })
+        const response = await photoService.findAllByUserUUID(this.uuid, queryParams).then(response => response)
+        this.setPaginationData(response.data)
+        return Object.values(response.data.photos)
       },
-      async renderNewPage () {
-        this.showPaginateLoader()
-
+      async preparePageData () {
         try {
-          this.photoList = await this.fetchUserPhotos()
+          this.photoList = await this.fetchMyPhotos()
         } catch (error) {
-          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+          handleServiceError(error, this.$route)
         }
-
-        this.hidePaginateLoader()
       },
       setPaginationData (data) {
         this.paginationData = this.getPaginationData(data)
@@ -169,36 +156,24 @@
       gotoPreviousPage () {
         if (this.currentPage > 1) {
           this.currentPage--
-          this.renderNewPage()
+          loadPageData(this)
         }
       },
       gotoNextPage () {
         if (this.currentPage < this.paginationData.last_page) {
           this.currentPage++
-          this.renderNewPage()
+          loadPageData(this)
         }
       },
       gotoPage (page) {
         if (page !== this.currentPage && (page > 0 && page <= this.paginationData.last_page)) {
           this.currentPage = page
-          this.renderNewPage()
+          loadPageData(this)
         }
-      },
-      showPageLoader () {
-        this.$store.commit('setPageLoader', true)
-      },
-      hidePageLoader () {
-        this.$store.commit('setPageLoader', false)
-      },
-      showPaginateLoader () {
-        this.isPaginateLoader = true
-      },
-      hidePaginateLoader () {
-        this.isPaginateLoader = false
       }
     },
     created () {
-      if (this.isUserPhotosRoute) this.prepareComponent()
+      if (this.isMyPhotosRoute) loadComponentData(this)
     }
   }
 </script>

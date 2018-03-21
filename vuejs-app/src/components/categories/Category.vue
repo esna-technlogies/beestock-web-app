@@ -1,84 +1,88 @@
 <template>
-    <div class="category" v-show="!isPageLoading">
+    <div class="category">
       <template v-if="isCategoryRoute">
-        <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
+        <page-pre-loader v-if="isPageDataLoading"/>
 
-        <vuestic-widget class="-category-widget -transparent-widget">
-          <div class="row no-gutters justify-content-between">
-            <div class="col-1">
-              <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.photos' | translate }}</span>
+        <div v-show="!isPageDataLoading">
+          <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
+
+          <vuestic-widget class="-category-widget -transparent-widget">
+            <div class="row no-gutters justify-content-between">
+              <div class="col-1">
+                <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.photos' | translate }}</span>
+              </div>
+
+              <router-link class="col-1 badge badge-info"
+                           :style="{ 'font-size': '.9em' }"
+                           :to="{ name: 'CategoryPhotos', params: {uuid: this.uuid} }">
+                {{ 'category.buttons.showAll' | translate }}
+              </router-link>
             </div>
 
-            <router-link class="col-1 badge badge-info"
-                         :style="{ 'font-size': '.9em' }"
-                         :to="{ name: 'CategoryPhotos', params: {uuid: this.uuid} }">
-              {{ 'category.buttons.showAll' | translate }}
-            </router-link>
-          </div>
+
+            <photos-container :photoList="photoList"/>
 
 
-          <photos-container :photoList="photoList"/>
-
-
-          <div class="row no-gutters mb-2 justify-content-center">
-            <hr class="col-12">
-          </div>
-
-
-          <div class="row no-gutters justify-content-between">
-            <div class="col-1">
-              <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.illustrations' | translate }}</span>
+            <div class="row no-gutters mb-2 justify-content-center">
+              <hr class="col-12">
             </div>
 
-            <router-link class="col-1 badge badge-info"
-                         :style="{ 'font-size': '.9em' }"
-                         :to="{ name: 'CategoryIllustrations', params: {uuid: this.uuid} }">
-              {{ 'category.buttons.showAll' | translate }}
-            </router-link>
-          </div>
 
-          <photos-container :photoList="photoList"/>
+            <div class="row no-gutters justify-content-between">
+              <div class="col-1">
+                <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.illustrations' | translate }}</span>
+              </div>
 
-
-          <div class="row no-gutters mb-2 justify-content-center">
-            <hr class="col-12">
-          </div>
-
-
-          <div class="row no-gutters justify-content-between">
-            <div class="col-1">
-              <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.footage' | translate }}</span>
+              <router-link class="col-1 badge badge-info"
+                           :style="{ 'font-size': '.9em' }"
+                           :to="{ name: 'CategoryIllustrations', params: {uuid: this.uuid} }">
+                {{ 'category.buttons.showAll' | translate }}
+              </router-link>
             </div>
 
-            <router-link class="col-1 badge badge-info"
-                         :style="{ 'font-size': '.9em' }"
-                         :to="{ name: 'CategoryFootage', params: {uuid: this.uuid} }">
-              {{ 'category.buttons.showAll' | translate }}
-            </router-link>
-          </div>
-
-          <photos-container :photoList="photoList"/>
+            <photos-container :photoList="photoList"/>
 
 
-          <div class="row no-gutters mb-2 justify-content-center">
-            <hr class="col-12">
-          </div>
-
-
-          <div class="row no-gutters justify-content-between">
-            <div class="col-1">
-              <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.audio' | translate }}</span>
+            <div class="row no-gutters mb-2 justify-content-center">
+              <hr class="col-12">
             </div>
 
-            <router-link class="col-1 badge badge-info"
-                         :style="{ 'font-size': '.9em' }"
-                         :to="{ name: 'CategoryAudio', params: {uuid: this.uuid} }">
-              {{ 'category.buttons.showAll' | translate }}
-            </router-link>
-          </div>
 
-          <photos-container :photoList="photoList"/>
-        </vuestic-widget>
+            <div class="row no-gutters justify-content-between">
+              <div class="col-1">
+                <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.footage' | translate }}</span>
+              </div>
+
+              <router-link class="col-1 badge badge-info"
+                           :style="{ 'font-size': '.9em' }"
+                           :to="{ name: 'CategoryFootage', params: {uuid: this.uuid} }">
+                {{ 'category.buttons.showAll' | translate }}
+              </router-link>
+            </div>
+
+            <photos-container :photoList="photoList"/>
+
+
+            <div class="row no-gutters mb-2 justify-content-center">
+              <hr class="col-12">
+            </div>
+
+
+            <div class="row no-gutters justify-content-between">
+              <div class="col-1">
+                <span class="badge badge-info" style="font-size: .9em">{{ 'category.heads.audio' | translate }}</span>
+              </div>
+
+              <router-link class="col-1 badge badge-info"
+                           :style="{ 'font-size': '.9em' }"
+                           :to="{ name: 'CategoryAudio', params: {uuid: this.uuid} }">
+                {{ 'category.buttons.showAll' | translate }}
+              </router-link>
+            </div>
+
+            <photos-container :photoList="photoList"/>
+          </vuestic-widget>
+        </div>
       </template>
 
       <router-view v-else />
@@ -88,14 +92,15 @@
 <script>
   import VuesticAlert from '../vuestic-components/vuestic-alert/VuesticAlert'
   import PhotosContainer from '../photos-container/PhotosContainer'
-
-  import {mapGetters} from 'vuex'
+  import PagePreLoader from '../loaders/PagePreLoader'
 
   import photoService from '../../services/photo'
   import categoryService from '../../services/category'
   import {breadcrumbsHelper} from '../../helpers'
+  import {handleServiceError} from '../../helpers/error-handlers'
+  import {loadComponentData} from '../../helpers/loader-wrappers'
 
-export default {
+  export default {
     name: 'category',
     metaInfo () {
       return {
@@ -110,22 +115,30 @@ export default {
     },
     components: {
       VuesticAlert,
+      PagePreLoader,
       PhotosContainer
     },
     data () {
       return {
         pageTitle: this.$t('titles.loading'),
+        isPageDataLoading: false,
         category: '',
-        photoList: []
+        photoList: [],
+        titleSlug: ''
       }
     },
     computed: {
-      ...mapGetters(['isPageLoading']),
       isCategoryRoute () {
         return this.$route.name === 'Category'
       },
       breadcrumbs () {
         return breadcrumbsHelper.category(this.category.title)
+      },
+      page () {
+        return 1
+      },
+      limit () {
+        return 4
       }
     },
     watch: {
@@ -134,35 +147,25 @@ export default {
       }
     },
     methods: {
-      async prepareComponent () {
-        this.showPageLoader()
-
+      async prepareComponentData () {
         try {
-          await this.fetchCategoryDetails()
-          await this.fetchCategoryPhotos()
+          this.category = await this.fetchCategoryDetails()
+          this.photoList = await this.fetchCategoryPhotos()
         } catch (error) {
-          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+          handleServiceError(error, this.$route)
         }
-
-        this.hidePageLoader()
       },
       async fetchCategoryDetails () {
-        this.category = await categoryService.findByUUID(this.uuid)
+        return categoryService.findByUUID(this.uuid)
           .then(response => response.data.category)
       },
       async fetchCategoryPhotos () {
-        this.photoList = await photoService.findAllByCategoryUUID(this.uuid, { page: 1, limit: 4 })
+        return photoService.findAllByCategoryUUID(this.uuid, { page: this.page, limit: this.limit })
           .then(response => Object.values(response.data.photos))
-      },
-      showPageLoader () {
-        this.$store.commit('setPageLoader', true)
-      },
-      hidePageLoader () {
-        this.$store.commit('setPageLoader', false)
       }
     },
     created () {
-      this.prepareComponent()
+      loadComponentData(this)
     }
   }
 </script>

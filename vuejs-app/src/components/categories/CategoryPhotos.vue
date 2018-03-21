@@ -1,40 +1,45 @@
 <template>
-    <div class="category-photos" v-show="!isPageLoading">
-      <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
+    <div class="category-photos">
+      <page-pre-loader v-if="isPageDataLoading"/>
 
-      <vuestic-widget class="-category-photos-widget -transparent-widget">
-        <template v-for="(container, index) in photosContainerList">
-          <component :is="container" :key="container.name" :photoList="photoList[index]"></component>
-        </template>
+      <div v-show="!isPageDataLoading">
+        <vuestic-breadcrumbs :breadcrumbs="breadcrumbs"/>
 
-        <div class="row justify-content-center mt-3" v-if="!noMorePhotos">
-          <div class="col-2">
-            <button class="btn btn-block btn-info btn-micro rounded-0" @click="loadMorePhotos" v-if="!isLoadingMorePhotos">
-              <span>LOAD MORE</span>
-            </button>
+        <vuestic-widget class="-category-photos-widget -transparent-widget">
+          <template v-for="(container, index) in photosContainerList">
+            <component :is="container" :key="container.name" :photoList="photoList[index]"></component>
+          </template>
 
-            <div class="btn btn-block btn-info btn-micro pt-1 pb-1 rounded-0" :disabled="true" v-else>
-              <spinner
-                :size="27"
-                :line-size="3"
-                :line-fg-color="'#F9CB55'"
-                class="-spinner"/>
+          <div class="row justify-content-center mt-3" v-if="!noMorePhotos">
+            <div class="col-2">
+              <button class="btn btn-block btn-info btn-micro rounded-0" @click="loadMorePhotos" v-if="!isLoadingMorePhotos">
+                <span>LOAD MORE</span>
+              </button>
+
+              <div class="btn btn-block btn-info btn-micro pt-1 pb-1 rounded-0" :disabled="true" v-else>
+                <spinner
+                  :size="27"
+                  :line-size="3"
+                  :line-fg-color="'#F9CB55'"
+                  class="-spinner"/>
+              </div>
             </div>
           </div>
-        </div>
-      </vuestic-widget>
+        </vuestic-widget>
+      </div>
     </div>
 </template>
 
 <script>
   import PhotosContainer from '../photos-container/PhotosContainer'
   import Spinner from 'vue-simple-spinner'
-
-  import {mapGetters} from 'vuex'
+  import PagePreLoader from '../loaders/PagePreLoader'
 
   import photoService from '../../services/photo'
   import categoryService from '../../services/category'
   import {breadcrumbsHelper} from '../../helpers'
+  import {handleServiceError} from '../../helpers/error-handlers'
+  import {loadComponentData} from '../../helpers/loader-wrappers'
 
   export default {
     name: 'category-photos',
@@ -50,8 +55,9 @@
       }
     },
     components: {
-      PhotosContainer,
-      Spinner
+      Spinner,
+      PagePreLoader,
+      PhotosContainer
     },
     data () {
       return {
@@ -62,11 +68,11 @@
         noMorePhotos: false,
         category: {},
         photoList: [],
-        photosContainerList: [PhotosContainer]
+        photosContainerList: [PhotosContainer],
+        isPageDataLoading: false
       }
     },
     computed: {
-      ...mapGetters(['isPageLoading']),
       breadcrumbs () {
         return breadcrumbsHelper.categoryPhotos(this.category.title)
       }
@@ -77,54 +83,41 @@
       }
     },
     methods: {
-      async prepareComponent () {
-        this.showPageLoader()
-
+      async prepareComponentData () {
         try {
-          await this.fetchCategoryDetails()
-          await this.fetchCategoryPhotos()
+          this.category = await this.fetchCategoryDetails()
+          const photos = await this.fetchCategoryPhotos()
+          this.photoList.push(photos)
         } catch (error) {
-          console.error('BEESTOCK-ERROR', error.response ? error.response : error)
+          handleServiceError(error, this.$route)
         }
-
-        this.hidePageLoader()
       },
-      async fetchCategoryDetails () {
-        this.category = await categoryService.findByUUID(this.uuid)
+      fetchCategoryDetails () {
+        return categoryService.findByUUID(this.uuid)
           .then(response => response.data.category)
       },
       async fetchCategoryPhotos () {
         const queryParams = { page: this.page, limit: this.limit }
 
-        await photoService.findAllByCategoryUUID(this.uuid, queryParams)
-          .then(response => {
-            const photos = Object.values(response.data.photos)
+        const response = await photoService.findAllByCategoryUUID(this.uuid, queryParams).then(response => response)
 
-            this.photoList.push(photos)
+        if (!response.data._links.next) { this.noMorePhotos = true }
 
-            if (!response.data._links.next) {
-              this.noMorePhotos = true
-            }
-          })
+        return Object.values(response.data.photos)
       },
       async loadMorePhotos () {
         this.isLoadingMorePhotos = true
 
         this.page++
-        await this.fetchCategoryPhotos()
+        const photos = await this.fetchCategoryPhotos()
+        this.photoList.push(photos)
         this.photosContainerList.push(PhotosContainer)
 
         this.isLoadingMorePhotos = false
-      },
-      showPageLoader () {
-        this.$store.commit('setPageLoader', true)
-      },
-      hidePageLoader () {
-        this.$store.commit('setPageLoader', false)
       }
     },
     created () {
-      this.prepareComponent()
+      loadComponentData(this)
     }
   }
 </script>
