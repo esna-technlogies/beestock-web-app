@@ -100,12 +100,9 @@ workflows:
   build-and-deploy:
     jobs:
       - checkout
-      - dependencies:
-          requires:
-            - checkout
       - build:
           requires:
-            - dependencies
+            - checkout
       - deploy:
           requires:
             - dependencies
