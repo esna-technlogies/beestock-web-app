@@ -4,54 +4,165 @@
 #
 version: 2  # This indicates a circleci version
 jobs:
-  build:
-
-    # This indicates the docker image used will be the one built with node.js v8.9.1 from circleci repo
+  checkout:
     docker:
       - image: circleci/node:8.9.1
 
-    # This indicates the working directory for the following steps
     working_directory: ~/beestock-webapp
 
     steps:
-      # This would checkout the project from github to the current working directory '.'
       - checkout
+
+      - save_cache:
+          key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/beestock-webapp
+
+  dependencies:
+    docker:
+      - image: circleci/node:8.9.1
+
+    working_directory: ~/beestock-webapp
+
+    steps:
+      - restore_cache:
+        key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+        key: dependencies-{{ checksum "vuejs-app/package.json" }}
+
+      - run:
+          name: Install Dependencies using NPM
+          command: npm install
+          working_directory: ./vuejs-app
+
+      - save_cache:
+        key: dependencies-{{ checksum "vuejs-app/package.json" }}
+        paths:
+          - ~/beestock-app/cached-dependencies
+
+  build:
+    docker:
+      - image: circleci/node:8.9.1
+
+    working_directory: ~/beestock-webapp
+
+    steps:
+      - restore_cache:
+          key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
 
       - restore_cache:
           keys:
-            - npm-deps-{{ checksum "vuejs-app/package.json" }}
-            - npm-deps-
-
-      - save_cache:
-          key: npm-deps-{{ checksum "vuejs-app/package.json" }}
-          paths:
-            - vuejs-app/node_modules
-
-      - run:
-          name: Install Project Dependencies
-          command: npm install
-          working_directory: ./vuejs-app
+            - dependencies-{{ checksum "vuejs-app/package.json" }}
+            - dependencies-
 
       - run:
           name: Build The Project For Production
           command: npm run build
           working_directory: ./vuejs-app
 
+      - save_cache:
+          key: dist-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/beestock-webapp/dist
+
+  deploy:
+    docker:
+      - image: circleci/node:8.9.1
+
+
+    working_directory: ~/beestock-webapp
+
+    steps:
+      - restore_cache:
+        key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
+
+      - restore-cache:
+        keys:
+          - dependencies-{{ checksum "vuejs-app/package.json" }}
+          - dependencies-
+
+      - restore_cache:
+        key: dist-{{ .Environment.CIRCLE_SHA1 }}
+
       # We need here to add 'dev.beesstock.com' to known_hosts so the OS can communicate with it
       - run:
-         name: Clear ~/.ssh/known_hosts and Add host dev.beesstock.com to it
-         command: ssh-keyscan dev.beesstock.com > ~/.ssh/known_hosts
+          name: Add host dev.beesstock.com to ~/.ssh/known_hosts
+          command: ssh-keyscan dev.beesstock.com > ~/.ssh/known_hosts
 
       # A build is done under ./vuejs-app/dist, so copy it remotely on 'dev.beesstock.com' server
-      - deploy:
+      - run:
           name: Deploy dist/ to remote 'dev.beesstock.com' instance
           command: scp -rp dist/ ubuntu@dev.beesstock.com:~/project/
-          working_directory: ./vuejs-app
+          working_directory: ~/beestock-webapp
 
-      # Using 'forever' command:
-      # . Restart the application
-      # . Specify options for saving different types of logs (forever, output, error)
-      # . Specific '-a' for appending to current logs
       - run:
           name: Restart The Application
           command: ssh ubuntu@dev.beesstock.com 'forever restart -a -l ~/project/logs/forever.log -o ~/project/logs/out.log -e ~/project/logs/error.log ~/project/server.js'
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - checkout
+      - dependencies:
+          requires:
+            - checkout
+      - build:
+          requires:
+            - dependencies
+      - deploy:
+          requires:
+            - dependencies
+            - build
+
+#  build:
+#
+#    # This indicates the docker image used will be the one built with node.js v8.9.1 from circleci repo
+#    docker:
+#      - image: circleci/node:8.9.1
+#
+#    # This indicates the working directory for the following steps
+#    working_directory: ~/beestock-webapp
+#
+#    steps:
+#      # This would checkout the project from github to the current working directory '.'
+#      - checkout
+#
+#      - restore_cache:
+#          keys:
+#            - npm-deps-{{ checksum "vuejs-app/package.json" }}
+#            - npm-deps-
+#
+#      - save_cache:
+#          key: npm-deps-{{ checksum "vuejs-app/package.json" }}
+#          paths:
+#            - node_modules
+#
+#      - run:
+#          name: Install Project Dependencies
+#          command: npm install
+#          working_directory: ./vuejs-app
+#
+#      - run:
+#          name: Build The Project For Production
+#          command: npm run build
+#          working_directory: ./vuejs-app
+#
+#      # We need here to add 'dev.beesstock.com' to known_hosts so the OS can communicate with it
+#      - run:
+#         name: Add host dev.beesstock.com to ~/.ssh/known_hosts
+#         command: ssh-keyscan dev.beesstock.com > ~/.ssh/known_hosts
+#
+#      # A build is done under ./vuejs-app/dist, so copy it remotely on 'dev.beesstock.com' server
+#      - deploy:
+#          name: Deploy dist/ to remote 'dev.beesstock.com' instance
+#          command: scp -rp dist/ ubuntu@dev.beesstock.com:~/project/
+#          working_directory: ./vuejs-app
+#
+#      # Using 'forever' command:
+#      # . Restart the application
+#      # . Specify options for saving different types of logs (forever, output, error)
+#      # . Specific '-a' for appending to current logs
+#      - run:
+#          name: Restart The Application
+#          command: ssh ubuntu@dev.beesstock.com 'forever restart -a -l ~/project/logs/forever.log -o ~/project/logs/out.log -e ~/project/logs/error.log ~/project/server.js'
