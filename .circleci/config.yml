@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Deploy 'dist/' Directory To Remote Instance 'dev.beesstock.com'
           command: scp -rp dist/ ubuntu@dev.beesstock.com:~/project/
-          working_directory: ~/beestock-webapp
+          working_directory: ./vuejs-app
 
       - run:
           name: Restart The Application
