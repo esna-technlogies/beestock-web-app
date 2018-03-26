@@ -17,6 +17,16 @@ jobs:
       # This would checkout the project from github to the current working directory '.'
       - checkout
 
+      - restore_cache:
+        keys:
+          - npm-deps-{{ checksum "package.json" }}
+          - npm-deps-
+
+      - save_cache:
+        key: npm-deps-{{ checksum "package.json" }}
+        path:
+          - node_modules
+
       - run:
           name: Install Project Dependencies
           command: npm install
