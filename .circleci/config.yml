@@ -14,31 +14,10 @@ jobs:
       - checkout
 
       - save_cache:
+          name: Cache Checkout Code
           key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/beestock-webapp
-
-  dependencies:
-    docker:
-      - image: circleci/node:8.9.1
-
-    working_directory: ~/beestock-webapp
-
-    steps:
-      - restore_cache:
-          key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
-      - restore_cache:
-          key: dependencies-{{ checksum "vuejs-app/package.json" }}
-
-      - run:
-          name: Install Dependencies using NPM
-          command: npm install
-          working_directory: ./vuejs-app
-
-      - save_cache:
-          key: dependencies-{{ checksum "vuejs-app/package.json" }}
-          paths:
-            - ~/beestock-app/cached-dependencies
 
   build:
     docker:
@@ -48,12 +27,25 @@ jobs:
 
     steps:
       - restore_cache:
+          name: Restore Checkout Code From Cache
           key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
 
       - restore_cache:
+          name: Restore Dependencies From Cache
           keys:
             - dependencies-{{ checksum "vuejs-app/package.json" }}
             - dependencies-
+
+      - run:
+          name: Install Dependencies using NPM
+          command: npm install
+          working_directory: ./vuejs-app
+
+      - save_cache:
+          name: Cache Dependencies
+          key: dependencies-{{ checksum "vuejs-app/package.json" }}
+          paths:
+            - ~/beestock-app/cached-dependencies
 
       - run:
           name: Build The Project For Production
@@ -61,6 +53,7 @@ jobs:
           working_directory: ./vuejs-app
 
       - save_cache:
+          name: Cache Project Build
           key: dist-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/beestock-webapp/dist
@@ -74,14 +67,17 @@ jobs:
 
     steps:
       - restore_cache:
+          name: Restore Checkout Code From Cache
           key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
 
       - restore-cache:
+          name: Restore Dependencies From Cache
           keys:
             - dependencies-{{ checksum "vuejs-app/package.json" }}
             - dependencies-
 
       - restore_cache:
+          name: Restore Project Build From Cache
           key: dist-{{ .Environment.CIRCLE_SHA1 }}
 
       # We need here to add 'dev.beesstock.com' to known_hosts so the OS can communicate with it
