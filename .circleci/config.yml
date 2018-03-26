@@ -10,44 +10,44 @@ jobs:
 
       working_directory: ~/beestock-webapp
 
-      steps:
-        - checkout
+    steps:
+      - checkout
 
-        - restore_cache:
-            name: Restore Dependencies From Cache
-            keys:
-              - dependencies-{{ checksum "vuejs-app/package.json" }}
-              - dependencies-
+      - restore_cache:
+          name: Restore Dependencies From Cache
+          keys:
+            - dependencies-{{ checksum "vuejs-app/package.json" }}
+            - dependencies-
 
-        - run:
-            name: Install Dependencies using NPM
-            command: npm install
-            working_directory: ./vuejs-app
+      - run:
+          name: Install Dependencies using NPM
+          command: npm install
+          working_directory: ./vuejs-app
 
-        - save_cache:
-            name: Cache Dependencies
-            key: dependencies-{{ checksum "vuejs-app/package.json" }}
-            paths:
-              - ~/beestock-app/cached-dependencies
+      - save_cache:
+          name: Cache Dependencies
+          key: dependencies-{{ checksum "vuejs-app/package.json" }}
+          paths:
+            - ~/beestock-app/cached-dependencies
 
-        - run:
-            name: Build The Project For Production
-            command: npm run build
-            working_directory: ./vuejs-app
+      - run:
+          name: Build The Project For Production
+          command: npm run build
+          working_directory: ./vuejs-app
 
-        - run:
-            name: Add Host 'dev.beesstock.com' To '~/.ssh/known_hosts'
-            command: ssh-keyscan dev.beesstock.com > ~/.ssh/known_hosts
+      - run:
+          name: Add Host 'dev.beesstock.com' To '~/.ssh/known_hosts'
+          command: ssh-keyscan dev.beesstock.com > ~/.ssh/known_hosts
 
-        # A build is done under ./vuejs-app/dist, so copy it remotely on 'dev.beesstock.com' server
-        - run:
-            name: Deploy 'dist/' Directory To Remote Instance 'dev.beesstock.com'
-            command: scp -rp dist/ ubuntu@dev.beesstock.com:~/project/
-            working_directory: ~/beestock-webapp
+      # A build is done under ./vuejs-app/dist, so copy it remotely on 'dev.beesstock.com' server
+      - run:
+          name: Deploy 'dist/' Directory To Remote Instance 'dev.beesstock.com'
+          command: scp -rp dist/ ubuntu@dev.beesstock.com:~/project/
+          working_directory: ~/beestock-webapp
 
-        - run:
-            name: Restart The Application
-            command: ssh ubuntu@dev.beesstock.com 'forever restart -a -l ~/project/logs/forever.log -o ~/project/logs/out.log -e ~/project/logs/error.log ~/project/server.js'
+      - run:
+          name: Restart The Application
+          command: ssh ubuntu@dev.beesstock.com 'forever restart -a -l ~/project/logs/forever.log -o ~/project/logs/out.log -e ~/project/logs/error.log ~/project/server.js'
 
 #  build:
 #
