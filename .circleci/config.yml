@@ -26,9 +26,9 @@ jobs:
 
     steps:
       - restore_cache:
-        key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
+          key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
-        key: dependencies-{{ checksum "vuejs-app/package.json" }}
+          key: dependencies-{{ checksum "vuejs-app/package.json" }}
 
       - run:
           name: Install Dependencies using NPM
@@ -36,9 +36,9 @@ jobs:
           working_directory: ./vuejs-app
 
       - save_cache:
-        key: dependencies-{{ checksum "vuejs-app/package.json" }}
-        paths:
-          - ~/beestock-app/cached-dependencies
+          key: dependencies-{{ checksum "vuejs-app/package.json" }}
+          paths:
+            - ~/beestock-app/cached-dependencies
 
   build:
     docker:
@@ -74,15 +74,15 @@ jobs:
 
     steps:
       - restore_cache:
-        key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
+          key: checkout-code-{{ .Environment.CIRCLE_SHA1 }}
 
       - restore-cache:
-        keys:
-          - dependencies-{{ checksum "vuejs-app/package.json" }}
-          - dependencies-
+          keys:
+            - dependencies-{{ checksum "vuejs-app/package.json" }}
+            - dependencies-
 
       - restore_cache:
-        key: dist-{{ .Environment.CIRCLE_SHA1 }}
+          key: dist-{{ .Environment.CIRCLE_SHA1 }}
 
       # We need here to add 'dev.beesstock.com' to known_hosts so the OS can communicate with it
       - run:
