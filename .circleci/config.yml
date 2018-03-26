@@ -99,13 +99,9 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - checkout
-      - build:
-          requires:
-            - checkout
       - deploy:
           requires:
-            - dependencies
+            - checkout
             - build
 
 #  build:
