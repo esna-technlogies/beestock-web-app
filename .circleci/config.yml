@@ -24,7 +24,7 @@ jobs:
 
       - save_cache:
           key: npm-deps-{{ checksum "package.json" }}
-          path:
+          paths:
             - node_modules
 
       - run:
