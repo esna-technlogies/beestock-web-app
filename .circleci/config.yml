@@ -25,7 +25,7 @@ jobs:
       - save_cache:
           key: npm-deps-{{ checksum "vuejs-app/package.json" }}
           paths:
-            - node_modules
+            - vuejs-app/node_modules
 
       - run:
           name: Install Project Dependencies
