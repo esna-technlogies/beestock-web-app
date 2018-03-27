@@ -5,13 +5,14 @@
 version: 2  # This indicates a circleci version
 jobs:
   build:
+    working_directory: ~/app
+
     docker:
       - image: circleci/node:8.9.1
 
-    working_directory: ~/beestock-webapp
-
     steps:
       - checkout
+      - setup_remote_docker
 
       - restore_cache:
           name: Restore Dependencies From Cache
@@ -20,7 +21,7 @@ jobs:
             - dependencies-
 
       - run:
-          name: Install Dependencies using NPM
+          name: Install Dependencies
           command: npm install
           working_directory: ./vuejs-app
 
@@ -31,23 +32,55 @@ jobs:
             - ~/beestock-app/cached-dependencies
 
       - run:
-          name: Build The Project For Production
-          command: npm run build
+          name: Build Docker image
+          command: docker build -t app .
           working_directory: ./vuejs-app
 
-      - run:
-          name: Add Host 'dev.beesstock.com' To '~/.ssh/known_hosts'
-          command: ssh-keyscan dev.beesstock.com > ~/.ssh/known_hosts
+      - deploy:
+          name: Push Docker Image to AWS ECR
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "immutable-infra" ]; then
+              CLUSTER='beestock-dev'
+              FAMILY='beestock-dev'
+              DOCKER_IMAGE='beestock-dev'
+              TASK='beestock-dev-ecs-task'
+              SERVICE='beestock-dev-ecs-service'
 
-      # A build is done under ./vuejs-app/dist, so copy it remotely on 'dev.beesstock.com' server
-      - run:
-          name: Deploy 'dist/' Directory To Remote Instance 'dev.beesstock.com'
-          command: scp -rp dist/ ubuntu@dev.beesstock.com:~/project/
-          working_directory: ./vuejs-app
+              aws configure set region 'us-west-2'
+              $(aws ecr get-login)
 
-      - run:
-          name: Restart The Application
-          command: ssh ubuntu@dev.beesstock.com 'forever restart -a -l ~/project/logs/forever.log -o ~/project/logs/out.log -e ~/project/logs/error.log ~/project/server.js'
+              docker tag app $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$CIRCLE_SHA1
+              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$CIRCLE_SHA1
+
+              task_template='[
+                {
+                  "name": "%s",
+                  "image": "%s.dkr.ecr.%s.amazonaws.com/%s:%s",
+                  "essential": true,
+                  "memoryReservation": 1000,
+                  "portMappings": [
+                    {
+                      "containerPort": 3000,
+                      "hostPort": 80
+                    }
+                  ],
+                  "environment" : [
+                      { "name" : "NODE_ENV", "value" : "production" }
+                  ]
+                }
+              ]'
+              echo "$task_template"
+
+              task_def=$(printf "$task_template" $TASK $AWS_ACCOUNT_ID $AWS_REGION $TASK $CIRCLE_SHA1)
+
+              json=$(aws ecs register-task-definition --container-definitions "$task_def" --family "$FAMILY")
+
+              revision=$(echo "$json" | grep -o '"revision": [0-9]*' | grep -Eo '[0-9]+')
+
+              aws ecs update-service --cluster "$CLUSTER" --service "$SERVICE" --task-definition "$TASK":"$revision"
+
+              return 0
+            fi
 
 #  build:
 #
@@ -56,7 +89,7 @@ jobs:
 #      - image: circleci/node:8.9.1
 #
 #    # This indicates the working directory for the following steps
-#    working_directory: ~/beestock-webapp
+#    working_directory: ~/app
 #
 #    steps:
 #      # This would checkout the project from github to the current working directory '.'
