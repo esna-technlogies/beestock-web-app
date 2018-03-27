@@ -14,23 +14,6 @@ jobs:
       - checkout
       - setup_remote_docker
 
-      - restore_cache:
-          name: Restore Dependencies From Cache
-          keys:
-            - dependencies-{{ checksum "vuejs-app/package.json" }}
-            - dependencies-
-
-      - run:
-          name: Install Dependencies
-          command: npm install
-          working_directory: ./vuejs-app
-
-      - save_cache:
-          name: Cache Dependencies
-          key: dependencies-{{ checksum "vuejs-app/package.json" }}
-          paths:
-            - ~/beestock-app/cached-dependencies
-
       - run:
           name: Build Docker image
           command: docker build -t app .
