@@ -31,9 +31,10 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "immutable-infra" ]; then
               CLUSTER='beestock-dev'
               FAMILY='beestock-dev'
-              DOCKER_IMAGE='beestock-dev'
+              DOCKER_IMAGE='test-repository'
               TASK='beestock-dev-ecs-task'
               SERVICE='beestock-dev-ecs-service'
+              AWS_REGION='us-west-2'
 
               aws configure set region 'us-west-2'
               $(aws ecr get-login --no-include-email)
