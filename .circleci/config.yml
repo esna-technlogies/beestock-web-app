@@ -8,11 +8,17 @@ jobs:
     working_directory: ~/app
 
     docker:
-      - image: amazonlinux
+      - image: docker:18.03.0-ce-git
 
     steps:
       - checkout
       - setup_remote_docker
+
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache py-pip=9.3.0
+            pip install awscli==1.11.76
 
       - run:
           name: Build Docker image
