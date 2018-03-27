@@ -32,7 +32,7 @@ jobs:
               CLUSTER='beestock-dev'
               FAMILY='beestock-dev'
               DOCKER_IMAGE='test-repository'
-              TASK='beestock-dev-ecs-task'
+              TASK='beestock-dev'
               SERVICE='vuejs-app'
               AWS_REGION='us-west-2'
 
