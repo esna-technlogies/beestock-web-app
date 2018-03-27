@@ -39,7 +39,7 @@ jobs:
               aws configure set region 'us-west-2'
               $(aws ecr get-login --no-include-email --region us-west-2)
 
-              docker tag app 014519795457.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$CIRCLE_SHA1
+              docker tag test-repository 014519795457.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$CIRCLE_SHA1
               docker push 014519795457.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$CIRCLE_SHA1
 
               task_template='[
