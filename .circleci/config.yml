@@ -36,7 +36,7 @@ jobs:
               SERVICE='webapp_service'
               AWS_REGION='us-east-2'
 
-              aws configure set region 'us-west-2'
+              aws configure set region $AWS_REGION
               $(aws ecr get-login --no-include-email --region $AWS_REGION)
 
               docker tag beestock_webapp_dev $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$CIRCLE_SHA1
@@ -66,11 +66,7 @@ jobs:
 
               json=$(aws ecs register-task-definition --container-definitions "$task_def" --family "$FAMILY")
 
-              echo "Before"
               revision=$(echo "$json" | grep -o '"revision": [0-9]*' | grep -Eo '[0-9]+')
-              echo "After"
-
-              echo -e "$CLUSTER - $SERVICE - $TASK:$revision"
 
               aws ecs update-service --cluster "$CLUSTER" --service "$SERVICE" --task-definition "$TASK":"$revision"
 
