@@ -22,7 +22,7 @@ jobs:
 
       - run:
           name: Build Docker image
-          command: docker build -t test-repository .
+          command: docker build -t beestock_webapp_dev .
           working_directory: ./vuejs-app
 
       - deploy:
@@ -31,7 +31,7 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "immutable-infra" ]; then
               CLUSTER='beestock_development'
               FAMILY='beestock_development'
-              DOCKER_IMAGE='webapp'
+              DOCKER_IMAGE='beestock_webapp_dev'
               TASK='webapp_task_definition'
               SERVICE='webapp_service'
               AWS_REGION='us-east-2'
@@ -39,7 +39,7 @@ jobs:
               aws configure set region 'us-west-2'
               $(aws ecr get-login --no-include-email --region $AWS_REGION)
 
-              docker tag $DOCKER_IMAGE:$CIRCLE_SHA1 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/beestock_development
+              docker tag $DOCKER_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$CIRCLE_SHA1
               docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/beestock_development/$DOCKER_IMAGE:$CIRCLE_SHA1
 
               task_template='[
