@@ -29,18 +29,18 @@ jobs:
           name: Push Docker Image to AWS ECR
           command: |
             if [ "${CIRCLE_BRANCH}" == "immutable-infra" ]; then
-              CLUSTER='beestock-dev'
-              FAMILY='beestock-dev'
-              DOCKER_IMAGE='test-repository'
-              TASK='beestock-dev'
-              SERVICE='vuejs-app'
-              AWS_REGION='us-west-2'
+              CLUSTER='beestock_development'
+              FAMILY='beestock_development'
+              DOCKER_IMAGE='webapp'
+              TASK='webapp_task_definition'
+              SERVICE='webapp_service'
+              AWS_REGION='us-east-2'
 
               aws configure set region 'us-west-2'
-              $(aws ecr get-login --no-include-email --region us-west-2)
+              $(aws ecr get-login --no-include-email --region $AWS_REGION)
 
-              docker tag test-repository 014519795457.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$CIRCLE_SHA1
-              docker push 014519795457.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$CIRCLE_SHA1
+              docker tag beestock_development $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/beestock_development/$DOCKER_IMAGE:$CIRCLE_SHA1
+              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/beestock_development/$DOCKER_IMAGE:$CIRCLE_SHA1
 
               task_template='[
                 {
@@ -50,18 +50,18 @@ jobs:
                   "memoryReservation": 1000,
                   "portMappings": [
                     {
-                      "containerPort": 3000,
+                      "containerPort": 8080,
                       "hostPort": 80
                     }
                   ],
                   "environment" : [
-                      { "name" : "NODE_ENV", "value" : "production" }
+                      { "name" : "NODE_ENV", "value" : "development" }
                   ]
                 }
               ]'
               echo "$task_template"
 
-              task_def=$(printf "$task_template" $TASK 014519795457 $AWS_REGION $TASK $CIRCLE_SHA1)
+              task_def=$(printf "$task_template" $TASK $AWS_ACCOUNT_ID $AWS_REGION $TASK $CIRCLE_SHA1)
 
               json=$(aws ecs register-task-definition --container-definitions "$task_def" --family "$FAMILY")
 
