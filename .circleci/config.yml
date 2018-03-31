@@ -30,7 +30,7 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "immutable-infra" ]; then
               CLUSTER='beestock_development'
-              FAMILY='webapp_task_definition'
+              FAMILY='beestock_webapp_dev'
               DOCKER_IMAGE='beestock_webapp_dev'
               TASK='webapp_task_definition'
               SERVICE='webapp_service'
