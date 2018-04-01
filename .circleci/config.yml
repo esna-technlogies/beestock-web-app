@@ -32,7 +32,7 @@ jobs:
               CLUSTER='beestock_development'
               FAMILY='webapp_task_definition'
               DOCKER_IMAGE='beestock_webapp_dev'
-              TASK='webapp_task_definition'
+              TASK='dev_webapp'
               SERVICE='webapp_service'
               AWS_REGION='us-east-2'
 
