@@ -55,6 +55,14 @@ jobs:
                       "hostPort": 8080
                     }
                   ],
+                  "logConfiguration": {
+                      "logDriver": "awslogs",
+                      "options": {
+                          "awslogs-group": "awslogs-beestock",
+                          "awslogs-region": "us-east-2",
+                          "awslogs-stream-prefix": "awslogs-webapp"
+                      }
+                  },
                   "environment" : [
                       { "name" : "NODE_ENV", "value" : "development" }
                   ]
