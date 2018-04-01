@@ -40,8 +40,8 @@ jobs:
               aws configure set region $AWS_REGION
               $(aws ecr get-login --no-include-email --region $AWS_REGION)
 
-              docker tag $DOCKER_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE
-              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE
+              docker tag $DOCKER_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:LATEST
+              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:LATEST
 
               task_template='[
                 {
@@ -59,7 +59,7 @@ jobs:
                   "logConfiguration": {
                       "logDriver": "awslogs",
                       "options": {
-                          "awslogs-group": "awslogs-beestock",
+                          "awslogs-group": "beestock",
                           "awslogs-region": "us-east-2",
                           "awslogs-stream-prefix": "awslogs-webapp"
                       }
