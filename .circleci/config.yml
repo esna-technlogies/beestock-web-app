@@ -28,20 +28,20 @@ jobs:
       - deploy:
           name: Push Docker Image to AWS ECR
           command: |
-            if [ "${CIRCLE_BRANCH}" == "immutable-infra" ]; then
-              CLUSTER='beestock_development'
-              FAMILY='webapp_task_definition'
-              DOCKER_IMAGE='beestock_webapp_dev'
-              TASK='webapp_task_definition'
-              CONTAINER_NAME='dev_webapp'
-              SERVICE='webapp_service'
+            if [ "${CIRCLE_BRANCH}" == "immutable-infra" ] || [ "${CIRCLE_BRANCH}" == "shendy-develop" ]; then
               AWS_REGION='us-east-2'
+              CLUSTER='dev_beestock'
+              TASK='dev-webapp'
+              FAMILY='dev-webapp'
+              SERVICE='webapp-service'
+              CONTAINER_NAME='dev-webapp'
+              DOCKER_IMAGE='dev_beestock_webapp'
 
               aws configure set region $AWS_REGION
               $(aws ecr get-login --no-include-email --region $AWS_REGION)
 
-              docker tag $DOCKER_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:LATEST
-              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:LATEST
+              docker tag $DOCKER_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
 
               task_template='[
                 {
@@ -55,21 +55,9 @@ jobs:
                       "containerPort": 8080,
                       "hostPort": 8080
                     }
-                  ],
-                  "logConfiguration": {
-                      "logDriver": "awslogs",
-                      "options": {
-                          "awslogs-group": "beestock",
-                          "awslogs-region": "us-east-2",
-                          "awslogs-stream-prefix": "awslogs-webapp"
-                      }
-                  },
-                  "environment" : [
-                      { "name" : "NODE_ENV", "value" : "development" }
                   ]
                 }
               ]'
-              echo "$task_template"
 
               task_def=$(printf "$task_template" $CONTAINER_NAME $AWS_ACCOUNT_ID $AWS_REGION $DOCKER_IMAGE)
 
@@ -81,55 +69,3 @@ jobs:
 
               return 0
             fi
-
-#  build:
-#
-#    # This indicates the docker image used will be the one built with node.js v8.9.1 from circleci repo
-#    docker:
-#      - image: circleci/node:8.9.1
-#
-#    # This indicates the working directory for the following steps
-#    working_directory: ~/app
-#
-#    steps:
-#      # This would checkout the project from github to the current working directory '.'
-#      - checkout
-#
-#      - restore_cache:
-#          keys:
-#            - npm-deps-{{ checksum "vuejs-app/package.json" }}
-#            - npm-deps-
-#
-#      - save_cache:
-#          key: npm-deps-{{ checksum "vuejs-app/package.json" }}
-#          paths:
-#            - node_modules
-#
-#      - run:
-#          name: Install Project Dependencies
-#          command: npm install
-#          working_directory: ./vuejs-app
-#
-#      - run:
-#          name: Build The Project For Production
-#          command: npm run build
-#          working_directory: ./vuejs-app
-#
-#      # We need here to add 'dev.beesstock.com' to known_hosts so the OS can communicate with it
-#      - run:
-#         name: Add host dev.beesstock.com to ~/.ssh/known_hosts
-#         command: ssh-keyscan dev.beesstock.com > ~/.ssh/known_hosts
-#
-#      # A build is done under ./vuejs-app/dist, so copy it remotely on 'dev.beesstock.com' server
-#      - deploy:
-#          name: Deploy dist/ to remote 'dev.beesstock.com' instance
-#          command: scp -rp dist/ ubuntu@dev.beesstock.com:~/project/
-#          working_directory: ./vuejs-app
-#
-#      # Using 'forever' command:
-#      # . Restart the application
-#      # . Specify options for saving different types of logs (forever, output, error)
-#      # . Specific '-a' for appending to current logs
-#      - run:
-#          name: Restart The Application
-#          command: ssh ubuntu@dev.beesstock.com 'forever restart -a -l ~/project/logs/forever.log -o ~/project/logs/out.log -e ~/project/logs/error.log ~/project/server.js'
