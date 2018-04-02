@@ -73,9 +73,9 @@
     import SearchBox from '../search/SearchBox'
     import MainAlert from '../alerts/MainAlert'
     import PagePreLoader from '../loaders/PagePreLoader'
+    import {loadComponentDataMixin} from '../../mixins'
 
     import categoryService from '../../services/category'
-    import {loadComponentData} from '../../helpers/loader-wrappers'
     import {handleServiceError} from '../../helpers/error-handlers'
 
     import {mapGetters} from 'vuex'
@@ -104,9 +104,11 @@
         VuesticWidget,
         PagePreLoader
       },
+      mixins: [
+        loadComponentDataMixin
+      ],
       data () {
         return {
-          // isLoading: false,
           isPageDataLoading: false,
           categoryList: [],
           randomPhotoList: []
@@ -163,7 +165,7 @@
       },
       created () {
         if (this.isAuthenticatedUser) {
-          loadComponentData(this)
+          this.loadComponentData()
         }
       }
     }

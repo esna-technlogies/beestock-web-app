@@ -180,7 +180,7 @@
 
   import photoService from '../../services/photo'
   import {breadcrumbsHelper} from '../../helpers'
-  import {loadComponentData} from '../../helpers/loader-wrappers'
+  import {loadComponentDataMixin} from '../../mixins'
   import {handleServiceError} from '../../helpers/error-handlers'
 
   export default {
@@ -194,6 +194,9 @@
       PagePreLoader,
       PhotosContainer
     },
+    mixins: [
+      loadComponentDataMixin
+    ],
     data () {
       return {
         pageTitle: this.$t('titles.myUploads'),
@@ -230,7 +233,7 @@
       }
     },
     created () {
-      loadComponentData(this)
+      this.loadComponentData()
     }
   }
 </script>

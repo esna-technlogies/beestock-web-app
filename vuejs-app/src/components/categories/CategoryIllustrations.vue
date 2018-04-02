@@ -33,7 +33,7 @@
   import categoryService from '../../services/category'
   import {breadcrumbsHelper} from '../../helpers'
   import {handleServiceError} from '../../helpers/error-handlers'
-  import {loadComponentData, loadPageData} from '../../helpers/loader-wrappers'
+  import {loadComponentDataMixin, loadPageDataMixin} from '../../mixins'
 
   export default {
     name: 'category-illustrations',
@@ -54,6 +54,10 @@
       PhotosContainer,
       VuetablePagination
     },
+    mixins: [
+      loadComponentDataMixin,
+      loadPageDataMixin
+    ],
     data () {
       return {
         pageTitle: this.$t('titles.loading'),
@@ -144,24 +148,24 @@
       gotoPreviousPage () {
         if (this.currentPage > 1) {
           this.currentPage--
-          loadPageData(this)
+          this.loadPageData()
         }
       },
       gotoNextPage () {
         if (this.currentPage < this.paginationData.last_page) {
           this.currentPage++
-          loadPageData(this)
+          this.loadPageData()
         }
       },
       gotoPage (page) {
         if (page !== this.currentPage && (page > 0 && page <= this.paginationData.last_page)) {
           this.currentPage = page
-          loadPageData(this)
+          this.loadPageData()
         }
       }
     },
     created () {
-      loadComponentData(this)
+      this.loadComponentData()
     }
   }
 </script>

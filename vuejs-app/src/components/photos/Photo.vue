@@ -86,7 +86,7 @@
   import categoryService from '../../services/category'
   import {breadcrumbsHelper} from '../../helpers'
   import {handleServiceError} from '../../helpers/error-handlers'
-  import {loadComponentData} from '../../helpers/loader-wrappers'
+  import {loadComponentDataMixin} from '../../mixins'
 
   export default {
     name: 'photo',
@@ -104,6 +104,9 @@
     components: {
       PagePreLoader
     },
+    mixins: [
+      loadComponentDataMixin
+    ],
     data () {
       return {
         isPageDataLoading: false,
@@ -150,7 +153,7 @@
       }
     },
     created () {
-      loadComponentData(this)
+      this.loadComponentData()
     }
   }
 </script>

@@ -40,7 +40,7 @@
   import {breadcrumbsHelper} from '../../helpers'
   import photoService from '../../services/photo'
   import {handleServiceError} from '../../helpers/error-handlers'
-  import {loadComponentData, loadPageData} from '../../helpers/loader-wrappers'
+  import {loadComponentDataMixin, loadPageDataMixin} from '../../mixins'
   import DataTableStyles from '../vuestic-components/vuestic-datatable/data/data-table-styles'
 
   export default {
@@ -68,6 +68,10 @@
       UnderConstruction,
       VuetablePagination
     },
+    mixins: [
+      loadComponentDataMixin,
+      loadPageDataMixin
+    ],
     data () {
       return {
         isPageDataLoading: false,
@@ -92,7 +96,7 @@
     },
     watch: {
       async '$route' (to, from) {
-        if (to.name === 'Photos') await loadComponentData(this)
+        if (to.name === 'Photos') await this.loadComponentData()
       }
     },
     methods: {
@@ -157,24 +161,24 @@
       gotoPreviousPage () {
         if (this.currentPage > 1) {
           this.currentPage--
-          loadPageData(this)
+          this.loadPageData()
         }
       },
       gotoNextPage () {
         if (this.currentPage < this.paginationData.last_page) {
           this.currentPage++
-          loadPageData(this)
+          this.loadPageData()
         }
       },
       gotoPage (page) {
         if (page !== this.currentPage && (page > 0 && page <= this.paginationData.last_page)) {
           this.currentPage = page
-          loadPageData(this)
+          this.loadPageData()
         }
       }
     },
     created () {
-      if (this.isPhotosRoute) loadComponentData(this)
+      if (this.isPhotosRoute) this.loadComponentData()
     }
   }
 </script>

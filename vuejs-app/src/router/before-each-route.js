@@ -22,8 +22,6 @@ const beforeEachRoute = (to, from, next) => {
 
   const routeRequires = to.meta.requires ? to.meta.requires : []
 
-  console.log('routeRequires', routeRequires)
-
   for (const condition of routeRequires) {
     switch (condition) {
       case VERIFIED_USER:
