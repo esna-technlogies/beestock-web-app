@@ -6,7 +6,7 @@
       <main class="content-inside" role="main">
         <not-verified-alert v-if="userIsAuthenticatedAndNotVerifiedYet"/>
 
-        <router-view />
+        <router-view v-if="!isPageLoading"/>
       </main>
 
       <page-pre-loader v-if="isPageLoading"/>
