@@ -1,6 +1,8 @@
 import lazyLoading from '../../store/modules/menu/lazyLoading'
 import { routeConditions } from '../../config'
 
+const {NO_LOGIN} = routeConditions
+
 export const login = {
   name: 'Login',
   path: '/login',
@@ -20,7 +22,7 @@ export const resetPassword = {
   component: lazyLoading('auth/reset-password/ResetPassword'),
   props: true,
   meta: {
-    conditions: [routeConditions.NO_LOGIN]
+    requires: [NO_LOGIN]
   }
 }
 

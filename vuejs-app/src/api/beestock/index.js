@@ -12,6 +12,10 @@ const setAuthorizationHeader = () => {
   if (token) axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 }
 
+const removeAuthorizationHeader = () => {
+  delete axios.defaults.headers.common['Authorization']
+}
+
 setAuthorizationHeader()
 
 
@@ -22,5 +26,6 @@ export default {
   patch: axios.patch,
   delete: axios.delete,
   head: axios.head,
-  setAuthorizationHeader
+  setAuthorizationHeader,
+  removeAuthorizationHeader
 }

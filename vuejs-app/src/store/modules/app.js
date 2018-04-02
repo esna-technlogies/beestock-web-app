@@ -98,8 +98,9 @@ const actions = {
       })
   },
   doLogout ({ commit }) {
-    commit('setAuthenticated', false)
+    api.removeAuthorizationHeader()
     utils.clearAuthStorage()
+    commit('setAuthenticated', false)
   },
   verifyUser ({ commit }, verificationDetails) {
     const queryParams = { code: verificationDetails.code }

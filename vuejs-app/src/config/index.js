@@ -27,7 +27,8 @@ export const routeConditions = {
   NO_LOGIN: 'NoLogin',
   SYSTEM_ONLY: 'SystemOnly',
   VERIFIED_USER: 'VerifiedUser',
-  AUTHENTICATED_USER: 'AuthenticatedUser'
+  AUTHENTICATED_USER: 'AuthenticatedUser',
+  JWT_TOKEN_IS_NOT_EXPIRED: 'JwtTokenIsNotExpired'
 }
 
 let config = {

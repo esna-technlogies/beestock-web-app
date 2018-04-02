@@ -26,7 +26,6 @@
   import Navbar from './components/basic-layout/navbar/Navbar'
 
   import auth from './services/auth'
-  import { routerHelper } from './helpers'
 
   import {mapGetters} from 'vuex'
 
@@ -53,12 +52,6 @@
       ...mapGetters(['isPageLoading']),
       userIsAuthenticatedAndNotVerifiedYet () {
         return auth.isAuthenticated() && !auth.isVerifiedUser()
-      }
-    },
-    created () {
-      if (auth.isJwtTokenExpired()) {
-        this.$store.dispatch('doLogout')
-        routerHelper.loginSessionExpired()
       }
     }
   }
