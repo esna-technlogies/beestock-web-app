@@ -9,7 +9,7 @@
         <router-view />
       </main>
 
-      <!--<page-pre-loader v-if="isPageLoading"/>-->
+      <page-pre-loader v-if="isPageLoading"/>
     </div>
 
     <beestock-footer />
