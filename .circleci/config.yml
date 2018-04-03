@@ -40,13 +40,16 @@ jobs:
               aws configure set region $AWS_REGION
               $(aws ecr get-login --no-include-email --region $AWS_REGION)
 
-              docker tag $DOCKER_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$revision
-              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$revision
+              docker tag $DOCKER_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+
+              docker tag $DOCKER_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$CIRCLE_SHA1
+              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$CIRCLE_SHA1
 
               task_template='[
                 {
                   "name": "%s",
-                  "image": "%s.dkr.ecr.%s.amazonaws.com/%s:%s",
+                  "image": "%s.dkr.ecr.%s.amazonaws.com/%s:latest",
                   "essential": true,
                   "cpu": 10,
                   "memory": 300,
@@ -59,7 +62,7 @@ jobs:
                 }
               ]'
 
-              task_def=$(printf "$task_template" $CONTAINER_NAME $AWS_ACCOUNT_ID $AWS_REGION $DOCKER_IMAGE $revision)
+              task_def=$(printf "$task_template" $CONTAINER_NAME $AWS_ACCOUNT_ID $AWS_REGION $DOCKER_IMAGE)
 
               json=$(aws ecs register-task-definition --container-definitions "$task_def" --family "$FAMILY")
 
