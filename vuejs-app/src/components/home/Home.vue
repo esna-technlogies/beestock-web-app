@@ -6,7 +6,7 @@
         <main-alert v-if="alertType" :alertType="alertType" :alertMessage="alertMessage"/>
 
         <div class="row no-gutters justify-content-center">
-          <h2>Header 3</h2>
+          <h2>Header 4</h2>
         </div>
 
         <div class="row no-gutters justify-content-center">
