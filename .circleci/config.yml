@@ -30,7 +30,7 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "immutable-infra" ] || [ "${CIRCLE_BRANCH}" == "shendy-develop" ]; then
               AWS_REGION='us-east-2'
-              CLUSTER='dev_beestock'
+              CLUSTER='dev-beestock'
               TASK='dev-webapp'
               FAMILY='dev-webapp'
               SERVICE='webapp-service'
