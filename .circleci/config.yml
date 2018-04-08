@@ -65,7 +65,7 @@ jobs:
                 "portMappings": [
                   {
                     "containerPort": 8080,
-                    "hostPort": 8081
+                    "hostPort": 8080
                   }
                 ]
               }
