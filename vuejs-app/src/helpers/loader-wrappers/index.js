@@ -13,4 +13,3 @@ export const loadPageData = async (component) => {
   await component.preparePageData()
   component.isPaginationDataLoading = false
 }
-

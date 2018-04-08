@@ -29,7 +29,7 @@ jobs:
           name: Push Docker Image to AWS ECR
           command: |
             if [ "${CIRCLE_BRANCH}" == "immutable-infra" ] || [ "${CIRCLE_BRANCH}" == "shendy-develop" ]; then
-              AWS_REGION='us-east-2'
+              AWS_REGION='us-west-2'
               CLUSTER='dev-beestock'
               TASK='dev-webapp'
               FAMILY='dev-webapp'

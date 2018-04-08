@@ -5,7 +5,10 @@ export const login = {
   name: 'Login',
   path: '/login',
   component: lazyLoading('auth/login/Login'),
-  props: true
+  props: true,
+  meta: {
+    conditions: [routeConditions.NO_LOGIN]
+  }
 }
 
 export const signup = {
