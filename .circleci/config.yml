@@ -34,7 +34,7 @@ jobs:
       #   This should be set to continue.
       # - All environment variables such $CLUSTER, $TASK, $FAMILY, $SERVICE, $CONTAINER_NAME, $DOCKER_IMAGE
       #   should match the same configuration done by terraform for building the infrastructure
-      # - As configured by Terraform, this will deploy a container image with port 8080 exposed as 8081
+      # - As configured by Terraform, this will deploy a container image with port 8080 exposed as 8080
       - deploy:
           name: Push Docker Image to AWS ECR
           command: |
