@@ -5,7 +5,7 @@
         <div class="col-12">PUB-</div>
         <div class="col-12">LISHER</div>
         <div class="col-12">
-          <router-link :to="{ name: 'RegisterPublisher' }" tag="button" class="-signup-button btn btn-primary btn-micro rounded-0" :disabled="isLoading">
+          <router-link :to="{ name: 'RegisterPublisher' }" tag="button" class="-signup-button btn btn-primary btn-micro rounded-0">
             {{ 'forms.buttons.signup' | translate }}
           </router-link>
         </div>
@@ -15,7 +15,7 @@
         <div class="col-12">PHOTO-</div>
         <div class="col-12">GRAPHER</div>
         <div class="col-12">
-          <router-link :to="{ name: 'RegisterPhotographer' }" tag="button" class="-signup-button btn btn-primary btn-micro rounded-0" :disabled="isLoading">
+          <router-link :to="{ name: 'RegisterPhotographer' }" tag="button" class="-signup-button btn btn-primary btn-micro rounded-0">
             {{ 'forms.buttons.signup' | translate }}
           </router-link>
         </div>

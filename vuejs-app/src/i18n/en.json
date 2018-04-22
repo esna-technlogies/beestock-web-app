@@ -125,7 +125,8 @@
       "logout": "Logout",
       "resetPassword": "Reset Password",
       "verifyUser": "Please Enter Your Verification Code",
-      "photoDetails": "Photo Details"
+      "photoDetails": "Photo Details",
+      "uploadUserId": "Upload your identification so you can start earning..."
     },
     "labels": {
       "firstName": "First Name",
@@ -163,6 +164,7 @@
     "photographerSignupWizard": {
       "stepOne": "First Step",
       "stepTwo": "Second Step",
+      "stepThree": "Third Step",
       "wizardCompleted": "Photographer Registration has been completed successfully."
     },
     "signupWizard": {
@@ -190,7 +192,8 @@
       "saveChanges": "Save Changes",
       "save": "Save",
       "facebook": "Facebook",
-      "googlePlus": "Google Plus"
+      "googlePlus": "Google Plus",
+      "upload": "Upload"
     },
     "alerts": {
       "signin": {
@@ -203,7 +206,8 @@
       "donotHaveAccount": "Don't have an account?",
       "signUpHere": "Sign Up Here",
       "rememberMe": "Remember Me",
-      "forgetPassword": "Forget Password?"
+      "forgetPassword": "Forget Password?",
+      "sendItAgain": "Send code again?"
     }
   },
   "grid": {

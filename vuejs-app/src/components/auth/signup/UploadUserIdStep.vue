@@ -1,39 +1,47 @@
 <template>
-  <div class="verify-user-step">
+  <div class="upload-user-id-step">
     <div class="col-12 text-center">
-      <h5><strong>{{ 'forms.heads.verifyUser' | translate }}</strong></h5>
+      <h5><strong>{{ 'forms.heads.uploadUserId' | translate }}</strong></h5>
+
+      <div>
+        <p class="small m-0">Before you submit content, we need to verify your identity.</p>
+        <p class="small m-0">It keeps your work safe and helps us speed up the payment process.</p>
+
+        <p class="small m-0 mt-2">Please add a full size image of you passport, driver's license, or state identification.</p>
+        <a href="#" class="small m-0">More Information</a>
+
+        <p class="small m-0 mt-2">Your identification must be issued by the same country as your residential address.</p>
+        <a href="#" class="small m-0">Edit your address</a>
+      </div>
+
     </div>
 
     <div class="col-12">
       <hr class="mt-4 mb-3">
     </div>
 
-    <form name="verifyUser" @submit.prevent="doVerifyUser">
+    <form name="verifyUser" @submit.prevent="doUploadUserId">
       <div class="row justify-content-center">
-        <div class="col-lg-10">
+        <div class="col-lg-5 text-center">
           <fieldset>
+            <div>
+              <p class="small m-0">Drag and drop file here</p>
+              <p class="small m-0">or</p>
+            </div>
             <div class="form-group mb-1">
-              <div class="input-group">
-                <input
-                  type="text"
-                  id="-verification-code"
-                  name="verificationCode"
-                  v-validate="'required'"
-                  v-model="verificationCode"
-                  data-vv-as="Verification Code"
-                  :placeholder="'forms.labels.verificationCode' | translate"
-                  autofocus
-                  required>
-                <i class="bar"></i>
-                <small v-show="errors.has('verificationCode')" class="help text-danger">{{ errors.first('verificationCode') }}</small>
-              </div>
+              <button class="btn btn-primary btn-micro btn-block rounded-0" :disabled="isLoading">
+                CHOOSE FILE
+              </button>
+            </div>
+            <div>
+              <p class="small m-0">(file format JPEG, TIFF, or PDF)</p>
             </div>
           </fieldset>
         </div>
 
         <div class="col-lg-10 mt-3 mb-2">
           <button class="btn btn-primary btn-micro btn-block rounded-0" :disabled="isLoading">
-            {{ 'forms.buttons.confirm' | translate }}
+            {{ 'forms.buttons.upload' | translate }}
           </button>
         </div>
 
@@ -53,44 +61,31 @@
   import BasicLoader from '../../loaders/BasicLoader'
 
   export default {
-    name: 'verify-user-step',
-    props: {
-      registeredUser: {
-        type: Object,
-        default: () => {}
-      }
-    },
+    name: 'upload-user-id-step',
     components: {
       BasicLoader
     },
     data () {
       return {
-        isLoading: false,
-        verificationCode: ''
+        isLoading: false
       }
     },
     methods: {
-      async doVerifyUser () {
-        if (!await this.$validator.validateAll()) return
+      async doUploadUserId () {
+        // if (!await this.$validator.validateAll()) return
 
         this.startLoading()
         this.clearErrorAlert()
 
-        const verificationDetails = {
-          uuid: this.registeredUser.uuid,
-          code: this.verificationCode
-        }
-
         try {
-          await this.$store.dispatch('verifyUser', verificationDetails)
-          this.verifyUserIsStepDone()
+          this.uploadUserIdStepIsDone()
         } catch (error) {
-          this.handleFailedVerification(error)
+          this.handleFailedUploadUserId(error)
         }
 
         this.stopLoading()
       },
-      handleFailedVerification (error) {
+      handleFailedUploadUserId (error) {
         if (!error.response) {
           this.setErrorAlert("Unknown error, please call the website's administrator")
         } else {
@@ -109,8 +104,8 @@
       setErrorAlert (message = 'Default Error Message') {
         this.$emit('setErrorAlert', message)
       },
-      verifyUserIsStepDone (registeredUser) {
-        this.$emit('verifyUserStepDone', registeredUser)
+      uploadUserIdStepIsDone () {
+        this.$emit('uploadUserIdStepDone')
       }
     }
   }

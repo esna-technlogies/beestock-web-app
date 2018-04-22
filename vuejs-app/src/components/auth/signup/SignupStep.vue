@@ -24,6 +24,7 @@
                       v-validate.initial="'required|alpha_spaces|min:3'"
                       data-vv-as="First Name"
                       :placeholder="'forms.labels.firstName' | translate"
+                      autofocus
                       required>
                     <i class="bar"></i>
                     <small v-show="errors.has('firstName')" class="help text-danger">{{ errors.first('firstName') }}</small>

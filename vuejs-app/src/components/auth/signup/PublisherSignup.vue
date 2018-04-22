@@ -29,20 +29,6 @@
                 slot="wizardCompleted"
               />
 
-              <!--<div slot="wizardCompleted">
-                <div class="row justify-content-center">
-                  <div class="col-12 text-center">
-                    <span>
-                      <i class="fa fa-check-square text-primary" style="font-size: 1em"></i>
-                      {{ 'forms.publisherSignupWizard.wizardCompleted' | translate }}
-                    </span>
-                  </div>
-
-                  <div class="col-12 text-center">
-                    <router-link :to="{ name: 'Login' }">{{ 'forms.misc.signInHere' | translate }}</router-link>
-                  </div>
-                </div>
-              </div>-->
             </form-wizard>
           </vuestic-widget>
         </div>
