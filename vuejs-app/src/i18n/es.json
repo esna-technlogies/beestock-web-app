@@ -155,6 +155,21 @@
       "simple": "Simple Select",
       "title": "Selects"
     },
+    "publisherSignupWizard": {
+      "stepOne": "First Step",
+      "stepTwo": "Second Step",
+      "wizardCompleted": "Publisher Registration has been completed successfully."
+    },
+    "photographerSignupWizard": {
+      "stepOne": "First Step",
+      "stepTwo": "Second Step",
+      "wizardCompleted": "Photographer Registration has been completed successfully."
+    },
+    "signupWizard": {
+      "stepOne": "First Step",
+      "stepTwo": "Second Step",
+      "stepThree": "Third Step"
+    },
     "wizard": {
       "name": "Name",
       "completed": "Wizard completed!",
@@ -173,7 +188,9 @@
       "submit": "Submit",
       "confirm": "Confirm",
       "saveChanges": "Save Changes",
-      "save": "Save"
+      "save": "Save",
+      "facebook": "Facebook",
+      "googlePlus": "Google Plus"
     },
     "alerts": {
       "signin": {
@@ -386,6 +403,8 @@
     "photo": "{photoTitle} Photo",
     "login": "Login",
     "signup": "Signup",
+    "publisherSignup": "Publisher Signup",
+    "photographerSignup": "Photographer Signup",
     "changePassword": "Change Password",
     "profileSettings": "Profile Settings",
     "verifyUser": "Verify User",

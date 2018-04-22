@@ -169,17 +169,6 @@
 
         return { name: 'Home' }
       }
-    },
-    created () {
-      if (this.$store.getters.isAuthenticatedUser) {
-        return this.$router.replace({
-          name: this.sendTo.name,
-          params: {
-            alertType: this.alertType,
-            alertMessage: this.alertMessage
-          }
-        })
-      }
     }
   }
 </script>

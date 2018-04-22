@@ -1,313 +1,36 @@
 <template>
   <div class="signup">
-    <div class="row no-gutters justify-content-center">
-      <div class="col-7">
-        <form-error-alert v-show="isErrorAlert" :alert-message="errorAlertMessage"/>
+    <div class="row justify-content-center -signup-wrapper">
+      <div class="col-6 text-right -publisher-signup-wrapper">
+        <div class="col-12">PUB-</div>
+        <div class="col-12">LISHER</div>
+        <div class="col-12">
+          <router-link :to="{ name: 'RegisterPublisher' }" tag="button" class="-signup-button btn btn-primary btn-micro rounded-0" :disabled="isLoading">
+            {{ 'forms.buttons.signup' | translate }}
+          </router-link>
+        </div>
+      </div>
 
-        <vuestic-widget class="-signup-widget">
-          <div class="col-12 text-center m-0 p-0">
-            <span class="h4"><strong>{{ 'forms.heads.signup' | translate }}</strong></span>
-          </div>
+      <div class="col-6 text-left -photographer-signup-wrapper">
+        <div class="col-12">PHOTO-</div>
+        <div class="col-12">GRAPHER</div>
+        <div class="col-12">
+          <router-link :to="{ name: 'RegisterPhotographer' }" tag="button" class="-signup-button btn btn-primary btn-micro rounded-0" :disabled="isLoading">
+            {{ 'forms.buttons.signup' | translate }}
+          </router-link>
+        </div>
 
-          <div class="col-12">
-            <hr class="mt-4 mb-3">
-          </div>
-
-          <form name="signup" @submit.prevent="doSignup">
-            <div class="row justify-content-center">
-              <div class="col-lg-11">
-                <div class="row justify-content-between">
-                  <div class="col-lg-6">
-                    <fieldset>
-                      <div class="form-group mb-1" :class="{ 'has-error': errors.has('firstName') }">
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            id="-firstname"
-                            name="firstName"
-                            v-model="firstName"
-                            v-validate.initial="'required|alpha_spaces|min:3'"
-                            data-vv-as="First Name"
-                            :placeholder="'forms.labels.firstName' | translate"
-                            required>
-                          <i class="bar"></i>
-                          <small v-show="errors.has('firstName')" class="help text-danger">{{ errors.first('firstName') }}</small>
-                        </div>
-                      </div>
-                    </fieldset>
-                  </div>
-
-                  <div class="col-lg-6">
-                    <fieldset>
-                      <div class="form-group mb-1" :class="{ 'has-error': errors.has('lastName') }">
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            id="-lastname"
-                            name="lastName"
-                            v-model="lastName"
-                            v-validate.initial="'required|alpha_spaces|min:3'"
-                            :placeholder="'forms.labels.lastName' | translate"
-                            data-vv-as="Last Name"
-                            required>
-                          <i class="bar"></i>
-                          <small v-show="errors.has('lastName')" class="help text-danger">{{ errors.first('lastName') }}</small>
-                        </div>
-                      </div>
-                    </fieldset>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-11">
-                <div class="row justify-content-between">
-                  <div class="col-lg-6">
-                    <fieldset>
-                      <div class="form-group mb-1" :class="{ 'has-error': errors.has('email') }">
-                        <div class="input-group">
-                          <input
-                            type="email"
-                            id="-email"
-                            name="email"
-                            v-model="email"
-                            v-validate="'required|email'"
-                            data-vv-as="Email Address"
-                            :placeholder="'forms.labels.email' | translate"
-                            required>
-                          <i class="bar"></i>
-                          <small v-show="errors.has('email')" class="help text-danger">{{ errors.first('email') }}</small>
-                        </div>
-                      </div>
-                    </fieldset>
-                  </div>
-
-                  <div class="col-lg-6">
-                    <fieldset>
-                      <div class="form-group mb-2" :class="{ 'has-error': errors.has('password') }">
-                        <div class="input-group">
-                          <input
-                            type="password"
-                            id="-password"
-                            name="password"
-                            v-model="password"
-                            v-validate.initial="'required|min:6'"
-                            :placeholder="'forms.labels.password' | translate"
-                            data-vv-as="Password"
-                            required>
-                          <i class="bar"></i>
-                          <small v-show="errors.has('password')" class="help text-danger">{{ errors.first('password') }}</small>
-                        </div>
-                      </div>
-                    </fieldset>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-11">
-                <div class="row justify-content-between">
-                  <div class="col-lg-6 mb-2">
-                    <fieldset>
-                      <div class="input-group">
-                        <input
-                          type="hidden"
-                          name="country"
-                          v-model="country"
-                          v-validate.initial="'required'"
-                          data-vv-as="Country"
-                          required>
-                        <multiselect
-                          label="name"
-                          track-by="name"
-                          name="country"
-                          :class="'rounded-0'"
-                          :options="countryList"
-                          :custom-label="nameWithCountryCode"
-                          :placeholder="'forms.selects.country' | translate"
-                          v-model="country"
-                          required>
-                        </multiselect>
-                      </div>
-                    </fieldset>
-                    <small v-show="errors.has('country')" class="help text-danger">{{ errors.first('country') }}</small>
-                  </div>
-
-                  <div class="col-lg-6">
-                    <fieldset>
-                      <div class="form-group mb-2" :class="{ 'has-error': errors.has('mobileNumber') }">
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            id="-mobile-number"
-                            name="mobileNumber"
-                            v-model="mobileNumber"
-                            v-validate.initial="'required|numeric'"
-                            data-vv-as="Mobile Number"
-                            :placeholder="'forms.labels.mobileNumber' | translate"
-                            required>
-                          <i class="bar"></i>
-                          <small v-show="errors.has('mobileNumber')" class="help text-danger">{{ errors.first('mobileNumber') }}</small>
-                        </div>
-                      </div>
-                    </fieldset>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-11">
-                <fieldset>
-                  <div class="form-check mb-0 abc-checkbox abc-checkbox-primary">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      id="-terms-accepted"
-                      name="termsAccepted"
-                      v-model="termsAccepted"
-                      v-validate.initial="'required'"
-                      data-vv-as="Terms Field"
-                      required>
-                    <label class="form-check-label" for="-terms-accepted">
-                      <span class="abc-label-text">{{ 'forms.checkboxes.acceptTheLicenceAgreement' | translate }}</span>
-                    </label>
-                  </div>
-                  <span><small v-show="errors.has('termsAccepted')" class="help text-danger">{{ errors.first('termsAccepted') }}</small></span>
-                </fieldset>
-              </div>
-
-              <div class="col-lg-11 mt-3 mb-2">
-                <button class="btn btn-primary btn-micro btn-block rounded-0" :disabled="isLoading">
-                  {{ 'forms.buttons.signup' | translate }}
-                </button>
-              </div>
-
-              <div class="col-lg-11 text-center mt-2">
-                <span>
-                  {{ 'forms.misc.alreadyHaveAccount' | translate }} <router-link :to="{ name: 'Login' }">{{ 'forms.misc.signInHere' | translate }}</router-link>
-                </span>
-              </div>
-            </div>
-          </form>
-
-          <basic-loader v-show="isLoading" />
-        </vuestic-widget>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import Multiselect from 'vue-multiselect'
-  import { HollowDotsSpinner } from 'epic-spinners'
-  import Spinner from 'vue-simple-spinner'
-  import BasicLoader from '../../loaders/BasicLoader'
-
-  import CountryList from '../../../data/country-list'
-  import { routerHelper } from '../../../helpers'
-  import FormErrorAlert from '../../alerts/FormErrorAlert'
-
-
-export default {
+  export default {
     name: 'signup',
     metaInfo () {
       return {
         title: this.$t('titles.signup')
-      }
-    },
-    components: {
-      Spinner,
-      Multiselect,
-      BasicLoader,
-      FormErrorAlert,
-      HollowDotsSpinner
-    },
-    data () {
-      return {
-        isLoading: false,
-        isErrorAlert: false,
-        errorAlertMessage: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        passwordConfirmation: '',
-        country: '',
-        mobileNumber: '',
-        termsAccepted: false,
-        countryList: CountryList
-      }
-    },
-    methods: {
-      async doSignup () {
-        if (!await this.$validator.validateAll()) return
-
-        this.startLoading()
-        this.clearErrorAlert()
-
-        try {
-          const userDetails = await this.createUserDetailsFromFormData()
-          await this.$store.dispatch('doSignup', userDetails)
-
-          routerHelper.signupDone()
-        } catch (error) {
-          this.handleFailedSignup(error)
-        }
-
-        this.stopLoading()
-      },
-      createUserDetailsFromFormData () {
-        return {
-          firstName: this.firstName,
-          lastName: this.lastName,
-          email: this.email,
-          language: 'en',
-          country: this.country.abbr,
-          termsAccepted: this.termsAccepted,
-          accessInfo: {
-            password: this.password
-          },
-          mobileNumber: {
-            number: this.mobileNumber[0] === '0' ? this.mobileNumber : `0${this.mobileNumber}`,
-            countryCode: this.country.abbr
-          }
-        }
-      },
-      handleFailedSignup (error) {
-        if (!error.response) {
-          this.setErrorAlert("Unknown error, please call the website's administrator")
-        } else {
-          const errorDetails = error.response.data.error.details
-
-          for (const field of Object.keys(errorDetails)) {
-            const errorMessage = errorDetails[field].message.split(' - ')
-
-            const message = errorMessage.length === 1 ? errorMessage[0] : errorMessage[1]
-
-            this.errors.add(field, message)
-          }
-
-          this.setErrorAlert(error.response.data.error.message)
-        }
-      },
-      startLoading () {
-        this.isLoading = true
-      },
-      stopLoading () {
-        this.isLoading = false
-      },
-      clearErrorAlert () {
-        this.isErrorAlert = false
-        this.errorAlertMessage = ''
-      },
-      setErrorAlert (message = 'Default Error Message') {
-        this.isErrorAlert = true
-        this.errorAlertMessage = message
-      },
-      nameWithCountryCode ({ name, countryCode }) {
-        return `${name} — [${countryCode}]`
-      }
-    },
-    created () {
-      if (this.$store.getters.isAuthenticatedUser) {
-        return this.$router.replace({ name: 'Home' })
       }
     }
   }
@@ -329,5 +52,50 @@ export default {
     width :100%;
     top: 30px;
     left: 0;
+  }
+
+  .-signup-wrapper {
+    height: 600px;
+  }
+
+  .-publisher-signup-wrapper {
+    background-color: #FFC10C;
+    color: #25539F;
+    font-weight: bold;
+    height: 100%;
+    padding-top: 100px;
+    padding-right: 40px;
+
+    .-signup-button {
+      border-color: #25539F !important;
+    }
+
+    div:nth-child(1), div:nth-child(2) {
+      font-size: 80px;
+    }
+  }
+
+  .-photographer-signup-wrapper {
+    background-color: #25539F;
+    color: #FFC10C;
+    font-weight: bold;
+    height: 100%;
+    padding-top: 100px;
+    padding-left: 40px;
+
+    .-signup-button {
+      border-color: #FFC10C !important;
+    }
+
+    div:nth-child(1), div:nth-child(2) {
+      font-size: 80px;
+    }
+  }
+
+  .signup button.-signup-button {
+    border: 5px solid;
+    background-color: white;
+    color: #E74155 ;
+    box-shadow: none;
   }
 </style>

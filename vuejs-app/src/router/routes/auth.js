@@ -7,13 +7,37 @@ export const login = {
   name: 'Login',
   path: '/login',
   component: lazyLoading('auth/login/Login'),
-  props: true
+  props: true,
+  meta: {
+    requires: [NO_LOGIN]
+  }
 }
 
 export const signup = {
   name: 'Register',
   path: '/register',
-  component: lazyLoading('auth/signup/Signup')
+  component: lazyLoading('auth/signup/Signup'),
+  meta: {
+    requires: [NO_LOGIN]
+  }
+}
+
+export const registerPublisher = {
+  name: 'RegisterPublisher',
+  path: '/register/publisher',
+  component: lazyLoading('auth/signup/PublisherSignup'),
+  meta: {
+    requires: [NO_LOGIN]
+  }
+}
+
+export const registerPhotographer = {
+  name: 'RegisterPhotographer',
+  path: '/register/photographer',
+  component: lazyLoading('auth/signup/PhotographerSignup'),
+  meta: {
+    requires: [NO_LOGIN]
+  }
 }
 
 export const resetPassword = {

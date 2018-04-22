@@ -85,9 +85,9 @@
                 <router-link :to="{ name: 'ProfileDetails' }" class="dropdown-item plain-link-item">
                   {{'user.settings' | translate}}
                 </router-link>
-                <div :to="{ name: 'Logout' }" class="dropdown-item plain-link-item" @click="doLogout">
+                <router-link :to="{ name: 'Logout' }" class="dropdown-item plain-link-item" @click="doLogout">
                   {{'user.logout' | translate}}
-                </div>
+                </router-link>
               </div>
             </div>
           </div>

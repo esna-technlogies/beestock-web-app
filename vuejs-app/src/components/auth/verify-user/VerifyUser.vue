@@ -2,7 +2,7 @@
   <div class="verify-user">
     <div class="row no-gutters justify-content-center">
       <div class="col-10 col-sm-10 col-md-8 col-lg-6">
-        <form-error-alert v-show="isErrorAlert" :alert-message="errorAlertMessage"/>
+        x
 
         <vuestic-widget class="-verify-user-widget">
           <div class="col-12 text-center">
